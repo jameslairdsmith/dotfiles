@@ -1,0 +1,8 @@
+unmap d
+unmap H
+unmap L
+unmap <c-e>
+map u goBack
+map c-b scrollPageUp
+map c-f scrollPageDown
+map <c-r> goForward
