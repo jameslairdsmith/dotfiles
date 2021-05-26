@@ -1,8 +1,17 @@
+# Remap un-vim-like bindings to be vim-like
+
+# Page up and down
 unmap d
-unmap H
-unmap L
+map <c-f> scrollPageDown
+unmap u
+map <c-b> scrollPageUp
+
+# Remove redundant up and down
 unmap <c-e>
+unmap <c-y>
+
+# Undo and redo are like going back and forward a page
+unmap H
 map u goBack
-map c-b scrollPageUp
-map c-f scrollPageDown
+unmap L
 map <c-r> goForward
