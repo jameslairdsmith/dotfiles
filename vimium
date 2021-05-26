@@ -15,3 +15,9 @@ unmap H
 map u goBack
 unmap L
 map <c-r> goForward
+
+# New tab
+unmap t
+unmap o # Vomnibar.activate
+unmap O # Vomnibar.activateInNewTab
+map o createTab
