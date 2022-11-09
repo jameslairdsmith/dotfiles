@@ -10,6 +10,7 @@ if(on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)){
 }
 
 ## List of all available RStudio Commands: https://docs.rstudio.com/ide/server-pro/1.3.1007-2/rstudio-ide-commands.html
+## Actually, this might be better: https://docs.rstudio.com/ide/server-pro/rstudio_ide_commands/rstudio_ide_commands.html
 
 
 # Maybe should try this sometime:
@@ -63,4 +64,5 @@ options(
 # .First <- function(){
 #   rstudioapi::sendToConsole("Sys.Date()", execute = TRUE)
 # }
+
 
