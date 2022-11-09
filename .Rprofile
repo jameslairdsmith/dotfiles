@@ -5,8 +5,11 @@ on_rstudio <- function(){
   FALSE
 }
 
-# if(on_rstudio() & interactive() & )
+if(on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)){
+  shrtcts::add_rstudio_shortcuts(set_keyboard_shortcuts = TRUE)
+}
 
+## List of all available RStudio Commands: https://docs.rstudio.com/ide/server-pro/1.3.1007-2/rstudio-ide-commands.html
 
 
 # Maybe should try this sometime:
@@ -60,3 +63,4 @@ options(
 # .First <- function(){
 #   rstudioapi::sendToConsole("Sys.Date()", execute = TRUE)
 # }
+
