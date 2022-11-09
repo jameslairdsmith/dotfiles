@@ -1,5 +1,4 @@
 #' Restart RStudio
-#' @interactive
 #' @shortcut Ctrl+Alt+Shift+R
 rstudioapi::restartSession
 
