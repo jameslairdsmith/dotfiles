@@ -51,6 +51,15 @@ options(
 
 options(styler.cache_root = "styler-perm")
 
+# RStudio preferences
+
+setHook("rstudio.sessionInit", function(newSession) {
+  rstudioapi::writeRStudioPreference("editor_keybindings", "vim")
+  rstudioapi::writeRStudioPreference("save_workspace", "never")
+  rstudioapi::writeRStudioPreference("always_save_history", FALSE)
+  rstudioapi::writeRStudioPreference("save_files_before_build", TRUE)
+}, action = "append")
+
 
 # RStudio keyboard shortcuts
 
