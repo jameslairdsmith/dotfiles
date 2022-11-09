@@ -19,3 +19,7 @@ function() rstudioapi::executeCommand("roxygenizePackage")
 #' Run devtools::document()
 #' @shortcut Ctrl+Alt+Shift+P
 function() rstudioapi::executeCommand("showCommandPalette")
+
+#' Run devtools::document()
+#' @shortcut Ctrl+Alt+Shift+S
+styler:::style_active_file
