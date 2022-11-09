@@ -4,9 +4,8 @@
 rstudioapi::restartSession
 
 #' Run devtools::load_all()
-#' @interactive
 #' @shortcut Ctrl+Alt+Shift+L
-devtools::load_all
+function() rstudioapi::executeCommand("devtoolsLoadAll")
 
 #' Run devtools::test()
 #' @shortcut Ctrl+Alt+Shift+T
@@ -23,3 +22,7 @@ function() rstudioapi::executeCommand("showCommandPalette")
 #' Run devtools::document()
 #' @shortcut Ctrl+Alt+Shift+S
 styler:::style_active_file
+
+#' Go to definition
+#' @shortcut Ctrl+.
+function() rstudioapi::executeCommand("goToDefinition")
