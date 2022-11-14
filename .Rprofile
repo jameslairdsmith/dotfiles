@@ -19,14 +19,16 @@ on_rstudio <- function() {
 if (requireNamespace("prompt", quietly = TRUE)) {
   my_prompt <- function(...) paste0("[", prompt::git_branch(), "]", " > ")
   prompt::set_prompt(my_prompt)
-
-
+  
+  
   # This get's the prompt to show up immediately:
   setHook("rstudio.sessionInit", function(newSession) {
     rstudioapi::sendToConsole("cat(\"\f\")", execute = TRUE)
   }, action = "append")
-
+  
   rm(my_prompt)
+} else {
+  warning("Package \"prompt\" is not installed, so no custom prompt is available" )
 }
 
 # Package dev
