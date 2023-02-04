@@ -1,64 +1,73 @@
+;; Basic display options
 (setq inhibit-startup-message t)
-
-(scroll-bar-mode -1)        ; Disable visible scrollbar
+;;(scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing 
-
 ;; (menu-bar-mode -1)            ; Disable the menu bar
-
-;; Set up the visible bell
 (setq visible-bell t)
 
-(set-face-attribute 'default nil :font "Fira Code" :height 125)
+(set-face-attribute 'default nil :font "Fira Code" :height 120 :family "Bold")
 
-(load-theme 'wombat)
-; (load-theme 'doom-dracula)
 
-;; Make ESC quit prompts
+;; Basic keybindings
+(global-set-key (kbd "<C-return>") 'eval-defun)
+(global-set-key (kbd "C-S-<return>") 'eval-buffer)
+(global-set-key (kbd "s-S-<return>") 'eval-buffer)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key (kbd "s-<return>") 'eval-defun)
+;;(global-set-key (kbd "C-c") 'ns-copy-including-secondary)  ;; Like copy
+(global-set-key (kbd "s-c") 'ns-copy-including-secondary) 
+;;(global-set-key (kbd "C-v") 'yank)
+(global-set-key (kbd "s-v") 'yank) ;; Paste
+;;(global-set-key (kbd "C-x") 'kill-region)
+(global-set-key (kbd "s-x") 'kill-region) 
+;;(global-set-key (kbd "C-2") 'execute-extended-command)
+;;(global-set-key (kbd "s-2") 'execute-extended-command)
+(global-set-key (kbd "s-p") 'execute-extended-command)
+; Basically a command palette
+(global-set-key (kbd "s-s") 'save-buffer)
+;;(global-set-key (kbd "C-s") 'save-buffer)
+(global-set-key (kbd "s-f") 'find-file)
 
-;; Used for maybe loading in all the package functions. (Might be auto-loaded.)
+;; Package stuff
 (require 'package)
-
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
-
 (package-initialize)
 (unless package-archive-contents
  (package-refresh-contents))
-
-;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
    (package-install 'use-package))
-
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Display settings
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
-;; Disable line numbers for some modes
-;;(dolist
- ;;   (mode '(org-mode-hook term-mode-hook))
- ;;   shell-mode-hook
- ;;   eshell-mode-hook
- ;;   (add-hook mode (lambda () (display-line-numbers-mode 0)))
- ;;)
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-(use-package command-log-mode)
+(use-package all-the-icons)
 
-(use-package counsel
+(use-package doom-modeline
   :ensure t
-  :init (counsel-mode 1))
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+;;(setq doom-modeline-height 15)
 
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history)))
+(use-package doom-themes
+  :init (load-theme 'doom-gruvbox t))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Emacs tooling
 
 (use-package ivy
   :bind (("C-s" . swiper)
@@ -76,20 +85,20 @@
          ("C-d" . ivy-reverse-i-search-kill))
   :config (ivy-mode 1))
 
-(global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
 
-(use-package all-the-icons)
-
-(use-package doom-modeline
+(use-package counsel
   :ensure t
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
+  :init (counsel-mode 1))
 
-(use-package doom-themes
-  :init (load-theme 'doom-gruvbox t))
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+(use-package counsel
+  :bind (("s-p" . counsel-M-x)
+         ("C-x b" . counsel-ibuffer)
+         ("s-f" . counsel-find-file)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history)))
 
 (use-package which-key
   :init (which-key-mode)
@@ -97,62 +106,17 @@
   :config
   (setq which-key-idle-delay 1))
 
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
 
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
 
-(use-package general
-  :config
-  (general-create-definer rune/leader-keys  ;personal
-    :keymaps '(normal insert visual emacs)  ; emacs is just disabled vim. 
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-  (rune/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")))
+;; Fun with changing themes
+(load-theme 'doom-dracula t)
+(load-theme 'doom-earl-grey t)
+(load-theme 'doom-material t)
 
-(use-package evil
-  :init
-  (setq evil-want-integration t) ; What do you want evil to do?
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+;; Just for editing
+(find-file "/Users/jameslaird-smith/.emacs.d/wip-init.el")
+(split-window-horizontally)
+(find-file "/Users/jameslaird-smith/.emacs.d/init.el")
 
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-(use-package hydra)
-
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
-
-(rune/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
-
-(find-file "~/.emacs.d/init.el")
+(toggle-frame-fullscreen)
+;(toggle-frame-maximized)
