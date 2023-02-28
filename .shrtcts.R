@@ -1,6 +1,8 @@
 #' Restart RStudio
 #' @shortcut Ctrl+Alt+Shift+R
-rstudioapi::restartSession
+function() rstudioapi::executeCommand("restartR")
+##  Note: rstudioapi::restartSession does not remove objects in the Global environment. 
+## See: https://github.com/rstudio/rstudioapi/issues/95
 
 #' Run devtools::load_all()
 #' @shortcut Ctrl+Alt+Shift+L
