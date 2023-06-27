@@ -69,6 +69,8 @@ if (on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)) 
   shrtcts::add_rstudio_shortcuts(set_keyboard_shortcuts = TRUE)
 }
 
+options(max.print = 40)
+
 # Clears console and stops startup messages.
 # cat("\f")
 # cat(" ")
