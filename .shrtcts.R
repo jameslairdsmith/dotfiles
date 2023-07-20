@@ -27,3 +27,7 @@ styler:::style_active_file
 #' Go to definition
 #' @shortcut Ctrl+.
 function() rstudioapi::executeCommand("goToDefinition")
+
+#' Wrap markdown text
+#' @shortcut Ctrl+Alt+Shift+W
+WrapRmd::wrap_rmd_addin
