@@ -70,6 +70,7 @@ if (on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)) 
 }
 
 options(max.print = 40)
+options(connection.observer = NULL)
 
 # Clears console and stops startup messages.
 # cat("\f")
