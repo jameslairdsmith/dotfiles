@@ -7,6 +7,10 @@ on_rstudio <- function() {
   FALSE
 }
 
+  # Assign shortcuts to a hidden environment, so they don't show up in ls()
+  # Idea from https://csgillespie.github.io/efficientR/set-up.html#creating-hidden-environments-with-.rprofile
+  .shortcut_env <- new.env()
+
 ## List of all available RStudio Commands: https://docs.rstudio.com/ide/server-pro/1.3.1007-2/rstudio-ide-commands.html
 ## Actually, this might be better: https://docs.rstudio.com/ide/server-pro/rstudio_ide_commands/rstudio_ide_commands.html
 
