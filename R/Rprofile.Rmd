@@ -96,6 +96,10 @@ if (.e$on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE
 }
 ```
 
+My keyboard shortcuts are very hyper-key dependent at the moment, because I've
+programmed my keyboard to make that easy. But it's not workable when I don't 
+have my programmable keyboard, so might require rethinking soon.
+
 # Prompt
 
 I really like it when the prompt captures how long the previous operation has
