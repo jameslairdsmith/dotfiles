@@ -5,6 +5,18 @@ knit: customiser::customiser
 
 This is the file I use for compiling my .Rprofile.
 
+# Strategy
+
+Creating a personalised .RProfile involves balancing two competing concerns.
+The first is the desire for customisation. You want functionality to be 
+automatically available to you in every R session that you create. But you
+also want a clean R environment. This is perhaps most difficult when relying 
+on external packages. You don't want to load them, even using `::`. One reason 
+is that they might affect installs.
+
+One way to tackle this is to wrap a lot of functionality in functions. Which 
+(basically) don't have any effect until they are called.
+
 # Helpers
 
 For creating helper functions in an environment. Then attaching at the end of
