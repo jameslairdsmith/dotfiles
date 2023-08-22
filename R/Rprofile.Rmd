@@ -1,6 +1,7 @@
 ---
 title: "My .Rprofile"
 knit: customiser::customiser
+allow_overwrite: TRUE
 ---
 
 This is the file I use for compiling my .Rprofile.
@@ -14,8 +15,8 @@ also want a clean R environment. This is perhaps most difficult when relying
 on external packages. You don't want to load them, even using `::`. One reason 
 is that they might affect installs.
 
-One way to tackle this is to wrap a lot of functionality in functions. Which 
-(basically) don't have any effect until they are called.
+One way to tackle this is to wrap a lot of customisation in functions. Which 
+have far fewer effects unit they are called.
 
 # Helpers
 
@@ -30,13 +31,13 @@ the script.
 Am I at work?
 
 ```{r}
-.e$at_work <- function() {
+at_work <- function() {
   if(Sys.info()["user"] == "jameslaird-smith") return(FALSE)
   TRUE
 }
 
-.e$my_email <- function() {
-  if(.e$at_work()) return("James.Laird-Smith@bankofengland.co.uk")
+my_email <- function() {
+  if(at_work()) return("James.Laird-Smith@bankofengland.co.uk")
   "jameslairdsmith@gmail.com"
 }
 ```
@@ -47,7 +48,7 @@ Strangely, this is the best way I've found to do this, among many worse
 [alternatives](https://twitter.com/JLS_DataScience/status/1587904642670804993?s=20&t=tTPjcXTZW61NZS7fuYDDhQ)
 
 ```{r}
-.e$on_rstudio <- function() {
+on_rstudio <- function() {
   if (commandArgs()[[1L]] == "RStudio") {
     return(TRUE)
   }
@@ -63,6 +64,13 @@ options(connectionObserver = NULL)
 # ^ connectionObserver at work just gets in the way.
 ```
 
+# Git
+
+```{r}
+system("git config --global user.name 'James Laird-Smith'")
+system(paste0("git config --global user.email '", my_email(), "'"))
+```
+
 
 # Package dev
 
@@ -72,7 +80,7 @@ options(
   usethis.description = list(
     "Authors@R" = utils::person(
       "James", "Laird-Smith",
-      email = .e$my_email(),
+      email = my_email(),
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-1175-4046")
     ),
@@ -103,7 +111,7 @@ List of all available RStudio Commands: https://docs.rstudio.com/ide/server-pro/
 Actually, this might be better: https://docs.rstudio.com/ide/server-pro/rstudio_ide_commands/rstudio_ide_commands.html
 
 ```{r}
-if (.e$on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)) {
+if (on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)) {
   shrtcts::add_rstudio_shortcuts(set_keyboard_shortcuts = TRUE)
 }
 ```
@@ -138,4 +146,11 @@ Attach shortcuts.
 attach(.e)
 ```
 
+Cleanup
+
+Removing the helpers that I created before.
+
+```{r}
+rm(at_work, my_email, on_rstudio)
+```
 
