@@ -67,10 +67,9 @@ options(connectionObserver = NULL)
 # Git
 
 ```{r}
-system("git config --global user.name 'James Laird-Smith'")
-system(paste0("git config --global user.email '", my_email(), "'"))
+invisible(system("git config --global user.name 'James Laird-Smith'"))
+invisible(system(paste0("git config --global user.email '", my_email(), "'")))
 ```
-
 
 # Package dev
 
