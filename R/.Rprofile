@@ -17,7 +17,7 @@ on_rstudio <- function() {
 
 # Maybe should try this sometime:
 # https://stackoverflow.com/questions/6313079/quit-and-restart-a-clean-r-session-from-within-r
-
+  
 # My custom prompt
 
 if (requireNamespace("prompt", quietly = TRUE)) {

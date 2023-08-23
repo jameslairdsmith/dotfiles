@@ -153,4 +153,3 @@ Removing the helpers that I created before.
 ```{r}
 rm(at_work, my_email, on_rstudio)
 ```
-
