@@ -144,8 +144,6 @@ have my programmable keyboard, so might require rethinking soon.
   system(cmd)
   # pak::pkg_install("")
 }
-
-.e$jls_install_stringi()
 ```
 
 
