@@ -119,34 +119,6 @@ My keyboard shortcuts are very hyper-key dependent at the moment, because I've
 programmed my keyboard to make that easy. But it's not workable when I don't 
 have my programmable keyboard, so might require rethinking soon.
 
-# Helpers
-
-```{r}
-.e$jls_install_stringi <- function() {
-  
-  tmp <- withr::local_tempfile(pattern = "stringi", fileext = ".zip")
-  tmpdir <- withr::local_tempdir("stringi-master")
-  
-  tmp <- here::here("stringi.zip")
-  tmpdir <- here::here("stringi-master")
-  # tmpdir <- gsub(pattern = " ", replacement = "\\ ", x = tmpdir, perl = T)
-  
-  # system2("wget", c("https://github.com/gagolews/stringi/archive/master.zip",
-  #                   "-O",
-  #                   tmp))
-  
-  download.file("https://github.com/gagolews/stringi/archive/master.zip",
-                destfile = tmp, method = "libcurl")
-  z <- processx::run("unzip", args = c(tmp, "-d", here::here()))
-  buildfile <- paste0(tmpdir, "/.Rbuildignore")
-  processx::run("sed", c("-i", "'/\\/icu..\\/data/d'", buildfile))
-  cmd <- glue::glue(r"[sed -i '/\/icu..\/data/d' '{buildfile}']")
-  system(cmd)
-  # pak::pkg_install("")
-}
-```
-
-
 # Prompt
 
 I really like it when the prompt captures how long the previous operation has
