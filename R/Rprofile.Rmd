@@ -64,6 +64,19 @@ options(connectionObserver = NULL)
 # ^ connectionObserver at work just gets in the way.
 ```
 
+# Repos
+
+If I'm not at work, I just using the default that RStudio would use even if
+I'm not in RStudio.
+
+```{r}
+if(!at_work()) {
+  options(repos = c(CRAN='https://cloud.r-project.org'))
+}
+```
+
+If I am at work, then these values get set separately.
+
 # Git
 
 ```{r}
