@@ -1,5 +1,5 @@
 ---
-title: "My .Rprofile"
+title: "JLS .Rprofile"
 knit: customiser::customiser
 allow_overwrite: TRUE
 ---
@@ -24,7 +24,7 @@ For creating helper functions in an environment. Then attaching at the end of
 the script.
 
 ```{r}
-.e <- new.env()
+jls <- new.env()
 ```
 
 
@@ -123,7 +123,7 @@ List of all available RStudio Commands: https://docs.rstudio.com/ide/server-pro/
 Actually, this might be better: https://docs.rstudio.com/ide/server-pro/rstudio_ide_commands/rstudio_ide_commands.html
 
 ```{r}
-if (on_rstudio() & interactive() & requireNamespace("shrtcts", quietly = TRUE)) {
+jls$jls_set_shrtcts <- function() {
   shrtcts::add_rstudio_shortcuts(set_keyboard_shortcuts = TRUE)
 }
 ```
@@ -155,7 +155,7 @@ options(styler.cache_root = "styler-perm")
 Attach shortcuts.
 
 ```{r}
-attach(.e)
+attach(jls)
 ```
 
 Cleanup
@@ -163,5 +163,5 @@ Cleanup
 Removing the helpers that I created before.
 
 ```{r}
-rm(at_work, my_email, on_rstudio)
+rm(at_work, my_email, on_rstudio, jls)
 ```
