@@ -22,7 +22,7 @@ function() rstudioapi::executeCommand("showCommandPalette")
 
 #' Run devtools::document()
 #' @shortcut Ctrl+Alt+Shift+S
-styler:::style_active_file
+styler:::style_selection
 
 #' Go to definition
 #' @shortcut Ctrl+.
