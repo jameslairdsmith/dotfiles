@@ -62,6 +62,7 @@ on_rstudio <- function() {
 options(max.print = 40)
 options(connectionObserver = NULL)
 # ^ connectionObserver at work just gets in the way.
+options(tidyverse.quiet = TRUE)
 ```
 
 # Repos
