@@ -63,6 +63,7 @@ options(max.print = 40)
 options(connectionObserver = NULL)
 # ^ connectionObserver at work just gets in the way.
 options(tidyverse.quiet = TRUE)
+# ^ Is there a way to silence S3 overwrites?
 ```
 
 # Repos
