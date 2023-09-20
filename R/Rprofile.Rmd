@@ -66,7 +66,7 @@ options(tidyverse.quiet = TRUE)
 # ^ Is there a way to silence S3 overwrites?
 ```
 
-It also might be good to set `_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_`.
+It also might be good to set `_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_`?
 
 # Repos
 
