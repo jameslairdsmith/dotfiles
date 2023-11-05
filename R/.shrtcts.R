@@ -1,7 +1,8 @@
 #' Restart RStudio
 #' @shortcut Ctrl+Alt+Shift+R
 function() rstudioapi::executeCommand("restartR")
-##  Note: rstudioapi::restartSession does not remove objects in the Global environment. 
+## Note: rstudioapi::restartSession does not remove objects in the Global
+## environment.
 ## See: https://github.com/rstudio/rstudioapi/issues/95
 
 #' Run devtools::load_all()
@@ -22,7 +23,7 @@ function() rstudioapi::executeCommand("showCommandPalette")
 
 #' Run devtools::document()
 #' @shortcut Ctrl+Alt+Shift+S
-styler:::style_active_file
+styler:::style_selection
 
 #' Go to definition
 #' @shortcut Ctrl+.

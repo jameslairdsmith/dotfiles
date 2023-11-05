@@ -1,0 +1,17 @@
+snippet lib
+	library(${1:package})
+
+snippet sch
+	${1:tbl} <- tbl(${2:sc}, in_schema("${3:db}", "${4:tbl}"))
+	
+snippet odbc
+	odbc_sc <- dap_connect_odbc()
+	
+snippet spark
+	spark_sc <- dap_spark_connect()
+	
+snippet db
+	DBI::dbGetQuery(odbc_sc, "SHOW DATABASES")
+	
+snippet tab
+	DBI::dbGetQuery(odbc_sc, "SHOW TABLES IN ${1:tab}")
