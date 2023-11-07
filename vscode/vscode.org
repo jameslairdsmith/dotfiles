@@ -1,0 +1,13 @@
+#+title: JLS VS Code config
+#+PROPERTY: header-args:json :tangle ~/settings.json :mkdirp yes
+
+* JLS VS Code config
+
+First thing needed is to have an elisp function to get the proper
+location for the destination file.
+
+According to this [[https://stackoverflow.com/questions/65908987/how-to-open-visual-studio-codes-settings-json-file][answer]] on SO:
+
+- Windows `%APPDATA%\Code\User\settings.json`
+- macOS `$HOME/Library/Application\ Support/Code/User/settings.json`
+- Linux `$HOME/.config/Code/User/settings.json`
