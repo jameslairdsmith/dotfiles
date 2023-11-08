@@ -1,7 +1,5 @@
 #+title: JLS VS Code config
-#+PROPERTY: header-args:json :tangle ~/settings.json :mkdirp yes
-
-* JLS VS Code config
+PROPERTY: header-args:json :tangle (print mydir) :mkdirp yes
 
 First thing needed is to have an elisp function to get the proper
 location for the destination file.
@@ -11,3 +9,14 @@ According to this [[https://stackoverflow.com/questions/65908987/how-to-open-vis
 - Windows `%APPDATA%\Code\User\settings.json`
 - macOS `$HOME/Library/Application\ Support/Code/User/settings.json`
 - Linux `$HOME/.config/Code/User/settings.json`
+
+#+begin_src emacs-lisp
+(setq mydir "try.el")  
+#+end_src
+
+#+RESULTS:
+: try.el
+
+#+begin_src json :tangle (print mydir) :mkdirp yes
+{"JLS"}
+#+end_src
