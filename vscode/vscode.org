@@ -12,11 +12,15 @@ According to this [[https://stackoverflow.com/questions/65908987/how-to-open-vis
 - Linux `$HOME/.config/Code/User/settings.json`
 
 #+begin_src emacs-lisp
-(setq mydir "try2.json")  
+(setq
+ mydir2
+ (cond
+  ((equal system-type 'darwin)
+   "$HOME/Library/Application\ Support/Code/User/settings.json")))
 #+end_src
 
 #+RESULTS:
-: try2.json
+: $HOME/Library/ApplicationSupport/Code/User/settings.json
 
 #+begin_src json :tangle (print mydir) :mkdirp yes
 {"JLS"}
