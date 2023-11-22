@@ -1,0 +1,10 @@
+{
+    "git.confirmSync": false,
+    "liveServer.settings.donotVerifyTags": true,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "quarto.mathjax.theme": "dark",
+    "r.rterm.mac": "/usr/local/bin/radian",
+    "r.bracketedPaste": true,
+    "r.removeLeadingComments": true,
+    "r.plot.useHttpgd": true
+}
