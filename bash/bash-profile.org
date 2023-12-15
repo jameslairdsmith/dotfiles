@@ -1,0 +1,11 @@
+#+title: My bash profile
+
+echo "This is my .bash_profile file running!"
+export BASH_SILENCE_DEPRECATION_WARNING=1
+alias emacsg='/Applications/Emacs.app/Contents/MacOS/Emacs'
+alias emacsc='/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_11/emacsclient -c -a "emacsg"'
+#alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_14/emacsclient -c -a "emacsg"'
+#alias emacs='emacsclient -c -a /Applications/Emacs.app/Contents/MacOS/Emacs'
+#alias emacs="emacsclient -c -a 'emacsg --daemon'"
+PS1="> "
+alias c='clear'
