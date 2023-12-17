@@ -1,11 +1,40 @@
 #+title: My bash profile
+#+PROPERTY: header-args:sh :tangle ~/.bash_profile :mkdirp yes :results silent
 
-echo "This is my .bash_profile file running!"
-export BASH_SILENCE_DEPRECATION_WARNING=1
 alias emacsg='/Applications/Emacs.app/Contents/MacOS/Emacs'
 alias emacsc='/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_11/emacsclient -c -a "emacsg"'
 #alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_14/emacsclient -c -a "emacsg"'
 #alias emacs='emacsclient -c -a /Applications/Emacs.app/Contents/MacOS/Emacs'
 #alias emacs="emacsclient -c -a 'emacsg --daemon'"
+
+
+#+begin_src sh 
+echo "This is my .bash_profile file running!"
+echo "I created my bash profile in Emacs!"
+#+end_src
+
+Setting my prompt
+
+#+begin_src sh 
 PS1="> "
+#+end_src
+
+* Silencing deprecation warning
+
+#+begin_src sh
+export BASH_SILENCE_DEPRECATION_WARNING=1
+#+end_src
+
+Aliases
+
+#+begin_src sh
 alias c='clear'
+#+end_src
+
+* Controlling Emacs
+
+#+begin_src sh
+alias ekill='emacsclient -e "(kill-emacs)"'
+#+end_src
+
+Killing Emacs client advice comes from [[https://stackoverflow.com/questions/1167484/how-to-gracefully-shutdown-emacs-daemon][here]] and the Crafting Emacs videos.
