@@ -1,2 +1,5 @@
+* My skhd config
+
+
 - [[https://mybyways.com/blog/skhd-runatload-launch-agent][Some ideas for the launch agents etc]]
 - [[https://github.com/koekeishiya/yabai/blob/master/examples/yabairc][You can set config settings all at once.]] 
