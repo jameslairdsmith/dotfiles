@@ -2,5 +2,7 @@
 
 Very much a work in progress.
 
+For those who don't know, skhd is a Mac tool for setting keyboard shortcuts.
+
 - [[https://mybyways.com/blog/skhd-runatload-launch-agent][Some ideas for the launch agents etc]]
 - [[https://github.com/koekeishiya/yabai/blob/master/examples/yabairc][You can set config settings all at once.]] 
