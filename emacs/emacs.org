@@ -672,32 +672,32 @@ Just using the typical evil-collection setup for now.
 * Window management
 
 #+begin_src emacs-lisp
-(setq switch-to-buffer-obey-display-actions nil)
-;(setq switch-to-buffer-in-dedicated-window "pop")
+  (setq switch-to-buffer-obey-display-actions nil)
+  ;(setq switch-to-buffer-in-dedicated-window "pop")
 
-; (add-to-list
-;  'display-buffer-alist
-;  '("\\*jls" (display-buffer-reuse-window
-;     display-buffer-pop-up-window)))
+  ; (add-to-list
+  ;  'display-buffer-alist
+  ;  '("\\*jls" (display-buffer-reuse-window
+  ;     display-buffer-pop-up-window)))
 
-(add-to-list
- 'display-buffer-alist
- '("\\*helpful"
-   (display-buffer-in-side-window)
-   (window-width . 82)
-   (side . right)))
+  (add-to-list
+   'display-buffer-alist
+   '("\\*helpful"
+     (display-buffer-in-side-window)
+     (window-width . 95)
+     (side . right)))
 
-(add-to-list
- 'display-buffer-alist
- '("\\*Warnings\\*" (display-buffer-in-side-window) (side . right)))
+  (add-to-list
+   'display-buffer-alist
+   '("\\*Warnings\\*" (display-buffer-in-side-window) (side . right)))
 
-(add-to-list
- 'display-buffer-alist
- '("\\*R"
-   display-buffer-in-direction
-   (direction . bottom)
-   (window . root)
-   (window-height . 0.3)))
+  (add-to-list
+   'display-buffer-alist
+   '("\\*R"
+     display-buffer-in-direction
+     (direction . bottom)
+     (window . root)
+     (window-height . 0.3)))
 #+end_src
 
 #+RESULTS:
