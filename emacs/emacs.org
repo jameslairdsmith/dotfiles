@@ -1,0 +1,874 @@
+#+title: JLS Emacs
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes :results output silent
+
+* Introduction
+
+This is my Emacs configuration. It's highly experimental.
+
+* Dealing with Mac port
+
+#+begin_src emacs-lisp
+(setq mac-command-modifier 'super)
+(setq mac-option-modifier 'meta)
+#+end_src
+
+* Org mode
+
+** Org-babel
+
+*** Evaluating code chunks.
+
+Same keybinding as RStudio.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-confirm-babel-evaluate nil)
+(global-set-key (kbd "s-S-<return>") 'org-ctrl-c-ctrl-c)
+#+END_SRC
+
+*** Inserting new code chunks
+
+One way to to do this would be with org-temo, but I don't use that (yet!).Instead I just use use a global key to insert Emacs Lisp chunks using the same keybinding as RStudio for R chunks in R Markdown.
+
+Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetaright-org-shiftmetaleft-to-shift-select-metaleft-word][this answer on SO]] for showing me how to re-enable the meta-select keys. 
+
+#+begin_src emacs-lisp
+(use-package org
+  ; I like my shift selections ... for now
+  :init
+  (setq org-support-shift-select "always")
+  (setq org-startup-truncated t)
+  :config
+  ; (define-key org-mode-map (kbd "<S-s-right>") nil) ; Not defined either way
+  ; (define-key org-mode-map (kbd "<S-s-left>") nil) ; Not defined either way
+  (define-key org-mode-map (kbd "<s-left>") 'beginning-of-visual-line)
+  (define-key org-mode-map (kbd "<s-right>") 'end-of-visual-line)
+  (define-key org-mode-map (kbd "<M-S-left>") nil)
+  (define-key org-mode-map (kbd "<M-S-right>") nil)
+  (define-key org-mode-map (kbd "s-C") 'comment-line))
+
+(require 'org-tempo)
+;  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+;  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+; (add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+(defun org-insert-el ()
+  (interactive)
+  (org-insert-structure-template "src emacs-lisp")
+  (insert "\n")
+  (previous-line))
+
+(global-set-key (kbd "M-s-i") 'org-insert-el)
+#+end_src
+
+#+RESULTS:
+: always
+
+** Centering
+
+#+begin_src emacs-lisp
+(defun jls/org-mode-visual-fill ()
+  (interactive)
+  (setq
+   visual-fill-column-width 100
+   visual-fill-column-fringes-outside-margins nil
+   ; This makes the gutter annotations appear closer ^
+   visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)
+   ; This makes it so that you can still see the line wrappings from the gutter.
+   visual-fill-column-center-text t)
+  (visual-line-mode)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :ensure t
+  :hook (org-mode . jls/org-mode-visual-fill))
+#+end_src
+
+#+RESULTS:
+| #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | (lambda nil (display-line-numbers-mode 0)) | (lambda nil (add-hook 'after-save-hook #'jls/org-babel-tangle-config)) | jls/org-mode-visual-fill | org-tempo-setup | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
+* Quirks
+
+Stuff I've just added for experimentation.
+
+#+begin_src emacs-lisp
+(define-key emacs-lisp-mode-map (kbd "s-t") 'counsel-load-theme)
+
+(global-set-key (kbd "s-t") 'counsel-load-theme)
+
+(defun open-init-el ()
+  "Opens init.el file"
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
+(defun open-Emacs-org ()
+  "Opens init.org file"
+  (interactive)
+  (find-file "~/projects/dotfiles/emacs/Emacs.org"))
+#+end_src
+
+#+RESULTS:
+: open-Emacs-org
+
+* Opening common files
+
+#+begin_src emacs-lisp
+(defun open-bash-profile ()
+  "Opens bash_profile"
+  (interactive)
+  (find-file "~/.bash_profile"))
+
+(defun open-bash-profile-org ()
+  "Opens the org file I use to generate my bash_profile"
+  (interactive)
+  (find-file "~/projects/dotfiles/bash/bash-profile.org"))
+#+end_src
+
+Trick for auto-tangling. Taken from [[https://github.com/daviwil/emacs-from-scratch/blob/9388cf6ecd9b44c430867a5c3dad5f050fdc0ee1/Emacs.org][here]].
+
+Is there a way of forcing the save?
+
+#+begin_src emacs-lisp
+; files for auto-tangling
+(setq files-for-auto-tangling
+      (mapcar
+       'expand-file-name
+       '("~/projects/dotfiles/bash/bash-profile.org"
+         "~/projects/.emacs.d/Emacs.org")))
+
+;; Automatically tangle our Emacs.org config file when we save it
+(defun jls/org-babel-tangle-config ()
+  (when (member (buffer-file-name) files-for-auto-tangling)
+    ;; We also want to transclude every time we save
+    ;; ... so we get the transcluded blocks 
+    (org-transclusion-add-all)
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook
+  (lambda ()
+    (add-hook 'after-save-hook
+      #'jls/org-babel-tangle-config)))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (add-hook 'after-save-hook #'jls/org-babel-tangle-config)) | jls/org-mode-visual-fill | org-tempo-setup | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | (lambda nil (display-line-numbers-mode 0)) |
+
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((R . t) (emacs-lisp . t)))
+#+end_src
+
+#+RESULTS:
+
+* Basic display options
+
+The font stuff is commented out right now until I can work out how to get it to work with emacsclient.
+
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t)
+(scroll-bar-mode 1) ; Disable visible scrollbar
+(tool-bar-mode -1) ; Disable the toolbar
+(tooltip-mode -1) ; Disable tooltips
+(set-fringe-mode 10) ; Give some breathing 
+;; (menu-bar-mode -1)            ; Disable the menu bar
+(setq visible-bell t)
+
+;(set-face-attribute 'default nil
+;                    :font "Fira Code"
+;                    :height 120
+;                    :family "Bold") 
+
+(setq make-backup-files nil)
+; I, too, like to live dangerously
+#+end_src
+
+#+RESULTS:
+
+Just using the defaults for now, but could change these in the future. Undfortunately
+`internal-border-width` isn't after the tab in tab-line-mode.
+
+#+begin_src emacs-lisp
+(setq default-frame-alist
+      '((internal-border-width . 0)
+        ;; (undecorated . t)
+        (ns-transparent-titlebar t)
+        (left-fringe . 10)
+        (left-fringe . 10)
+        (right-frings . 10)))
+#+end_src
+
+
+#+begin_src emacs-lisp
+(defun efs/set-font-faces ()
+  (message "Setting faces!")
+  (set-face-attribute 'default nil
+                      :font "Fira Code Retina"
+;;                      :family "Bold"
+                      :height 120))
+
+;; Set the fixed pitch face
+;;  (set-face-attribute 'fixed-pitch nil
+;;                     :font "Fira Code Retina"
+;;                     :height efs/default-font-size)
+
+;; Set the variable pitch face
+;;  (set-face-attribute 'variable-pitch nil
+;;                      :font "Cantarell"
+;;                      :height efs/default-variable-font-size
+;;                     :weight 'regular))
+
+;(if (daemonp)
+;    (add-hook 'after-make-frame-functions
+;      (lambda (frame)
+;        ;; (setq doom-modeline-icon t)
+;        (with-selected-frame frame
+;          (efs/set-font-faces))))
+;  (efs/set-font-faces))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;;  (set-face-attribute 'default nil :font "Menlo" :height 120)
+
+
+  ;;  'default
+#+end_src
+
+* Basic keybindings
+
+#+begin_src emacs-lisp
+;(global-set-key (kbd "C-S-<return>") 'eval-buffer)
+;(global-set-key (kbd "s-S-<return>") 'eval-buffer)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key (kbd "s-<return>") 'eval-defun)
+(global-set-key (kbd "s-c") 'ns-copy-including-secondary)
+(global-set-key (kbd "s-v") 'yank) ;; Paste
+(global-set-key (kbd "s-x") 'kill-region)
+(global-set-key (kbd "s-p") 'execute-extended-command)
+; Basically a command palette
+(global-set-key (kbd "s-s") 'save-buffer)
+(global-set-key (kbd "s-f") 'find-file)
+#+end_src
+
+#+RESULTS:
+
+** Keyboard escape
+
+With thanks to this Reddit [[https://www.reddit.com/r/emacs/comments/10l40yi/how_do_i_make_esc_stop_closing_all_my_windows/][answer]] for changing the way keyboard escape quit works.
+
+#+begin_src emacs-lisp
+(defun +keyboard-escape-quit-adv (fun)
+  "Around advice for `keyboard-escape-quit' FUN.
+    Preserve window configuration when pressing ESC."
+  (let ((buffer-quit-function (or buffer-quit-function #'ignore)))
+    (funcall fun)))
+
+(advice-add #'keyboard-escape-quit
+  :around #'+keyboard-escape-quit-adv)
+#+end_src
+
+* Package infrastructure
+
+#+begin_src emacs-lisp
+(require 'package)
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")
+        ("elpa" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure t)
+  
+#+end_src
+
+#+RESULTS:
+: t
+
+* Display settings
+
+#+begin_src emacs-lisp
+(column-number-mode)
+(global-display-line-numbers-mode t)
+;(setq display-line-numbers 'relative)
+(setq display-line-numbers-type 'relative)
+
+(dolist (mode
+         '(org-mode-hook
+           term-mode-hook
+           shell-mode-hook
+           eshell-mode-hook
+           inferior-ess-r-mode-hook))
+  (add-hook mode
+    (lambda () (display-line-numbers-mode 0))))
+
+(use-package all-the-icons)
+
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+;;(setq doom-modeline-height 15)
+
+(use-package doom-themes
+  ;:init (load-theme 'doom-nano-dark t)
+  )
+
+(load-theme 'doom-nano-dark t)
+
+;; Supressing rainbow delimiters
+
+;;(use-package rainbow-delimiters
+;;  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+* Tabs
+
+I have some more inspiration for how to change this.
+
+- [[https://andreyor.st/posts/2020-05-10-making-emacs-tabs-look-like-in-atom/][Making Emacs tabs look like Atom]] ([[https://www.reddit.com/r/emacs/comments/gh8580/making_emacs_27_tabs_look_like_in_atom/][discussion]]).
+- [[https://github.com/thread314/intuitive-tab-line-mode][Intuitive Tabs in Emacs.]]
+
+#+begin_src emacs-lisp
+(use-package tab-line
+  :ensure nil
+  :config (global-tab-line-mode))
+
+; These are the same as in popular browsers
+(global-set-key (kbd "M-s-<left>") 'previous-buffer)
+(global-set-key (kbd "M-s-<right>") 'next-buffer)
+#+end_src
+
+#+RESULTS:
+: next-buffer
+
+* Toolings
+
+#+begin_src emacs-lisp
+(defun jls/open-dired-local ()
+  (interactive)
+  (dired default-directory))
+
+(global-set-key (kbd "s-D") 'jls/open-dired-local)
+#+end_src
+
+#+RESULTS:
+: jls/open-dired-local
+
+** Ivy
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :bind
+  (("C-s" . swiper)
+   :map
+   ivy-minibuffer-map
+   ("TAB" . ivy-alt-done)
+   ("C-l" . ivy-alt-done)
+   ("C-j" . ivy-next-line)
+   ("C-k" . ivy-previous-line)
+   :map
+   ivy-switch-buffer-map
+   ("C-k" . ivy-previous-line)
+   ("C-l" . ivy-done)
+   ("C-d" . ivy-switch-buffer-kill)
+   :map
+   ivy-reverse-i-search-map
+   ("C-k" . ivy-previous-line)
+   ("C-d" . ivy-reverse-i-search-kill))
+  :config (ivy-mode 1))
+
+(use-package ivy-rich
+  :ensure t
+  :init
+  (ivy-rich-mode 1)
+  (setq ivy-posframe-display-functions-alist
+        '((t . ivy-posframe-display-at-top-center-offset))
+        ; '((t . ivy-posframe-display-at-frame-center))
+        ))
+
+(use-package counsel
+  :ensure t
+  :init (counsel-mode 1))
+
+(use-package counsel
+  :bind
+  (("s-p" . counsel-M-x)
+   ("C-x b" . counsel-ibuffer)
+   ("s-f" . counsel-find-file)
+   :map
+   minibuffer-local-map
+   ("C-r" . 'counsel-minibuffer-history)))
+
+(global-set-key (kbd "s-b") 'counsel-switch-buffer)
+
+(use-package ivy-posframe
+  :init (ivy-posframe-mode 1)
+  :defer t)
+
+(defun posframe-poshandler-window-top-center-offset (info)
+  "Posframe's position handler.
+
+			    Get a position which let posframe stay onto current window's
+			    top center.  The structure of INFO can be found in docstring of
+			    `posframe-show'."
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top))
+         (window-width (plist-get info :parent-window-width))
+         (posframe-width (plist-get info :posframe-width)))
+    (cons
+     (+ window-left (/ (- window-width posframe-width) 2))
+     (+ window-top 48))))
+
+(defun posframe-poshandler-frame-top-center-offset (info)
+  "Posthandler based on frame"
+  (let* ((posframe-width (plist-get info :posframe-width))
+         (my-frame-width (frame-outer-width (selected-frame))))
+    (cons
+     (/ (- my-frame-width posframe-width) 2)
+     ;     100
+     48)))
+
+(defun ivy-posframe-display-at-top-center-offset (str)
+  (ivy-posframe--display
+   str #'posframe-poshandler-frame-top-center-offset))
+#+end_src
+
+#+RESULTS:
+: ivy-posframe-display-at-top-center-offset
+
+#+RESULTS:
+: 100
+
+I got the Ivy postframe stuff from its [[https://github.com/tumashu/ivy-posframe][documentation]].
+
+I was trying to get it to look a lot like VS Code. There was a comment in [[https://www.reddit.com/r/emacs/comments/ii4eg8/can_vscodes_command_palette_be_done_in_emacs/][this Reddit thread]].
+
+I might try to get this working with Vertigo instead a bit like is done [[https://github.com/jasonmj/.emacs.d/blob/07ef300e0f6d9cdff6ddbb12365c9442115a7e0e/config-org/completion.org#vertico-posframe][here]].
+
+** Vertigo
+
+Placeholder for Vertico...
+
+#+begin_src emacs-lisp
+;(use-package vertigo
+;  :init (vertigo-mode))
+#+end_src
+
+** Which-key and helpful
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 1))
+#+end_src
+
+
+#+begin_src emacs-lisp
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
+#+end_src
+
+Potentially dangerous to replace the standard Emacs functions wholesale, but let's see if it causes problems.
+
+#+begin_src emacs-lisp
+(advice-add 'describe-function :override #'helpful-callable)
+(advice-add 'describe-variable :override #'helpful-variable)
+#+end_src
+
+#+RESULTS:
+
+** General
+
+#+begin_src emacs-lisp
+(use-package general
+  :config
+  (general-create-definer jls/leader-key
+    :keymaps '(normal insert visual emacs Elisp/l)
+    :prefix "s-SPC"
+    :global-prefix "s-SPC")
+
+  (jls/leader-key
+   "o"
+   '(edwina-clone-window :which-key "add window")
+   "x"
+   '(edwina-delete-window :which-key "delete window")))
+#+end_src
+
+#+RESULTS:
+: t
+
+** Project management
+
+This is again almost all from the Emacs from Scratch series.
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/projects")
+    (setq projectile-project-search-path '("~/projects"))
+    (setq projectile-switch-project-action #'projectile-dired)))
+#+end_src
+
+#+RESULTS:
+| lambda | nil | (interactive) | (use-package-autoload-keymap 'projectile-command-map 'projectile nil) |
+
+
+#+begin_src emacs-lisp
+(use-package ess
+  :init (setq ess-startup-directory 'default-directory))
+#+end_src
+
+#+RESULTS:
+
+Code for working out whether a folder is an R project or not.
+
+#+begin_src emacs-lisp
+(defun jls/r-proj-p (dir)
+  (if (eval
+       (cons
+        'or
+        (mapcar
+         (lambda (vec) (string-match ".Rproj" vec))
+         (directory-files dir))))
+      t
+    nil))
+#+end_src
+
+#+RESULTS:
+: jls/r-proj-p
+
+It would be interesting to see what to do with buffer local variables?
+
+What to do when opening an R project.
+
+An idea is to capture various trailing command arguments when starting R. Then in .RProfile, optionally incorporate them somehow. Notably, set the working directory silently. I'm not sure how RStudio does it.
+
+#+begin_src emacs-lisp
+(defun jls/open-r-project ()
+  (interactive)
+  (R))
+#+end_src
+
+#+RESULTS:
+: jls/open-r-project
+
+A better solution would be to have the generic open project actions in their own function. And all the project specific actions can call that one. Classic remove duplication.
+
+#+begin_src emacs-lisp
+(defun jls/open-project ()
+  (interactive)
+  (cond
+   ((jls/r-proj-p (projectile-project-root))
+    (jls/open-r-project))
+   (t
+    projectile-dired)))
+#+end_src
+
+#+RESULTS:
+: jls/open-project
+
+#+begin_src emacs-lisp
+(setq projectile-switch-project-action 'jls/open-project)
+#+end_src
+
+#+RESULTS:
+: jls/open-project
+
+#+begin_src emacs-lisp
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Magit
+
+#+begin_src emacs-lisp
+(defun jls/default-magit-dir (url)
+  ;  (concat "~/projects/" (file-name-base url))
+  "~/projects/")
+
+(use-package magit
+  :init (setq magit-clone-default-directory #'jls/default-magit-dir)
+  ;:init (setq magit-clone-default-directory (defun (url) "~/projects/"))
+  :custom
+  (magit-display-buffer-function
+   #'magit-display-buffer-same-window-except-diff-v1))
+
+
+(global-set-key (kbd "s-m") 'magit-status)
+#+end_src
+
+#+RESULTS:
+: magit-status
+
+The below is to change up the formatting of the diffs in the Magit status buffer.
+I should probably have a separate theme file for that.
+
+#+begin_src emacs-lisp
+ ;   (custom-set-faces
+ ;    ;`(magit-diff-added ((t :foreground ,(doom-color 'green))))
+ ;    `(magit-diff-added-highlight
+ ;      ((t :background ,(doom-color 'green)
+;	   :foreground ,(doom-color 'blue)))
+     ;`(magit-diff-added                      :foreground green :weight 'bold)
+     ;`(magit-diff-added-highlight            :foreground teal :weight 'bold)
+     ; `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
+     ; `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
+ ;    ))
+#+end_src
+
+#+RESULTS:
+
+** Typing
+
+#+begin_src emacs-lisp
+(use-package speed-type
+  :ensure t)
+#+end_src
+
+#+RESULTS:
+
+** Snippets
+* Evil
+
+Just using the typical evil-collection setup for now.
+
+#+begin_src emacs-lisp
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  :config (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config (evil-collection-init))
+#+end_src
+
+* Window management
+
+#+begin_src emacs-lisp
+(setq switch-to-buffer-obey-display-actions nil)
+;(setq switch-to-buffer-in-dedicated-window "pop")
+
+; (add-to-list
+;  'display-buffer-alist
+;  '("\\*jls" (display-buffer-reuse-window
+;     display-buffer-pop-up-window)))
+
+(add-to-list
+ 'display-buffer-alist
+ '("\\*helpful"
+   (display-buffer-in-side-window)
+   (window-width . 82)
+   (side . right)))
+
+(add-to-list
+ 'display-buffer-alist
+ '("\\*Warnings\\*" (display-buffer-in-side-window) (side . right)))
+
+(add-to-list
+ 'display-buffer-alist
+ '("\\*R"
+   display-buffer-in-direction
+   (direction . bottom)
+   (window . root)
+   (window-height . 0.3)))
+#+end_src
+
+#+RESULTS:
+| \*R          | display-buffer-in-direction     | (direction . bottom) | (window . root) | (window-height . 0.3) |
+| \*Warnings\* | (display-buffer-in-side-window) | (side . right)       |                 |                       |
+| \*helpful    | (display-buffer-in-side-window) | (side . right)       |                 |                       |
+
+** Popper
+
+#+begin_src emacs-lisp
+;  (use-package popper
+;    :ensure t 
+;    :bind (("C-`"   . popper-toggle-latest)
+;	   ("M-`"   . popper-cycle)
+;	   ("C-M-`" . popper-toggle-type))
+;    :init
+;    (setq popper-reference-buffers
+;	  '("\\*Messages\\*"
+;	    "Output\\*$"
+;	    "\\*helpful"
+;	    "\\*Async Shell Command\\*"
+;	    help-mode
+;	    compilation-mode))
+;    (popper-mode +1)
+;    (popper-echo-mode +1)) 
+#+end_src
+
+#+RESULTS:
+: popper-toggle-type
+
+** Edwina
+
+#+begin_src emacs-lisp
+;(use-package edwina
+;  :ensure t
+;  :config (setq display-buffer-base-action '(display-buffer-below-selected))
+;  ;;(edwina-setup-dwm-keys)
+;  (edwina-mode 1))
+
+;(setq display-buffer-base-action '(display-buffer-below-selected))
+#+end_src
+
+#+RESULTS:
+| display-buffer-below-selected |
+
+** ace-window
+
+This might be better if you are able to set the home row keys to be the numbers that display.
+
+#+begin_src emacs-lisp
+;(use-package ace-window)
+#+end_src
+
+#+RESULTS:
+
+** Winnum
+
+#+begin_src emacs-lisp
+;(use-package winum
+;  :config (winum-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+* ESS and R
+
+#+begin_src emacs-lisp
+(use-package company
+  :ensure t
+  :config
+  ;; Turn on company-mode globally:
+  (add-hook 'after-init-hook
+    'global-company-mode)
+  ;; Only activate company in R scripts, not in R console:
+  (setq ess-use-company 'script-only))
+
+(add-hook 'ess-r-mode-hook
+  '(lambda () (local-set-key (kbd "C-8") #'company-R-args)))
+
+(setq
+ company-selection-wrap-around t
+ ;; Align annotations to the right tooltip border:
+ company-tooltip-align-annotations t
+ ;; Idle delay in seconds until completion starts automatically:
+ company-idle-delay 0.45
+ ;; Completion will start after typing two letters:
+ company-minimum-prefix-length 2
+ ;; Maximum number of candidates in the tooltip:
+ company-tooltip-limit 10)
+
+(use-package company-quickhelp
+  :ensure t
+  :config
+  ;; Load company-quickhelp globally:
+  (company-quickhelp-mode)
+  ;; Time before display of documentation popup:
+  (setq company-quickhelp-delay 0.3))
+  
+#+end_src
+
+#+RESULTS:
+: t
+
+I realise now I'm actually doing this in the project management section.
+
+#+begin_src emacs-lisp
+;(use-package ess
+;  :ensure t
+;  :init (require 'ess-site))
+#+end_src
+
+* PDF tooling
+
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure t)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;(use-package pdf-tools
+  ;  :ensure t
+  ;  :config
+  ;  (setenv
+  ;   "PKG_CONFIG_PATH"
+   ; "/usr/local/Cellar/zlib/1.2.12/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/X11/lib/pkgconfig:/usr/local/Cellar/poppler/22.06.0_1/lib/pkgconfig:/opt/x11/share/pkgconfig")
+  ;  (pdf-tools-install)
+  ;  (custom-set-variables '(pdf-tools-handle-upgrades t)))
+
+  ;; https://stackoverflow.com/questions/70202413/configure-pdf-tools-in-emacs-running-on-macos
+#+end_src
+
+#+RESULTS:
+: t
+
+* Term mode
+
+#+begin_src emacs-lisp
+(use-package term
+  :bind (:map term-raw-map ("s-v" . 'term-paste)))
+#+end_src
+
+* EAF
+
+#+begin_src emacs-lisp
+;(use-package eaf
+  ;:load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  ;:custom
+  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  ;(eaf-browser-continue-where-left-off t)
+  ;(eaf-browser-enable-adblocker t)
+  ;(browse-url-browser-function 'eaf-open-browser)
+  ;:config
+  ;(defalias 'browse-web #'eaf-open-browser)
+  ;(eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  ;(eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  ;(eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  ;(eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+#+end_src
+
+#+begin_src emacs-lisp
+;(require 'eaf-browser)
+#+end_src
+
+* Extras
+
+In this section, I use the org-transclusion package to transclude configurations that I keep in other Org files.
+
+Note that I will have to change my save-tangle workflow to include a transclusion element by default.
+
+Need to get saving correct. 
+
+#+transclude: [[file:config-org/linting.org]]
+#+transclude: [[file:config-org/final-actions.org]]

@@ -1,0 +1,38 @@
+* Linting
+
+With thanks to [[https://emacs.stackexchange.com/questions/35390/is-there-a-function-to-select-the-current-source-code-block-in-org-mode][this answer]] which helped me select the inner region of a code block.
+
+Needs the following line added to "elisp-autofmt.overrides.json" to work:
+
+#+begin_src json
+"use-package": ["special", 1, "unevalled", {"break": "always", "indent": 0}],
+"general-create-definer": ["special", 1, "unevalled", {"break": "always", "indent": 0}],
+"add-hook": ["special", 1, "unevalled", {"break": "always", "indent": 0}],
+"advice-add": ["special", 1, "unevalled", {"break": "always", "indent": 0}],
+#+end_src
+
+Function for opening the overrides file.
+
+#+begin_src emacs-lisp
+(defun jls/open-autofmt-overrides ()
+  (interactive)
+  (find-file
+   "~/.emacs.d/elpa/elisp-autofmt-20230307.230/elisp-autofmt.overrides.json"))
+#+end_src
+
+#+RESULTS:
+: jls/open-autofmt-overrides
+
+#+begin_src emacs-lisp
+(use-package elisp-autofmt
+  :commands elisp-autofmt-region)
+
+(setq elisp-autofmt-python-bin "/usr/local/bin/python3")
+
+(defun jls/style-block ()
+  (interactive)
+  (org-babel-mark-block)
+  (elisp-autofmt-region))
+
+(global-set-key (kbd "s-S") 'jls/style-block)
+#+end_src

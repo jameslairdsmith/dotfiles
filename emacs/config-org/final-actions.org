@@ -1,0 +1,7 @@
+* Final actions
+
+#+begin_src emacs-lisp
+;(toggle-frame-fullscreen)
+#+end_src
+
+#+RESULTS:

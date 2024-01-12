@@ -1,0 +1,22 @@
+#+TITLE: Model editing
+#+PROPERTY: header-args      :tangle "../config-elisp/modal.el"
+
+My modal editing system.
+
+Is this carried over?
+
+#+begin_src emacs-lisp
+(message "Hello modal!")
+#+end_src
+
+#+RESULTS:
+: Hello modal!
+
+#+begin_src emacs-lisp
+(defun my-model-command ()
+  (interactive)
+  (message "My modal activate!"))
+#+end_src
+
+#+RESULTS:
+: my-model-command
