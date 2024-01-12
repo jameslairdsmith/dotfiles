@@ -133,10 +133,11 @@ Is there a way of forcing the save?
       (mapcar
        'expand-file-name
        '("~/projects/dotfiles/bash/bash-profile.org"
-         "~/projects/.emacs.d/Emacs.org")))
+         "~/projects/dotfiles/emacs/Emacs.org")))
 
 ;; Automatically tangle our Emacs.org config file when we save it
 (defun jls/org-babel-tangle-config ()
+  (interactive)
   (when (member (buffer-file-name) files-for-auto-tangling)
     ;; We also want to transclude every time we save
     ;; ... so we get the transcluded blocks 
