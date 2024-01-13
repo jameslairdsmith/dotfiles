@@ -877,3 +877,4 @@ Need to get saving correct.
 
 #+transclude: [[file:config-org/linting.org]]
 #+transclude: [[file:config-org/final-actions.org]]
+#+transclude: [[file:config-org/window-management.org]]

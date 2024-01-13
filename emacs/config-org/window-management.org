@@ -1,0 +1,52 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Window management 
+
+#+begin_src emacs-lisp
+  ;(setq org-transclusion-exclude-elements 'property-drawer)
+(setq org-transclusion-include-first-section nil)
+#+end_src
+
+
+#+begin_src emacs-lisp
+(defhydra
+ hydra-window-nav
+ (evil-normal-state-map "<backspace>")
+ "A way to navigate windows"
+ ("h" windmove-left "left")
+ ("j" windmove-down "down")
+ ("k" windmove-up "up")
+ ("s" hydra-window-splits/body "splits" :exit t)
+ ("d" delete-window "delete")
+ ("l" windmove-right "right"))
+#+end_src
+
+
+Thanks to [[https://www.reddit.com/r/emacs/comments/nirg67/nesting_hydras/][this answer]] on Reddit, I worked out how to do hydra juggling.
+
+** Splitting
+
+We can do the splitting in a separate hydra.
+
+Firstly might just need to define a left split. With thanks to [[https://emacs.stackexchange.com/questions/53848/c-x-3-open-a-new-buffer-to-the-left-of-the-current-buffer][this answer on SO]].
+
+Actually, it seems the problem of left splitting is [[https://www.emacswiki.org/emacs/TransposeWindows][harder than I thought]].
+
+#+begin_src emacs-lisp
+(defun split-window-left (&optional size)
+  "Like split-window-right, with selected window on the right."
+  (interactive "P")
+  (split-window-right size)
+  (other-window 1))
+#+end_src
+
+
+#+begin_src emacs-lisp
+(defhydra
+ hydra-window-splits
+ (nil nil)
+ "Window splits"
+ ("l" split-window-right "right")
+ ("h" split-window-left "left")
+ ("j" split-window-below "below"))
+#+end_src
+
