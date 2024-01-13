@@ -865,6 +865,10 @@ I realise now I'm actually doing this in the project management section.
 
 * Extras
 
+#+begin_src emacs-lisp
+(use-package org-transclusion)
+#+end_src
+
 In this section, I use the org-transclusion package to transclude configurations that I keep in other Org files.
 
 Note that I will have to change my save-tangle workflow to include a transclusion element by default.
