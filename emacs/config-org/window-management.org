@@ -1,8 +1,6 @@
 #+PROPERTY: header-args:emacs-lisp :results output silent
 * Window management 
 
-
-
 #+begin_src emacs-lisp
 (defhydra
  hydra-window-nav
