@@ -109,6 +109,17 @@
   :init (marginalia-mode))
 #+end_src
 
+** Orderless
+
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+
 ** All the icons
 
 The code for this comes from [[https://kristofferbalintona.me/posts/202202211546/][this great blogpost]].
