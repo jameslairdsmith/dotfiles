@@ -841,32 +841,16 @@ I realise now I'm actually doing this in the project management section.
   :bind (:map term-raw-map ("s-v" . 'term-paste)))
 #+end_src
 
-* EAF
-
-#+begin_src emacs-lisp
-;(use-package eaf
-  ;:load-path "~/.emacs.d/site-lisp/emacs-application-framework"
-  ;:custom
-  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  ;(eaf-browser-continue-where-left-off t)
-  ;(eaf-browser-enable-adblocker t)
-  ;(browse-url-browser-function 'eaf-open-browser)
-  ;:config
-  ;(defalias 'browse-web #'eaf-open-browser)
-  ;(eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  ;(eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  ;(eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  ;(eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
-#+end_src
-
-#+begin_src emacs-lisp
-;(require 'eaf-browser)
-#+end_src
 
 * Extras
 
 #+begin_src emacs-lisp
 (use-package org-transclusion)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;(setq org-transclusion-exclude-elements 'property-drawer)
+(setq org-transclusion-include-first-section nil)
 #+end_src
 
 In this section, I use the org-transclusion package to transclude configurations that I keep in other Org files.
@@ -878,3 +862,7 @@ Need to get saving correct.
 #+transclude: [[file:config-org/linting.org]]
 #+transclude: [[file:config-org/final-actions.org]]
 #+transclude: [[file:config-org/window-management.org]]
+
+WIP
+
+##+transclude: [[file:config-org/eaf.org][file:config-org/eaf.org]]
