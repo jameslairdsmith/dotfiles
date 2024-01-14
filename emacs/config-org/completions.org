@@ -1,0 +1,184 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Completions
+
+** Ivy
+
+#+begin_src 
+(use-package ivy
+  :bind
+  (("C-s" . swiper)
+   :map
+   ivy-minibuffer-map
+   ("TAB" . ivy-alt-done)
+   ("C-l" . ivy-alt-done)
+   ("C-j" . ivy-next-line)
+   ("C-k" . ivy-previous-line)
+   :map
+   ivy-switch-buffer-map
+   ("C-k" . ivy-previous-line)
+   ("C-l" . ivy-done)
+   ("C-d" . ivy-switch-buffer-kill)
+   :map
+   ivy-reverse-i-search-map
+   ("C-k" . ivy-previous-line)
+   ("C-d" . ivy-reverse-i-search-kill))
+  :config (ivy-mode 1))
+
+(use-package ivy-rich
+  :ensure t
+  :init
+  (ivy-rich-mode 1)
+  (setq ivy-posframe-display-functions-alist
+        '((t . ivy-posframe-display-at-top-center-offset))
+        ; '((t . ivy-posframe-display-at-frame-center))
+        ))
+
+(use-package counsel
+  :ensure t
+  :init (counsel-mode 1))
+
+(use-package counsel
+  :bind
+  (("s-p" . counsel-M-x)
+   ("C-x b" . counsel-ibuffer)
+   ("s-f" . counsel-find-file)
+   :map
+   minibuffer-local-map
+   ("C-r" . 'counsel-minibuffer-history)))
+
+(global-set-key (kbd "s-b") 'counsel-switch-buffer)
+
+(use-package ivy-posframe
+  :init (ivy-posframe-mode 1)
+  :defer t)
+
+(defun posframe-poshandler-window-top-center-offset (info)
+  "Posframe's position handler.
+
+			    Get a position which let posframe stay onto current window's
+			    top center.  The structure of INFO can be found in docstring of
+			    `posframe-show'."
+  (let* ((window-left (plist-get info :parent-window-left))
+         (window-top (plist-get info :parent-window-top))
+         (window-width (plist-get info :parent-window-width))
+         (posframe-width (plist-get info :posframe-width)))
+    (cons
+     (+ window-left (/ (- window-width posframe-width) 2))
+     (+ window-top 48))))
+
+(defun posframe-poshandler-frame-top-center-offset (info)
+  "Posthandler based on frame"
+  (let* ((posframe-width (plist-get info :posframe-width))
+         (my-frame-width (frame-outer-width (selected-frame))))
+    (cons
+     (/ (- my-frame-width posframe-width) 2)
+     ;     100
+     48)))
+
+(defun ivy-posframe-display-at-top-center-offset (str)
+  (ivy-posframe--display
+   str #'posframe-poshandler-frame-top-center-offset))
+#+end_src
+
+#+RESULTS:
+: ivy-posframe-display-at-top-center-offset
+
+#+RESULTS:
+: 100
+
+
+** Vertico
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :custom (vertigo-cycle t)
+  :init (vertico-mode))
+#+end_src
+
+** savehist
+
+#+begin_src emacs-lisp
+(use-package savehist
+  :init (savehist-mode))
+#+end_src
+
+** Marginalia
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :init (marginalia-mode))
+#+end_src
+
+** All the icons
+
+The code for this comes from [[https://kristofferbalintona.me/posts/202202211546/][this great blogpost]].
+
+#+begin_src emacs-lisp
+(use-package all-the-icons-completion
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+#+end_src
+
+** Vertico postframe
+
+The setup above is perfectly usable without posframe, but below are some ideas of how to implment it.
+
+I got the Ivy postframe stuff from its [[https://github.com/tumashu/ivy-posframe][documentation]].
+
+I was trying to get it to look a lot like VS Code. There was a comment in [[https://www.reddit.com/r/emacs/comments/ii4eg8/can_vscodes_command_palette_be_done_in_emacs/][this Reddit thread]].
+
+I might try to get this working with Vertigo instead a bit like is done [[https://github.com/jasonmj/.emacs.d/blob/07ef300e0f6d9cdff6ddbb12365c9442115a7e0e/config-org/completion.org#vertico-posframe][here]].
+
+#+begin_src 
+;(quelpa '(vertico-posframe :repo "tumashu/vertico-posframe" :fetcher github))
+#+end_src
+
+#+begin_src 
+  (use-package vertico-posframe
+  :config (vertico-posframe-mode 1))
+#+end_src
+
+#+begin_src 
+ (use-package vertico-posframe
+   :ensure t
+   :config
+   (setq vertico-posframe-border-width 20
+	  vertico-posframe-hide-minibuffer t
+	  vertico-posframe-min-width 80
+	  vertico-posframe-height nil
+	  vertico-posframe-min-height 10
+	  vertico-posframe-width 110
+	  vertico-posframe-poshandler #'posframe-poshandler-window-top-center-offset
+	  vertico-posframe-parameters '((alpha-background . 85)
+					(parent-frame . nil)
+					(cursor-type . 'bar)
+					(left-fringe . 0)
+					(right-fringe . 0)))
+   (defun posframe-poshandler-window-top-center-offset (info)
+     "Posframe's position handler.
+
+	 Get a position which let posframe stay onto current window's
+	 top center.  The structure of INFO can be found in docstring of
+	 `posframe-show'."
+     (setq-local tab-line-format nil)
+     (let* ((window-left (plist-get info :parent-window-left))
+	     (window-top (plist-get info :parent-window-top))
+	     (window-width (plist-get info :parent-window-width))
+	     (posframe-width (plist-get info :posframe-width)))
+	(cons (+ window-left (/ (- window-width posframe-width) 2))
+	      (+ window-top 64))))
+   (vertico-indexed-mode 1)
+   (setq vertico-indexed-start 1)
+   (defun vertico-indexed-insert (i)
+     (setq vertico--index (- i 1))
+     (call-interactively #'vertico-insert)
+     (call-interactively #'vertico-exit))
+  (loopy-iter
+    (with (map vertico-map))
+    (numbering i :from 1 :to 9)
+    (define-key map (kbd (format "s-%d" i)) `(lambda () (interactive) (vertico-indexed-insert ,i))))
+   (custom-set-faces '(vertico-posframe-border ((t nil))))
+   (vertico-posframe-mode 1))
+#+end_src
