@@ -251,8 +251,6 @@ Just using the defaults for now, but could change these in the future. Undfortun
 (global-set-key (kbd "s-f") 'find-file)
 #+end_src
 
-#+RESULTS:
-
 ** Keyboard escape
 
 With thanks to this Reddit [[https://www.reddit.com/r/emacs/comments/10l40yi/how_do_i_make_esc_stop_closing_all_my_windows/][answer]] for changing the way keyboard escape quit works.
@@ -763,6 +761,7 @@ Need to get saving correct.
 #+transclude: [[file:config-org/final-actions.org]]
 #+transclude: [[file:config-org/window-management.org]]
 #+transclude: [[file:config-org/completions.org]]
+#+transclude: [[file:config-org/navigation.org]]
 
 WIP
 

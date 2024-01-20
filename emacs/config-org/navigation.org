@@ -1,0 +1,12 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Navigation
+
+#+begin_src emacs-lisp
+  (use-package consult
+  :bind ("s-b" . consult-buffer))
+#+end_src
+
+#+RESULTS:
+: consult-buffer
+
+It's nice that this works really well with marginalia.
