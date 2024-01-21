@@ -1,0 +1,37 @@
+
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* R
+
+** Window management
+
+This code is augmented from the [[https://ess.r-project.org/Manual/ess.html#Interactive-ESS][ESS setup guide in their documentation]]. 
+
+#+begin_src emacs-lisp
+(add-to-list
+ 'display-buffer-alist
+ '("^\\*R:"
+   (display-buffer-reuse-window display-buffer-in-side-window)
+   (side . right)
+   (slot . -1)
+   (dedicated . t)
+   (window-width . 0.33)))
+
+(add-to-list
+ 'display-buffer-alist
+ '("^\\*R Dired"
+   (display-buffer-reuse-window display-buffer-in-side-window)
+   (side . right)
+   (slot . 1)
+   (window-width . 0.33)
+   (reusable-frames . nil)))
+
+(add-to-list
+ 'display-buffer-alist
+ '("^\\*Help"
+   (display-buffer-reuse-window display-buffer-in-side-window)
+   (side . right)
+   (slot . 1)
+   (window-width . 0.33)
+   (reusable-frames . nil)))
+#+end_src
+

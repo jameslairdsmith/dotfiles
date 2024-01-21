@@ -630,9 +630,9 @@ This might be better if you are able to set the home row keys to be the numbers 
 I realise now I'm actually doing this in the project management section.
 
 #+begin_src emacs-lisp
-;(use-package ess
-;  :ensure t
-;  :init (require 'ess-site))
+(use-package ess
+  :ensure t
+  :init (require 'ess-site))
 #+end_src
 
 * PDF tooling
@@ -688,6 +688,7 @@ Need to get saving correct.
 #+transclude: [[file:config-org/window-management.org]]
 #+transclude: [[file:config-org/completions.org]]
 #+transclude: [[file:config-org/navigation.org]]
+#+transclude: [[file:config-org/R.org]]
 
 WIP
 

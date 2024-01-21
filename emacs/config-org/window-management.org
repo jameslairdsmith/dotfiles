@@ -40,10 +40,6 @@
  '("\\*helpful" (display-buffer-reuse-mode-window
     display-buffer-in-direction)
    (direction . right) (window-width . 95)))
-
-(add-to-list
- 'display-buffer-alist
- '("\\*R" display-buffer-in-direction (direction . right)))
 #+end_src
 
 ** Popper
