@@ -123,6 +123,16 @@ Stuff I've just added for experimentation.
   (find-file "~/projects/dotfiles/bash/bash-profile.org"))
 #+end_src
 
+#+begin_src emacs-lisp
+(defun jls/symbol-value (symbol)
+  (interactive "S")
+  (message (symbol-value symbol)))
+
+(defun jls/default-directory ()
+  (interactive)
+  (message (symbol-value 'default-directory)))
+#+end_src
+
 Trick for auto-tangling. Taken from [[https://github.com/daviwil/emacs-from-scratch/blob/9388cf6ecd9b44c430867a5c3dad5f050fdc0ee1/Emacs.org][here]].
 
 Is there a way of forcing the save?
