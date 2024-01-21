@@ -10,7 +10,6 @@
   :config (setq which-key-idle-delay 1))
 #+end_src
 
-
 ** Ivy
 
 #+begin_src 
@@ -101,6 +100,8 @@
 
 ** savehist
 
+I wonder if this is actually working?
+
 #+begin_src emacs-lisp
 (use-package savehist
   :init (savehist-mode))
@@ -122,7 +123,6 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
-
 
 ** All the icons
 
