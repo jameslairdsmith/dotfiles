@@ -80,12 +80,6 @@
    str #'posframe-poshandler-frame-top-center-offset))
 #+end_src
 
-#+RESULTS:
-: ivy-posframe-display-at-top-center-offset
-
-#+RESULTS:
-: 100
-
 
 ** Vertico
 
