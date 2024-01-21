@@ -365,14 +365,6 @@ I have some more inspiration for how to change this.
 ** Which-key and helpful
 
 #+begin_src emacs-lisp
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config (setq which-key-idle-delay 1))
-#+end_src
-
-
-#+begin_src emacs-lisp
 (use-package helpful
   :custom
   (counsel-describe-function-function #'helpful-callable)

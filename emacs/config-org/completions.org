@@ -1,6 +1,16 @@
 #+PROPERTY: header-args:emacs-lisp :results output silent
 * Completions
 
+** Which key
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 1))
+#+end_src
+
+
 ** Ivy
 
 #+begin_src 
