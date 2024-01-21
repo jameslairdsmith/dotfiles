@@ -91,10 +91,6 @@ Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetarigh
 Stuff I've just added for experimentation.
 
 #+begin_src emacs-lisp
-(define-key emacs-lisp-mode-map (kbd "s-t") 'counsel-load-theme)
-
-(global-set-key (kbd "s-t") 'counsel-load-theme)
-
 (defun open-init-el ()
   "Opens init.el file"
   (interactive)
