@@ -362,29 +362,6 @@ I have some more inspiration for how to change this.
 #+RESULTS:
 : jls/open-dired-local
 
-** Which-key and helpful
-
-#+begin_src emacs-lisp
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
-#+end_src
-
-Potentially dangerous to replace the standard Emacs functions wholesale, but let's see if it causes problems.
-
-#+begin_src emacs-lisp
-(advice-add 'describe-function :override #'helpful-callable)
-(advice-add 'describe-variable :override #'helpful-variable)
-#+end_src
-
-#+RESULTS:
-
 ** General
 
 #+begin_src emacs-lisp
