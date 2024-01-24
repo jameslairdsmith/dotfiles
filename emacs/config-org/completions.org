@@ -1,6 +1,15 @@
 #+PROPERTY: header-args:emacs-lisp :results output silent
 * Completions
 
+** Which key
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 1))
+#+end_src
+
 ** Ivy
 
 #+begin_src 
@@ -80,12 +89,6 @@
    str #'posframe-poshandler-frame-top-center-offset))
 #+end_src
 
-#+RESULTS:
-: ivy-posframe-display-at-top-center-offset
-
-#+RESULTS:
-: 100
-
 
 ** Vertico
 
@@ -96,6 +99,8 @@
 #+end_src
 
 ** savehist
+
+I wonder if this is actually working?
 
 #+begin_src emacs-lisp
 (use-package savehist
@@ -119,7 +124,6 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
-
 ** All the icons
 
 The code for this comes from [[https://kristofferbalintona.me/posts/202202211546/][this great blogpost]].
@@ -131,6 +135,21 @@ The code for this comes from [[https://kristofferbalintona.me/posts/202202211546
   :init
   (all-the-icons-completion-mode))
 #+end_src
+
+
+** Helpful
+
+My intial version of this was from the [[https://www.youtube.com/watch?v=IspAZtNTslY&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=2&ab_channel=SystemCrafters][Emacs from Scratch series video]]. But now my felling is that it's better to use helpful on its own, and have Vertico handle the selection (instead of messing around with Ivy/counsel).
+
+#+begin_src emacs-lisp
+(use-package helpful
+  :config
+  (advice-add 'describe-function :override #'helpful-callable)
+  (advice-add 'describe-variable :override #'helpful-variable)
+  (advice-add 'describe-command :override #'helpful-command)
+  (advice-add 'describe-key :override #'helpful-key))
+#+end_src
+
 
 ** Vertico postframe
 

@@ -1,0 +1,18 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Launcher
+
+Some ideas for how to make Emacs into a MacOS run launcher.
+
+#+begin_src emacs-lisp
+(defun list-macos-apps ()
+  "List available MacOS apps."
+  (interactive)
+  (shell-command "lsappinfo list -only type:0"))
+  
+(defun launch-macos-app (app-name)
+  "Launch a MacOS app by name."
+  (interactive
+   (list (completing-read "Enter the name of the MacOS app: "
+                          (split-string (shell-command-to-string "lsappinfo list -only type:0") "\n"))))
+  (shell-command (concat "open -a " app-name)))
+#+end_src
