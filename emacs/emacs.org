@@ -60,9 +60,6 @@ Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetarigh
 (global-set-key (kbd "M-s-i") 'org-insert-el)
 #+end_src
 
-#+RESULTS:
-: always
-
 ** Centering
 
 #+begin_src emacs-lisp
@@ -83,9 +80,6 @@ Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetarigh
   :hook (org-mode . jls/org-mode-visual-fill))
 #+end_src
 
-#+RESULTS:
-| #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] | (lambda nil (display-line-numbers-mode 0)) | (lambda nil (add-hook 'after-save-hook #'jls/org-babel-tangle-config)) | jls/org-mode-visual-fill | org-tempo-setup | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
-
 * Quirks
 
 Stuff I've just added for experimentation.
@@ -101,9 +95,6 @@ Stuff I've just added for experimentation.
   (interactive)
   (find-file "~/projects/dotfiles/emacs/Emacs.org"))
 #+end_src
-
-#+RESULTS:
-: open-Emacs-org
 
 * Opening common files
 
@@ -159,15 +150,12 @@ Is there a way of forcing the save?
       #'jls/org-babel-tangle-config)))
 #+end_src
 
-#+RESULTS:
-| (lambda nil (add-hook 'after-save-hook #'jls/org-babel-tangle-config)) | jls/org-mode-visual-fill | org-tempo-setup | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | (lambda nil (display-line-numbers-mode 0)) |
 
 #+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages '((R . t) (emacs-lisp . t)))
 #+end_src
 
-#+RESULTS:
 
 * Basic display options
 
@@ -190,8 +178,6 @@ The font stuff is commented out right now until I can work out how to get it to 
 (setq make-backup-files nil)
 ; I, too, like to live dangerously
 #+end_src
-
-#+RESULTS:
 
 Just using the defaults for now, but could change these in the future. Undfortunately
 `internal-border-width` isn't after the tab in tab-line-mode.
@@ -291,8 +277,6 @@ With thanks to this Reddit [[https://www.reddit.com/r/emacs/comments/10l40yi/how
   
 #+end_src
 
-#+RESULTS:
-: t
 
 * Display settings
 
@@ -332,9 +316,6 @@ With thanks to this Reddit [[https://www.reddit.com/r/emacs/comments/10l40yi/how
 ;;  :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
-#+RESULTS:
-: t
-
 * Tabs
 
 I have some more inspiration for how to change this.
@@ -352,9 +333,6 @@ I have some more inspiration for how to change this.
 (global-set-key (kbd "M-s-<right>") 'next-buffer)
 #+end_src
 
-#+RESULTS:
-: next-buffer
-
 * Toolings
 
 #+begin_src emacs-lisp
@@ -364,9 +342,6 @@ I have some more inspiration for how to change this.
 
 (global-set-key (kbd "s-D") 'jls/open-dired-local)
 #+end_src
-
-#+RESULTS:
-: jls/open-dired-local
 
 ** General
 
@@ -385,8 +360,6 @@ I have some more inspiration for how to change this.
    '(edwina-delete-window :which-key "delete window")))
 #+end_src
 
-#+RESULTS:
-: t
 
 ** Project management
 
@@ -404,16 +377,11 @@ This is again almost all from the Emacs from Scratch series.
     (setq projectile-switch-project-action #'projectile-dired)))
 #+end_src
 
-#+RESULTS:
-| lambda | nil | (interactive) | (use-package-autoload-keymap 'projectile-command-map 'projectile nil) |
-
 
 #+begin_src emacs-lisp
 (use-package ess
   :init (setq ess-startup-directory 'default-directory))
 #+end_src
-
-#+RESULTS:
 
 Code for working out whether a folder is an R project or not.
 
@@ -429,8 +397,6 @@ Code for working out whether a folder is an R project or not.
     nil))
 #+end_src
 
-#+RESULTS:
-: jls/r-proj-p
 
 It would be interesting to see what to do with buffer local variables?
 
@@ -444,8 +410,6 @@ An idea is to capture various trailing command arguments when starting R. Then i
   (R))
 #+end_src
 
-#+RESULTS:
-: jls/open-r-project
 
 A better solution would be to have the generic open project actions in their own function. And all the project specific actions can call that one. Classic remove duplication.
 
@@ -459,23 +423,14 @@ A better solution would be to have the generic open project actions in their own
     projectile-dired)))
 #+end_src
 
-#+RESULTS:
-: jls/open-project
-
 #+begin_src emacs-lisp
 (setq projectile-switch-project-action 'jls/open-project)
 #+end_src
-
-#+RESULTS:
-: jls/open-project
 
 #+begin_src emacs-lisp
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 #+end_src
-
-#+RESULTS:
-: t
 
 *** Magit
 
@@ -495,9 +450,6 @@ A better solution would be to have the generic open project actions in their own
 (global-set-key (kbd "s-m") 'magit-status)
 #+end_src
 
-#+RESULTS:
-: magit-status
-
 The below is to change up the formatting of the diffs in the Magit status buffer.
 I should probably have a separate theme file for that.
 
@@ -514,16 +466,12 @@ I should probably have a separate theme file for that.
  ;    ))
 #+end_src
 
-#+RESULTS:
-
 ** Typing
 
 #+begin_src emacs-lisp
 (use-package speed-type
   :ensure t)
 #+end_src
-
-#+RESULTS:
 
 ** Snippets
 * Evil
@@ -546,13 +494,6 @@ Just using the typical evil-collection setup for now.
 
 * Window management
 
-
-#+RESULTS:
-| \*R          | display-buffer-in-direction     | (direction . bottom) | (window . root) | (window-height . 0.3) |
-| \*Warnings\* | (display-buffer-in-side-window) | (side . right)       |                 |                       |
-| \*helpful    | (display-buffer-in-side-window) | (side . right)       |                 |                       |
-
-
 ** Edwina
 
 #+begin_src emacs-lisp
@@ -565,9 +506,6 @@ Just using the typical evil-collection setup for now.
 ;(setq display-buffer-base-action '(display-buffer-below-selected))
 #+end_src
 
-#+RESULTS:
-| display-buffer-below-selected |
-
 ** ace-window
 
 This might be better if you are able to set the home row keys to be the numbers that display.
@@ -576,17 +514,12 @@ This might be better if you are able to set the home row keys to be the numbers 
 ;(use-package ace-window)
 #+end_src
 
-#+RESULTS:
-
 ** Winnum
 
 #+begin_src emacs-lisp
 ;(use-package winum
 ;  :config (winum-mode))
 #+end_src
-
-#+RESULTS:
-: t
 
 * ESS and R
 
@@ -624,9 +557,6 @@ This might be better if you are able to set the home row keys to be the numbers 
   
 #+end_src
 
-#+RESULTS:
-: t
-
 I realise now I'm actually doing this in the project management section.
 
 #+begin_src emacs-lisp
@@ -654,9 +584,6 @@ I realise now I'm actually doing this in the project management section.
 
   ;; https://stackoverflow.com/questions/70202413/configure-pdf-tools-in-emacs-running-on-macos
 #+end_src
-
-#+RESULTS:
-: t
 
 * Term mode
 
