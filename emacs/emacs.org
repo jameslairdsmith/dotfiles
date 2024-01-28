@@ -380,13 +380,6 @@ I should probably have a separate theme file for that.
  ;    ))
 #+end_src
 
-** Typing
-
-#+begin_src emacs-lisp
-(use-package speed-type
-  :ensure t)
-#+end_src
-
 ** Snippets
 * Evil
 
