@@ -162,18 +162,6 @@ Is there a way of forcing the save?
 The font stuff is commented out right now until I can work out how to get it to work with emacsclient.
 
 #+begin_src emacs-lisp
-(setq inhibit-startup-message t)
-(scroll-bar-mode 1) ; Disable visible scrollbar
-(tool-bar-mode -1) ; Disable the toolbar
-(tooltip-mode -1) ; Disable tooltips
-(set-fringe-mode 10) ; Give some breathing 
-;; (menu-bar-mode -1)            ; Disable the menu bar
-(setq visible-bell t)
-
-;(set-face-attribute 'default nil
-;                    :font "Fira Code"
-;                    :height 120
-;                    :family "Bold") 
 
 (setq make-backup-files nil)
 ; I, too, like to live dangerously
@@ -297,18 +285,7 @@ With thanks to this Reddit [[https://www.reddit.com/r/emacs/comments/10l40yi/how
 
 (use-package all-the-icons)
 
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
 ;;(setq doom-modeline-height 15)
-
-(use-package doom-themes
-  ;:init (load-theme 'doom-nano-dark t)
-  )
-
-(load-theme 'doom-nano-dark t)
 
 ;; Supressing rainbow delimiters
 
@@ -616,6 +593,7 @@ Need to get saving correct.
 #+transclude: [[file:config-org/completions.org]]
 #+transclude: [[file:config-org/navigation.org]]
 #+transclude: [[file:config-org/R.org]]
+#+transclude: [[file:config-org/display.org]]
 
 WIP
 

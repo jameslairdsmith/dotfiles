@@ -1,0 +1,52 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Display
+
+** Basics
+
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t)
+(scroll-bar-mode 1) ; I like the scroll bar on the Mac port.
+(tool-bar-mode -1) ; Disable the toolbar
+(tooltip-mode -1) ; Disable tooltips
+(set-fringe-mode 10) ; Give some breathing 
+;; (menu-bar-mode -1)            ; Disable the menu bar
+(setq visible-bell t)
+#+end_src
+
+** Fonts
+
+Need to work out how to load Fira Code.
+
+#+begin_src emacs-lisp
+;(set-face-attribute 'default nil
+;                    :font "Fira Code"
+;                    :height 120
+;                    :family "Bold") 
+#+end_src
+
+** Theme
+
+#+begin_src emacs-lisp
+(consult-theme 'doom-nord)
+#+end_src
+
+#+RESULTS:
+
+I used to use doom-themes and a nord implementation.
+
+#+begin_src
+(use-package doom-themes
+  ;:init (load-theme 'doom-nano-dark t)
+  )
+
+(load-theme 'doom-nano-dark t)
+#+end_src
+
+** Modeline
+
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+#+end_src
