@@ -89,7 +89,6 @@
    str #'posframe-poshandler-frame-top-center-offset))
 #+end_src
 
-
 ** Vertico
 
 #+begin_src emacs-lisp
