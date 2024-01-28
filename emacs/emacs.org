@@ -303,24 +303,6 @@ With thanks to this Reddit [[https://www.reddit.com/r/emacs/comments/10l40yi/how
 (global-set-key (kbd "s-D") 'jls/open-dired-local)
 #+end_src
 
-** General
-
-#+begin_src emacs-lisp
-(use-package general
-  :config
-  (general-create-definer jls/leader-key
-    :keymaps '(normal insert visual emacs Elisp/l)
-    :prefix "s-SPC"
-    :global-prefix "s-SPC")
-
-  (jls/leader-key
-   "o"
-   '(edwina-clone-window :which-key "add window")
-   "x"
-   '(edwina-delete-window :which-key "delete window")))
-#+end_src
-
-
 ** Project management
 
 This is again almost all from the Emacs from Scratch series.
