@@ -24,6 +24,23 @@ Need to work out how to load Fira Code.
 ;                    :family "Bold") 
 #+end_src
 
+** Line numbers
+
+#+begin_src emacs-lisp
+(column-number-mode)
+(global-display-line-numbers-mode t)
+(setq display-line-numbers-type 'relative)
+
+(dolist (mode
+         '(org-mode-hook
+           term-mode-hook
+           shell-mode-hook
+           eshell-mode-hook
+           inferior-ess-r-mode-hook))
+  (add-hook mode
+    (lambda () (display-line-numbers-mode 0))))
+#+end_src
+
 ** Theme
 
 #+begin_src emacs-lisp
