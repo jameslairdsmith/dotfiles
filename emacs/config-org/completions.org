@@ -135,7 +135,6 @@ The code for this comes from [[https://kristofferbalintona.me/posts/202202211546
   (all-the-icons-completion-mode))
 #+end_src
 
-
 ** Helpful
 
 My intial version of this was from the [[https://www.youtube.com/watch?v=IspAZtNTslY&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=2&ab_channel=SystemCrafters][Emacs from Scratch series video]]. But now my felling is that it's better to use helpful on its own, and have Vertico handle the selection (instead of messing around with Ivy/counsel).

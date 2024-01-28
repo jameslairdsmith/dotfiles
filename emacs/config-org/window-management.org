@@ -42,6 +42,27 @@
    (direction . right) (window-width . 95)))
 #+end_src
 
+** Global mode line
+
+A few ideas for how to do this:
+ - [[https://github.com/Bad-ptr/common-header-mode-line.el][common-header-mode-line]]
+ - [[https://emacs.stackexchange.com/questions/9537/single-mode-line-for-all-windows][Answer on StackOverflow]]
+ - [[https://github.com/kiennq/emacs-mini-modeline/blob/master/mini-modeline.el][mini-modeline]]
+ 
+
+Below is an example of putting the calendar in the 'bottom' side window. That could be used for a
+global mode line.
+ 
+#+begin_src emacs-lisp
+  (add-to-list
+   'display-buffer-alist
+   '("\\*modelineonly"
+     (display-buffer-in-side-window)
+     (side . bottom)
+(window-height . 1)
+     (slot . 0)))
+#+end_src
+
 ** Popper
 
 #+begin_src emacs-lisp
