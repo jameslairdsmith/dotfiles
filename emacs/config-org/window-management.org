@@ -107,3 +107,34 @@ Actually, it seems the problem of left splitting is [[https://www.emacswiki.org/
  ("j" split-window-below "below"))
 #+end_src
 
+
+** Extra packages
+
+Some packages that may be useful at some stage but I don't use right now.
+
+*** Edwina
+
+#+begin_src emacs-lisp
+;(use-package edwina
+;  :ensure t
+;  :config (setq display-buffer-base-action '(display-buffer-below-selected))
+;  ;;(edwina-setup-dwm-keys)
+;  (edwina-mode 1))
+
+;(setq display-buffer-base-action '(display-buffer-below-selected))
+#+end_src
+
+*** ace-window
+
+This might be better if you are able to set the home row keys to be the numbers that display.
+
+#+begin_src emacs-lisp
+;(use-package ace-window)
+#+end_src
+
+*** Winnum
+
+#+begin_src emacs-lisp
+;(use-package winum
+;  :config (winum-mode))
+#+end_src

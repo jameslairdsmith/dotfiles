@@ -469,34 +469,6 @@ Just using the typical evil-collection setup for now.
   :config (evil-collection-init))
 #+end_src
 
-* Window management
-
-** Edwina
-
-#+begin_src emacs-lisp
-;(use-package edwina
-;  :ensure t
-;  :config (setq display-buffer-base-action '(display-buffer-below-selected))
-;  ;;(edwina-setup-dwm-keys)
-;  (edwina-mode 1))
-
-;(setq display-buffer-base-action '(display-buffer-below-selected))
-#+end_src
-
-** ace-window
-
-This might be better if you are able to set the home row keys to be the numbers that display.
-
-#+begin_src emacs-lisp
-;(use-package ace-window)
-#+end_src
-
-** Winnum
-
-#+begin_src emacs-lisp
-;(use-package winum
-;  :config (winum-mode))
-#+end_src
 
 * ESS and R
 
