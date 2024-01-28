@@ -1,0 +1,17 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Tabs
+
+I have some more inspiration for how to change this.
+
+- [[https://andreyor.st/posts/2020-05-10-making-emacs-tabs-look-like-in-atom/][Making Emacs tabs look like Atom]] ([[https://www.reddit.com/r/emacs/comments/gh8580/making_emacs_27_tabs_look_like_in_atom/][discussion]]).
+- [[https://github.com/thread314/intuitive-tab-line-mode][Intuitive Tabs in Emacs.]]
+
+#+begin_src emacs-lisp
+(use-package tab-line
+  :ensure nil
+  :config (global-tab-line-mode))
+
+; These are the same as in popular browsers
+(global-set-key (kbd "M-s-<left>") 'previous-buffer)
+(global-set-key (kbd "M-s-<right>") 'next-buffer)
+#+end_src
