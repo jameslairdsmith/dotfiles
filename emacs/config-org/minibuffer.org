@@ -1,0 +1,17 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Minibuffer
+
+** Ideas
+
+- Put the =default-directory= symbol's value in the minibuffer.
+
+** Packages to try
+
+- mini-modeline
+- minibuffer-line
+- feebleline
+- mini-echo
+- awesome-tray
+
+
+There is [[https://lists.gnu.org/archive/html/help-gnu-emacs/2014-02/msg00062.html][some discussion here]].
