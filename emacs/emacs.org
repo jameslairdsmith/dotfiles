@@ -501,4 +501,6 @@ Need to get saving correct.
 
 WIP
 
+I use two hashes to signify that I don't want this to be transcluded.
+
 ##+transclude: [[file:config-org/eaf.org][file:config-org/eaf.org]]
