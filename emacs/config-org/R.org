@@ -6,7 +6,11 @@
 (use-package ess
   :init
   (setq ess-startup-directory 'default-directory)
-  (require 'ess-site))
+  (require 'ess-site)
+  :bind
+  (:map
+   ess-mode-map
+   ("s-<return>" . ess-eval-region-or-line-visibly-and-step)))
 #+end_src
 
 ** Window management
@@ -34,7 +38,7 @@ This code is augmented from the [[https://ess.r-project.org/Manual/ess.html#Inte
 
 (add-to-list
  'display-buffer-alist
- '("^\\*Help"
+ '("^\\*[Hh]elp"
    (display-buffer-reuse-window display-buffer-in-side-window)
    (side . right)
    (slot . 1)
