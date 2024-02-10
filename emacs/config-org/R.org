@@ -2,6 +2,13 @@
 #+PROPERTY: header-args:emacs-lisp :results output silent
 * R
 
+#+begin_src emacs-lisp
+(use-package ess
+  :init
+  (setq ess-startup-directory 'default-directory)
+  (require 'ess-site))
+#+end_src
+
 ** Window management
 
 This code is augmented from the [[https://ess.r-project.org/Manual/ess.html#Interactive-ESS][ESS setup guide in their documentation]]. 

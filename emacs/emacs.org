@@ -292,10 +292,6 @@ This is again almost all from the Emacs from Scratch series.
 #+end_src
 
 
-#+begin_src emacs-lisp
-(use-package ess
-  :init (setq ess-startup-directory 'default-directory))
-#+end_src
 
 Code for working out whether a folder is an R project or not.
 
@@ -436,13 +432,6 @@ Just using the typical evil-collection setup for now.
   
 #+end_src
 
-I realise now I'm actually doing this in the project management section.
-
-#+begin_src emacs-lisp
-(use-package ess
-  :ensure t
-  :init (require 'ess-site))
-#+end_src
 
 * PDF tooling
 
