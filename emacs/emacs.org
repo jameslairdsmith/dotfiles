@@ -46,7 +46,7 @@ Stuff I've just added for experimentation.
 #+begin_src emacs-lisp
 (defun jls/symbol-value (symbol)
   (interactive "S")
-  (message (symbol-value symbol)))
+  (message "%s" (symbol-value symbol)))
 
 (defun jls/default-directory ()
   (interactive)
