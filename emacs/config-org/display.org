@@ -24,6 +24,33 @@ Need to work out how to load Fira Code.
 ;                    :family "Bold") 
 #+end_src
 
+#+begin_src
+  (defun efs/set-font-faces ()
+    (message "Setting faces!")
+    (set-face-attribute 'default nil
+			:font "Fira Code Retina"
+  ;;                      :family "Bold"
+			:height 120))
+
+  ;; Set the fixed pitch face
+  ;;  (set-face-attribute 'fixed-pitch nil
+  ;;                     :font "Fira Code Retina"
+  ;;                     :height efs/default-font-size)
+
+  ;; Set the variable pitch face
+  ;;  (set-face-attribute 'variable-pitch nil
+  ;;                      :font "Cantarell"
+  ;;                      :height efs/default-variable-font-size
+  ;;                     :weight 'regular))
+
+  ;(if (daemonp)
+  ;    (add-hook 'after-make-frame-functions
+  ;      (lambda (frame)
+  ;        ;; (setq doom-modeline-icon t)
+  ;        (with-selected-frame frame
+  ;          (efs/set-font-faces))))
+  ;  (efs/set-font-faces))
+#+end_src
 ** Line numbers
 
 #+begin_src emacs-lisp
@@ -72,4 +99,22 @@ I used to use doom-themes and a nord implementation.
 
 #+begin_src emacs-lisp
 (use-package all-the-icons)
+#+end_src
+
+** Frames
+
+Not used right now.
+
+#+begin_src 
+Just using the defaults for now, but could change these in the future. Undfortunately
+`internal-border-width` isn't after the tab in tab-line-mode.
+
+#+begin_src emacs-lisp
+(setq default-frame-alist
+      '((internal-border-width . 0)
+        ;; (undecorated . t)
+        (ns-transparent-titlebar t)
+        (left-fringe . 10)
+        (left-fringe . 10)
+        (right-frings . 10)))
 #+end_src
