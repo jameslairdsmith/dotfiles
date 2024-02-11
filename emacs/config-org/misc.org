@@ -1,0 +1,7 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Misc
+
+#+begin_src emacs-lisp
+(setq make-backup-files nil)
+; I, too, like to live dangerously
+#+end_src

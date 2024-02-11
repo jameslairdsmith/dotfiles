@@ -92,14 +92,6 @@ Is there a way of forcing the save?
 
 * Basic display options
 
-The font stuff is commented out right now until I can work out how to get it to work with emacsclient.
-
-#+begin_src emacs-lisp
-
-(setq make-backup-files nil)
-; I, too, like to live dangerously
-#+end_src
-
 Just using the defaults for now, but could change these in the future. Undfortunately
 `internal-border-width` isn't after the tab in tab-line-mode.
 
@@ -421,6 +413,7 @@ Need to get saving correct.
 #+transclude: [[file:config-org/display.org]]
 #+transclude: [[file:config-org/tabs.org]]
 #+transclude: [[file:config-org/Org.org]]
+#+transclude: [[file:config-org/misc.org]]
 
 WIP
 
