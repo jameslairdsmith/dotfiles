@@ -9,9 +9,31 @@ I have some more inspiration for how to change this.
 #+begin_src emacs-lisp
 (use-package tab-line
   :ensure nil
+  :bind
+  (("M-s-<left>" . 'jls/tab-line-prev-wrap)
+   ("M-s-<right>" . 'jls/tab-line-next-wrap))
   :config (global-tab-line-mode))
+#+end_src
 
-; These are the same as in popular browsers
-(global-set-key (kbd "M-s-<left>") 'previous-buffer)
-(global-set-key (kbd "M-s-<right>") 'next-buffer)
+** Wrapping
+
+To get tab line wrapping to behave like it does in most browsers, with wrapping around.
+
+#+begin_src emacs-lisp
+(defun jls/tab-line-next-wrap ()
+  (interactive)
+  (cond
+   ((eq (current-buffer) (car (last (tab-line-tabs-window-buffers))))
+    (tab-line-select-tab-buffer (car (tab-line-tabs-window-buffers))))
+   (t
+    (tab-line-switch-to-next-tab))))
+
+(defun jls/tab-line-prev-wrap ()
+  (interactive)
+  (cond
+   ((eq (current-buffer) (car (tab-line-tabs-window-buffers)))
+    (tab-line-select-tab-buffer
+     (car (last (tab-line-tabs-window-buffers)))))
+   (t
+    (tab-line-switch-to-prev-tab))))
 #+end_src
