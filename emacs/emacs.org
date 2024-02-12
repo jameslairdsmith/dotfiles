@@ -12,7 +12,6 @@ This is my Emacs configuration. It's highly experimental.
 (setq mac-option-modifier 'meta)
 #+end_src
 
-
 * Quirks
 
 Stuff I've just added for experimentation.
@@ -89,7 +88,6 @@ Is there a way of forcing the save?
  'org-babel-load-languages '((R . t) (emacs-lisp . t)))
 #+end_src
 
-
 * Basic keybindings
 
 #+begin_src emacs-lisp
@@ -164,8 +162,6 @@ This is again almost all from the Emacs from Scratch series.
     (setq projectile-project-search-path '("~/projects"))
     (setq projectile-switch-project-action #'projectile-dired)))
 #+end_src
-
-
 
 Code for working out whether a folder is an R project or not.
 
