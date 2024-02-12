@@ -71,3 +71,16 @@ Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetarigh
   :ensure t
   :hook (org-mode . jls/org-mode-visual-fill))
 #+end_src
+
+** Eval hook
+
+With thanks to [[https://emacs.stackexchange.com/questions/53238/make-org-c-c-c-c-actually-do-something-useful-on-a-simple-line-of-text][this answer]].
+
+It might be that I need to set =org-babel-no-eval-on-ctrl-c-ctrl-c= to make this actually catch.
+
+#+begin_src emacs-lisp
+(add-hook 'org-ctrl-c-ctrl-c-final-hook
+  (lambda ()
+    (message "yeah, you got \"%s\"" (word-at-point))
+    t))
+#+end_src
