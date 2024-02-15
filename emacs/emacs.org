@@ -95,7 +95,8 @@ Is there a way of forcing the save?
 ;(global-set-key (kbd "s-S-<return>") 'eval-buffer)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "s-<return>") 'eval-defun)
-(global-set-key (kbd "s-c") 'ns-copy-including-secondary)
+;(global-set-key (kbd "s-c") 'ns-copy-including-secondary) ; This only works for NS
+(global-set-key (kbd "s-c") 'kill-ring-save)
 (global-set-key (kbd "s-v") 'yank) ;; Paste
 (global-set-key (kbd "s-x") 'kill-region)
 (global-set-key (kbd "s-p") 'execute-extended-command)
