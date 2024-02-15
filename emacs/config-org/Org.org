@@ -16,6 +16,7 @@ Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetarigh
   (setq
    org-support-shift-select "always"
    org-confirm-babel-evaluate nil
+   org-edit-src-content-indentation 0
    org-startup-truncated t)
   :bind
   (:map
@@ -26,7 +27,7 @@ Thanks to [[https://stackoverflow.com/questions/17539007/remap-org-shiftmetarigh
    ; This is the same as RStudio  
    ("<M-S-left>" . nil)
    ("<M-S-right>" . nil)
-   ("s-C" . comment-line))) 
+   ("s-C" . comment-line)))
 ;:config
 ; (define-key org-mode-map (kbd "<S-s-right>") nil) ; Not defined either way
 ; (define-key org-mode-map (kbd "<S-s-left>") nil) ; Not defined either way
