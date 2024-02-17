@@ -1,0 +1,34 @@
+#+PROPERTY: header-args:emacs-lisp :results output silent
+* Magit
+
+#+begin_src emacs-lisp
+(defun jls/default-magit-dir (url)
+  ;  (concat "~/projects/" (file-name-base url))
+  "~/projects/")
+
+(use-package magit
+  :init (setq magit-clone-default-directory #'jls/default-magit-dir)
+  :bind ("s-m" . magit-status)
+  ;:init (setq magit-clone-default-directory (defun (url) "~/projects/"))
+  :custom
+  (magit-display-buffer-function
+   #'magit-display-buffer-same-window-except-diff-v1))
+
+;(global-set-key (kbd "s-m") 'magit-status)
+#+end_src
+
+At some stage I used this to change up the formatting of the diffs in the Magit status buffer.
+But it turned out not to be useful now that I'm using the doom-nord theme.
+
+#+begin_src emacs-lisp
+ ;   (custom-set-faces
+ ;    ;`(magit-diff-added ((t :foreground ,(doom-color 'green))))
+ ;    `(magit-diff-added-highlight
+ ;      ((t :background ,(doom-color 'green)
+;	   :foreground ,(doom-color 'blue)))
+     ;`(magit-diff-added                      :foreground green :weight 'bold)
+     ;`(magit-diff-added-highlight            :foreground teal :weight 'bold)
+     ; `(mode-line ((t (:background ,(doom-color 'dark-violet)))))
+     ; `(font-lock-comment-face ((t (:foreground ,(doom-color 'base6)))))
+ ;    ))
+#+end_src
