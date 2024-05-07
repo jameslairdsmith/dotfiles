@@ -165,6 +165,8 @@ options(styler.cache_root = "styler-perm")
 
 Attach shortcuts.
 
+TODO: make it the last thing that is attached.
+
 ```{r}
 attach(jls)
 ```
