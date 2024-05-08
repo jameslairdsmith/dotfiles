@@ -81,13 +81,6 @@ if(!at_work()) {
 
 If I am at work, then these values get set separately.
 
-# Git
-
-```{r}
-# invisible(system("git config --global user.name 'James Laird-Smith'"))
-# invisible(system(paste0("git config --global user.email '", my_email(), "'")))
-```
-
 # Package dev
 
 ```{r}
