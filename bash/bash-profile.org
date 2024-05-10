@@ -13,7 +13,7 @@ echo "This is my .bash_profile file running!"
 echo "I created my bash profile in Emacs!"
 #+end_src
 
-Setting my prompt
+Setting my prompt. For now this is just the default.
 
 #+begin_src sh 
 PS1="> "
