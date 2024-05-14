@@ -27,7 +27,6 @@ the script.
 jls <- new.env()
 ```
 
-
 Am I at work?
 
 ```{r}
