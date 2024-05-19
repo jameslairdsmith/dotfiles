@@ -105,7 +105,7 @@ I'm not sure why this was being set in my MacOS config, but explicitly setting
 it makes it fine.
 
 ```{r}
-if(!at_work){
+if(!at_work()) {
   Sys.setenv(RETICULATE_PYTHON="/usr/local/bin/python3")
 }
 ```
