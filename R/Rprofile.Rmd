@@ -30,13 +30,13 @@ jls <- new.env()
 Am I at work?
 
 ```{r}
-at_work <- function() {
+jls$at_work <- function() {
   if(Sys.info()["user"] == "jameslaird-smith") return(FALSE)
   TRUE
 }
 
-my_email <- function() {
-  if(at_work()) return("James.Laird-Smith@bankofengland.co.uk")
+jls$my_email <- function() {
+  if(jls$at_work()) return("James.Laird-Smith@bankofengland.co.uk")
   "jameslairdsmith@gmail.com"
 }
 ```
@@ -47,7 +47,7 @@ Strangely, this is the best way I've found to do this, among many worse
 [alternatives](https://twitter.com/JLS_DataScience/status/1587904642670804993?s=20&t=tTPjcXTZW61NZS7fuYDDhQ)
 
 ```{r}
-on_rstudio <- function() {
+jls$on_rstudio <- function() {
   if (commandArgs()[[1L]] == "RStudio") {
     return(TRUE)
   }
@@ -73,7 +73,7 @@ If I'm not at work, I just using the default that RStudio would use even if
 I'm not in RStudio.
 
 ```{r}
-if(!at_work()) {
+if(!jls$at_work()) {
   options(repos = c(CRAN='https://cloud.r-project.org'))
 }
 ```
@@ -88,7 +88,7 @@ options(
   usethis.description = list(
     "Authors@R" = utils::person(
       "James", "Laird-Smith",
-      email = my_email(),
+      email = jls$my_email(),
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-1175-4046")
     ),
@@ -105,7 +105,7 @@ I'm not sure why this was being set in my MacOS config, but explicitly setting
 it makes it fine.
 
 ```{r}
-if(!at_work()) {
+if(!jls$at_work()) {
   Sys.setenv(RETICULATE_PYTHON="/usr/local/bin/python3")
 }
 ```
@@ -171,7 +171,7 @@ Attach shortcuts.
 TODO: make it the last thing that is attached.
 
 ```{r}
-attach(jls)
+attach(jls, warn.conflicts = FALSE)
 ```
 
 Cleanup
@@ -179,5 +179,5 @@ Cleanup
 Removing the helpers that I created before.
 
 ```{r}
-rm(at_work, my_email, on_rstudio, jls)
+rm(jls)
 ```
