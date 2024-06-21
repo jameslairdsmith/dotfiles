@@ -124,21 +124,28 @@ setHook("rstudio.sessionInit", function(newSession) {
 }, action = "append")
 ```
 
+
 ## Keyboard shortcuts
+
+This is currently handled separately by the shrcts package.
+
+My keyboard shortcuts are very hyper-key dependent at the moment, because I've
+programmed my keyboard to make that easy. But it's not workable when I don't 
+have my programmable keyboard, so might require rethinking soon.
+
+Some of them are running RStudio commands.
 
 List of all available RStudio Commands: https://docs.rstudio.com/ide/server-pro/1.3.1007-2/rstudio-ide-commands.html
 
 Actually, this might be better: https://docs.rstudio.com/ide/server-pro/rstudio_ide_commands/rstudio_ide_commands.html
+
+## Helper functions
 
 ```{r}
 jls$jls_set_shrtcts <- function() {
   shrtcts::add_rstudio_shortcuts(set_keyboard_shortcuts = TRUE)
 }
 ```
-
-My keyboard shortcuts are very hyper-key dependent at the moment, because I've
-programmed my keyboard to make that easy. But it's not workable when I don't 
-have my programmable keyboard, so might require rethinking soon.
 
 # Prompt
 
