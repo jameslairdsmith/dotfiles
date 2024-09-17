@@ -124,13 +124,12 @@ if(!jls$jls_at_work()) {
 ## Preferences
 
 ```{r}
-setHook("rstudio.sessionInit", function(newSession) {
+jls$jls_set_rstudio_prefs <- function() {
   rstudioapi::writeRStudioPreference("editor_keybindings", "vim")
   rstudioapi::writeRStudioPreference("save_workspace", "never")
   rstudioapi::writeRStudioPreference("always_save_history", FALSE)
   rstudioapi::writeRStudioPreference("save_files_before_build", TRUE)
-  # rstudioapi::applyTheme("Kr Theme") # This doesn't seem to work so well
-}, action = "append")
+}
 ```
 
 
