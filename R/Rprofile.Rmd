@@ -171,6 +171,14 @@ options(prompt = "\u03BB > ")
 options(styler.cache_root = "styler-perm")
 ```
 
+# Extras
+
+```{r}
+if (file.exists("~/.Rprofile.local")) {
+  source("~/.Rprofile.local")
+}
+```
+
 # Final actions
 
 Attach shortcuts.
