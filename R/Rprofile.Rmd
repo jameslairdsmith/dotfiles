@@ -16,7 +16,7 @@ on external packages. You don't want to load them, even using `::`. One reason
 is that they might affect installs.
 
 One way to tackle this is to wrap a lot of customisation in functions. Which 
-have far fewer effects unit they are called.
+have far fewer effects until they are called.
 
 # Helpers
 
@@ -30,13 +30,13 @@ jls <- new.env()
 Am I at work?
 
 ```{r}
-jls$at_work <- function() {
+jls$jls_at_work <- function() {
   if(Sys.info()["user"] == "jameslaird-smith") return(FALSE)
   TRUE
 }
 
-jls$my_email <- function() {
-  if(jls$at_work()) return("James.Laird-Smith@bankofengland.co.uk")
+jls$jls_email <- function() {
+  if(jls$jls_at_work()) return("James.Laird-Smith@bankofengland.co.uk")
   "jameslairdsmith@gmail.com"
 }
 ```
@@ -47,13 +47,22 @@ Strangely, this is the best way I've found to do this, among many worse
 [alternatives](https://twitter.com/JLS_DataScience/status/1587904642670804993?s=20&t=tTPjcXTZW61NZS7fuYDDhQ)
 
 ```{r}
-jls$on_rstudio <- function() {
+jls$jls_on_rstudio <- function() {
   if (commandArgs()[[1L]] == "RStudio") {
     return(TRUE)
   }
   FALSE
 }
 ```
+
+Is a package installed?
+
+```{r}
+jls$jls_is_installed <- function(pkg) {
+  requireNamespace(pkg, quietly = TRUE)
+}
+```
+
 
 # General preferences
 
@@ -73,7 +82,7 @@ If I'm not at work, I just using the default that RStudio would use even if
 I'm not in RStudio.
 
 ```{r}
-if(!jls$at_work()) {
+if(!jls$jls_at_work()) {
   options(repos = c(CRAN='https://cloud.r-project.org'))
 }
 ```
@@ -88,7 +97,7 @@ options(
   usethis.description = list(
     "Authors@R" = utils::person(
       "James", "Laird-Smith",
-      email = jls$my_email(),
+      email = jls$jls_email(),
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-1175-4046")
     ),
@@ -105,7 +114,7 @@ I'm not sure why this was being set in my MacOS config, but explicitly setting
 it makes it fine.
 
 ```{r}
-if(!jls$at_work()) {
+if(!jls$jls_at_work()) {
   Sys.setenv(RETICULATE_PYTHON="/usr/local/bin/python3")
 }
 ```
@@ -163,7 +172,6 @@ But maybe I won't use that right now. Just a lambda, to be like the cool kids.
 ```{r}
 options(prompt = "\u03BB > ")
 ```
-
 
 # Linting and styling
 
