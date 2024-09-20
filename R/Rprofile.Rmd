@@ -27,6 +27,16 @@ the script.
 jls <- new.env()
 ```
 
+
+R version
+
+```{r}
+jls$jls_r_version <- function() {
+  numeric_version(paste0(R.version$major,".", R.version$minor))
+}
+```
+
+
 Am I at work?
 
 ```{r}
@@ -169,7 +179,10 @@ taken.
 But maybe I won't use that right now. Just a lambda, to be like the cool kids.
 
 ```{r}
-options(prompt = "\u03BB > ")
+# Unicode doesn't seem to work before R 4.1.0
+if(jls$jls_r_version() >= numeric_version("4.1.0")) {
+  options(prompt = "\u03BB > ")
+}
 ```
 
 # Linting and styling
