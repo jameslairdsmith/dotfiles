@@ -86,6 +86,12 @@ I used to use doom-themes and a nord implementation.
 (load-theme 'doom-nano-dark t)
 #+end_src
 
+Now also using modus
+
+#+begin_src emacs-lisp
+(load-theme 'modus-vivendi-tinted)
+#+end_src
+
 ** Modeline
 
 #+begin_src emacs-lisp
