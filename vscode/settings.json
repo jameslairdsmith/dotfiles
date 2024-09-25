@@ -68,5 +68,8 @@
                 "editor.action.outdentLines"
             ]
         }
-    ]
+    ],
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    "explorer.confirmDragAndDrop": false
 }
