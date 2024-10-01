@@ -270,6 +270,11 @@ Just using the typical evil-collection setup for now.
   
 #+end_src
 
+* Elm mode
+
+#+begin_src emacs-lisp
+(use-package elm-mode)
+#+end_src
 
 * PDF tooling
 
