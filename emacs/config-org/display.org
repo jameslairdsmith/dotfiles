@@ -89,7 +89,7 @@ I used to use doom-themes and a nord implementation.
 Now also using modus
 
 #+begin_src emacs-lisp
-(load-theme 'modus-vivendi-tinted)
+(load-theme 'modus-vivendi-tinted t)
 #+end_src
 
 ** Modeline

@@ -191,7 +191,6 @@ An idea is to capture various trailing command arguments when starting R. Then i
   (R))
 #+end_src
 
-
 A better solution would be to have the generic open project actions in their own function. And all the project specific actions can call that one. Classic remove duplication.
 
 #+begin_src emacs-lisp
