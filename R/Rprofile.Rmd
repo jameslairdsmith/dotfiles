@@ -199,6 +199,17 @@ if (file.exists("~/.Rprofile.local")) {
 }
 ```
 
+# Quitting
+
+Do not ask to save workspace on exit.
+
+```{r}
+jls$q <- function(save = "no", status = 0, runLast = TRUE) {
+  base::q(save = save, status = status, runLast = runLast)
+}
+```
+
+
 # Final actions
 
 Attach shortcuts.
