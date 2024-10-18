@@ -117,6 +117,15 @@ options(
 )
 ```
 
+```{r}
+if(jls$jls_at_work() && .Platform$OS.type == "windows") {
+  options(usethis.destdir = normalizePath(file.path(Sys.getenv("HOMEDRIVE"), 
+                                                    Sys.getenv("HOMEPATH"),
+                                                    "projects"), 
+                                          winslash = "/"))
+}
+```
+
 
 # Python dev
 
