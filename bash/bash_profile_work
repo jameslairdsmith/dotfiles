@@ -1,3 +1,6 @@
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'
+
+# For getting to project folder automatically from a terminal in RStudio
+cd "$OLDPWD"
