@@ -169,6 +169,14 @@ Actually, this might be better: https://docs.rstudio.com/ide/server-pro/rstudio_
 ## Helper functions
 
 ```{r}
+# For installing the packages required for my shrtcts
+jls$jls_shrtcts_pkgs <- function() {
+  c("tjmahr/WrapRmd",
+    "styler",
+    "gadenbuie/shrtcts")
+}
+
+
 jls$jls_set_shrtcts <- function() {
   shrtcts::add_rstudio_shortcuts(set_keyboard_shortcuts = TRUE)
 }
