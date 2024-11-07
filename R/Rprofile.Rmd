@@ -82,6 +82,8 @@ options(connectionObserver = NULL)
 # ^ connectionObserver at work just gets in the way.
 options(tidyverse.quiet = TRUE)
 # ^ Is there a way to silence S3 overwrites?
+options(rsconnect.launch.browser = FALSE)
+# ^ Not launching browser on new Posit Connect deployment
 ```
 
 It also might be good to set `_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_`?
