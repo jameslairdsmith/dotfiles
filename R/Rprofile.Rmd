@@ -140,6 +140,16 @@ if(!jls$jls_at_work()) {
 }
 ```
 
+# Radian
+
+This setting is supposed to help with supporting unicode the Radian interface,
+but it's not working for me right now. See here for more details: https://github.com/randy3k/radian/issues/269#issuecomment-1169663251
+
+```{r}
+#Sys.setlocale("LC_ALL", Sys.getenv("LANG"))
+```
+
+
 # RStudio 
 
 ## Preferences
