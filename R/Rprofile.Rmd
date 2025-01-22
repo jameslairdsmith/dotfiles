@@ -65,6 +65,18 @@ jls$jls_on_rstudio <- function() {
 }
 ```
 
+Alternatively, maybe I'm on Radian?
+
+```{r}
+jls$jls_on_radian <- function() {
+  if(commandArgs()[[1]] == "radian") {
+    return(TRUE)
+  }
+  FALSE
+}
+```
+
+
 Is a package installed?
 
 ```{r}
@@ -208,8 +220,14 @@ taken.
 But maybe I won't use that right now. Just a lambda, to be like the cool kids.
 
 ```{r}
-# Unicode doesn't seem to work before R 4.1.0
-if(jls$jls_r_version() >= numeric_version("4.1.0")) {
+jls$jls_want_prompt <- function() {
+   # Unicode doesn't seem to work before R 4.1.0
+  r_version_valid <- jls$jls_r_version() >= numeric_version("4.1.0")
+  # make sure we are not on Radian
+  r_version_valid && !jls$jls_on_radian()
+}
+
+if(jls$jls_want_prompt()) {
   options(prompt = "\u03BB > ")
 }
 ```
