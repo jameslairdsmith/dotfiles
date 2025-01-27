@@ -217,6 +217,7 @@ taken.
 ```
 
 But maybe I won't use that right now. Just a lambda, to be like the cool kids.
+But only when not on Radian.
 
 ```{r}
 jls$jls_want_prompt <- function() {
