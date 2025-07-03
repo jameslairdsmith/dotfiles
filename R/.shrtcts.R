@@ -21,9 +21,9 @@ function() rstudioapi::executeCommand("roxygenizePackage")
 #' @shortcut Ctrl+Alt+Shift+P
 function() rstudioapi::executeCommand("showCommandPalette")
 
-#' Run devtools::document()
+#' Style selection
 #' @shortcut Ctrl+Alt+Shift+S
-styler:::style_selection
+function() rstudioapi::executeCommand("reformatCode")
 
 #' Go to definition
 #' @shortcut Ctrl+.
