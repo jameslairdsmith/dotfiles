@@ -1,0 +1,6 @@
+# For getting vi mode to look nice in bash
+# source: https://stackoverflow.com/questions/44534678/how-to-change-cursor-shape-depending-on-vi-mode-in-bash
+
+set show-mode-in-prompt on
+set vi-cmd-mode-string "\1\e[2 q\2"
+set vi-ins-mode-string "\1\e[6 q\2"
