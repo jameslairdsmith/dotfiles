@@ -1,0 +1,7 @@
+
+[editor.key_map]
+"alt-hyphen" = " <- "
+"ctrl-shift-M" = " |> "
+
+[editor]
+auto_match = true
