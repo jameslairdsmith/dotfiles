@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "stateful.runme",
+    "posit.air-vscode",
+    "github.copilot",
+    "databricks.databricks",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "reditorsupport.r",
+    "elmtooling.elm-ls-vscode",
+    "elm-land.elm-land",
+    "sourcegraph.amp",
+    "redhat.vscode-yaml",
+    "tomoki1207.pdf"
+  ]
+}
