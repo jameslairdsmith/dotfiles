@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "stateful.runme",
     "posit.air-vscode",
     "github.copilot",
     "databricks.databricks",
@@ -11,6 +10,9 @@
     "elm-land.elm-land",
     "sourcegraph.amp",
     "redhat.vscode-yaml",
-    "tomoki1207.pdf"
+    "tomoki1207.pdf",
+    "quarto.quarto",
+    "vscodevim.vim",
+    "vspacecode.vspacecode"
   ]
 }
