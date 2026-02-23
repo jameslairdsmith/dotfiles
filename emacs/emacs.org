@@ -42,6 +42,7 @@ Stuff I've just added for experimentation.
   (find-file "~/projects/dotfiles/bash/bash-profile.org"))
 #+end_src
 
+
 #+begin_src emacs-lisp
 (defun jls/symbol-value (symbol)
   (interactive "S")
