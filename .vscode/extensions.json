@@ -13,6 +13,7 @@
     "tomoki1207.pdf",
     "quarto.quarto",
     "vscodevim.vim",
-    "vspacecode.vspacecode"
+    "vspacecode.vspacecode",
+    "ms-vscode.powershell"
   ]
 }
