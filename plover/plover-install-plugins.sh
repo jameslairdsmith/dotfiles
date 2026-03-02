@@ -4,3 +4,4 @@
 # Doing it this way seems like it doesn't re-install it.
 
 plover -s plover_plugins install plover-lapwing-aio
+plover -s plover_plugins install plover-python-dictionary
