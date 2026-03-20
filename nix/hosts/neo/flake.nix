@@ -27,8 +27,6 @@
 	#pkgs.mullvad-vpn
 	pkgs.git
 	pkgs.obsidian
-	pkgs.tmux
-	pkgs.ghostty-bin
         ];
 
 	homebrew = {

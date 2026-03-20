@@ -7,8 +7,11 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    pkgs.hello
+  home.packages = with pkgs; [
+    hello
+    tmux
+    ghostty-bin
+    fish
     #pkgs.alacritty
     #pkgs.qbittorrent
 
@@ -57,10 +60,27 @@
   #
   home.sessionVariables = {
     EDITOR = "vim";
+    #SHELL = "bash";
   };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  programs.ghostty = {
+    enable = true;
+    settings.command = "fish";
+    settings.initial-command = "fish";
+    # Need this until pkgs.ghostty works on Mac
+    package = pkgs.ghostty-bin;
+    #enableBashIntegration = true;
+  };
+
+  programs.bash = {
+    enable = true;
+    shellAliases = {
+      gs = "git status";
+    };
+  };
  
   #programs.git = {
   #  enable = true;
