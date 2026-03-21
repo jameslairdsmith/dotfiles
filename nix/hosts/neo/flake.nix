@@ -25,7 +25,7 @@
       environment.systemPackages = [
         pkgs.vim
         pkgs.neovim
-        #pkgs.alacritty
+        # pkgs.alacritty
         pkgs.brave
         pkgs.google-chrome
         pkgs.ghostty-bin
