@@ -10,8 +10,8 @@
   home.packages = with pkgs; [
     hello
     tmux
-    ghostty-bin
-    fish
+    #ghostty-bin
+    #fish
     #pkgs.alacritty
     #pkgs.qbittorrent
 
@@ -71,7 +71,8 @@
     settings.command = "fish";
     settings.initial-command = "fish";
     # Need this until pkgs.ghostty works on Mac
-    package = pkgs.ghostty-bin;
+    #package = pkgs.ghostty-bin;
+    package = null;
     #enableBashIntegration = true;
   };
 

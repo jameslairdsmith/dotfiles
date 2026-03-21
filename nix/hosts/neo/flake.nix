@@ -24,10 +24,20 @@
 	#pkgs.alacritty
 	pkgs.brave
 	pkgs.google-chrome
+	pkgs.ghostty-bin
+	pkgs.fish
 	#pkgs.mullvad-vpn
 	pkgs.git
 	pkgs.obsidian
         ];
+	
+	programs.fish.enable = true;
+	
+	environment.shells = [
+	  pkgs.fish
+	];
+	
+	users.users.jls.shell = pkgs.fish;
 
 	homebrew = {
 	  enable = true;
