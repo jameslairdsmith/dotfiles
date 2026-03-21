@@ -76,10 +76,27 @@
     #enableBashIntegration = true;
   };
 
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      gs = "git status";
+      hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
+    };
+  };
+
+  programs.zsh = {
+    enable = true;
+    shellAliases = {
+      gs = "git status";
+      hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
+    };
+  };
+
   programs.bash = {
     enable = true;
     shellAliases = {
       gs = "git status";
+      hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     };
   };
  
