@@ -28,7 +28,7 @@
         pkgs.vim
         pkgs.neovim
         # pkgs.alacritty
-        # pkgs.brave
+        #pkgs.brave
         pkgs.google-chrome
         pkgs.ghostty-bin
         pkgs.fish
@@ -59,6 +59,16 @@
         };
         onActivation.cleanup = "zap";
       };
+
+      /*
+         environment.etc."brave/policies/managed/extensions.json" = {
+        text = builtins.toJSON {
+          ExtensionInstallForcelist = [
+            "cjpalhdlnbpafiamejdnhcphjbkeiagm;https://clients2.google.com/service/update2/crx" # uBlock Origin
+          ];
+        };
+      };
+      */
 
       fonts.packages = [
         #(pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
