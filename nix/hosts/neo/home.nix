@@ -68,8 +68,7 @@
 
   programs.ghostty = {
     enable = true;
-    settings.command = "fish";
-    settings.initial-command = "fish";
+    settings.command = "/run/current-system/sw/bin/fish";
     # Need this until pkgs.ghostty works on Mac
     #package = pkgs.ghostty-bin;
     package = null;
