@@ -68,6 +68,8 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # nixpkgs-firefox-darwin looks more promising
+
   /*
      programs.firefox = {
     enable = true;
