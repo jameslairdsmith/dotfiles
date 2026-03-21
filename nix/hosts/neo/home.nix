@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   home.username = "jls";
   home.homeDirectory = "/Users/jls";
   home.stateVersion = "25.11"; # Please read the comment before changing.
@@ -66,6 +68,21 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  /*
+     programs.firefox = {
+    enable = true;
+    profiles.jls = {
+      isDefault = true;
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+        ublock-origin
+      ];
+      settings = {
+        "browser.startup.homepage" = "https://www.google.com";
+      };
+    };
+  };
+  */
+
   programs.ghostty = {
     enable = true;
     settings.command = "/run/current-system/sw/bin/fish";
@@ -98,7 +115,20 @@
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     };
   };
- 
+
+  /*
+      programs.chromium = {
+    enable = true;
+    package = pkgs.brave;
+    extensions = [
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
+    ];
+    commandLineArgs = [
+      "--disable-features=WebRtcAllowInputVolumeAdjustment"
+    ];
+  };
+  */
+
   #programs.git = {
   #  enable = true;
   #  settings = {

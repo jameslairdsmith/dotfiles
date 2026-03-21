@@ -8,6 +8,7 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    #nur.url = "github:nix-community/NUR";
   };
 
   outputs = inputs @ {
@@ -16,6 +17,7 @@
     nixpkgs,
     nix-homebrew,
     home-manager,
+    #nur,
   }: let
     configuration = {pkgs, ...}: {
       nixpkgs.config.allowUnfree = true;
@@ -26,7 +28,7 @@
         pkgs.vim
         pkgs.neovim
         # pkgs.alacritty
-        pkgs.brave
+        # pkgs.brave
         pkgs.google-chrome
         pkgs.ghostty-bin
         pkgs.fish
@@ -76,8 +78,16 @@
       system.defaults = {
         dock.autohide = true;
         trackpad.TrackpadThreeFingerDrag = true;
+        trackpad.TrackpadThreeFingerTapGesture = 2;
+        #CustomUserPreferences."com.apple.HIToolbox" = {
+        #  AppleCurrentKeyboardLayoutInputSourceID = "com.apple.keylayout.US";
+        #};
       };
 
+      system.keyboard = {
+        enableKeyMapping = true;
+        remapCapsLockToEscape = true;
+      };
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
 
@@ -105,6 +115,8 @@
         # Allow the CLI to be available globally
         #  environment.systemPackages = [ pkgs.mullvad ];
         #})
+
+        #nur.modules.nixos.default
 
         home-manager.darwinModules.home-manager
         {
