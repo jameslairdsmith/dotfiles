@@ -10,115 +10,124 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager}:
-  let
-    configuration = { pkgs, ... }: {
+  outputs =
+    inputs@{
+      self,
+      nix-darwin,
+      nixpkgs,
+      nix-homebrew,
+      home-manager,
+    }:
+    let
+      configuration =
+        { pkgs, ... }:
+        {
 
-	nixpkgs.config.allowUnfree = true;
+          nixpkgs.config.allowUnfree = true;
 
-      # List packages installed in system profile. To search by name, run:
-      # $ nix-env -qaP | grep wget
-      environment.systemPackages =
-        [ pkgs.vim
-	pkgs.neovim
-	#pkgs.alacritty
-	pkgs.brave
-	pkgs.google-chrome
-	pkgs.ghostty-bin
-	pkgs.fish
-	#pkgs.mullvad-vpn
-	pkgs.git
-	pkgs.obsidian
-        ];
-	
-	programs.fish.enable = true;
-	
-	environment.shells = [
-	  pkgs.fish
-	];
-	
-	users.users.jls.shell = pkgs.fish;
+          # List packages installed in system profile. To search by name, run:
+          # $ nix-env -qaP | grep wget
+          environment.systemPackages = [
+            pkgs.vim
+            pkgs.neovim
+            #pkgs.alacritty
+            pkgs.brave
+            pkgs.google-chrome
+            pkgs.ghostty-bin
+            pkgs.fish
+            #pkgs.mullvad-vpn
+            pkgs.git
+            pkgs.obsidian
+          ];
 
-	homebrew = {
-	  enable = true;
-	  brews = [
-	    "mas"
-	  ];
-	  casks = [
-	   # "firefox"
-	  ];
-	  masApps = {
-	    #"Yoink" = 457622435;
-            "ExpressVPN" = 886492891;
-	  };
-	  onActivation.cleanup = "zap";
-	};
+          programs.fish.enable = true;
 
-	fonts.packages = [
-		#(pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-		pkgs.nerd-fonts.jetbrains-mono
-	];
+          environment.shells = [
+            pkgs.fish
+          ];
 
-      # Necessary for using flakes on this system.
-      nix.settings.experimental-features = "nix-command flakes";
+          users.users.jls.shell = pkgs.fish;
 
-      # Enable alternative shell support in nix-darwin.
-      # programs.fish.enable = true;
+          homebrew = {
+            enable = true;
+            brews = [
+              "mas"
+            ];
+            casks = [
+              # "firefox"
+            ];
+            masApps = {
+              #"Yoink" = 457622435;
+              "ExpressVPN" = 886492891;
+            };
+            onActivation.cleanup = "zap";
+          };
 
-      system.primaryUser = "jls";
+          fonts.packages = [
+            #(pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+            pkgs.nerd-fonts.jetbrains-mono
+          ];
 
-      users.users.jls.home = "/Users/jls";
+          # Necessary for using flakes on this system.
+          nix.settings.experimental-features = "nix-command flakes";
 
-      system.defaults = {
-      	dock.autohide = true;
-	trackpad.TrackpadThreeFingerDrag = true;
-      };
+          # Enable alternative shell support in nix-darwin.
+          # programs.fish.enable = true;
 
+          system.primaryUser = "jls";
 
-      # Set Git commit hash for darwin-version.
-      system.configurationRevision = self.rev or self.dirtyRev or null;
+          users.users.jls.home = "/Users/jls";
 
-      # Used for backwards compatibility, please read the changelog before changing.
-      # $ darwin-rebuild changelog
-      system.stateVersion = 6;
+          system.defaults = {
+            dock.autohide = true;
+            trackpad.TrackpadThreeFingerDrag = true;
+          };
 
-      # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "aarch64-darwin";
-    };
-  in
-  {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#simple
-    darwinConfigurations."neo" = nix-darwin.lib.darwinSystem {
-      modules = [
-	configuration
+          # Set Git commit hash for darwin-version.
+          system.configurationRevision = self.rev or self.dirtyRev or null;
 
-        #services.mullvad-vpn.enable = true;
+          # Used for backwards compatibility, please read the changelog before changing.
+          # $ darwin-rebuild changelog
+          system.stateVersion = 6;
 
-	#({ pkgs, ... }: {
-          # This is the line that was failing. 
+          # The platform the configuration will be used on.
+          nixpkgs.hostPlatform = "aarch64-darwin";
+        };
+    in
+    {
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#simple
+      darwinConfigurations."neo" = nix-darwin.lib.darwinSystem {
+        modules = [
+          configuration
+
+          #services.mullvad-vpn.enable = true;
+
+          #({ pkgs, ... }: {
+          # This is the line that was failing.
           # It MUST be inside this top-level modules list.
-        #  services.mullvad-vpn.enable = true;
-          
-          # Allow the CLI to be available globally
-        #  environment.systemPackages = [ pkgs.mullvad ];
-        #})
+          #  services.mullvad-vpn.enable = true;
 
-        home-manager.darwinModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          #home-manager.users.jls = import "/Users/jls/.config/home-manager/home.nix";
-          home-manager.users.jls = import ./home.nix;
-        }
-	nix-homebrew.darwinModules.nix-homebrew
-	{
-	  nix-homebrew = {
-		enable = true;
-		enableRosetta = true;
-		user = "jls";
-	};	
-	}
-      ];
+          # Allow the CLI to be available globally
+          #  environment.systemPackages = [ pkgs.mullvad ];
+          #})
+
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            #home-manager.users.jls = import "/Users/jls/.config/home-manager/home.nix";
+            home-manager.users.jls = import ./home.nix;
+          }
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              user = "jls";
+            };
+          }
+        ];
+      };
     };
-  };
 }

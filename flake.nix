@@ -16,7 +16,7 @@
 
       myVscode = pkgs.vscode-with-extensions.override {
         vscodeExtensions = with pkgs.vscode-extensions; [
-          bbenoist.nix # Nix language support
+          jnoortheen.nix-ide # Nix language support + formatting
           sourcegraph.amp
         ];
       };

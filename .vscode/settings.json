@@ -1,0 +1,6 @@
+{
+  "nix.formatterPath": ["nixfmt"],
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  }
+}
