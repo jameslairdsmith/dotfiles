@@ -56,6 +56,8 @@
         masApps = {
           #"Yoink" = 457622435;
           "ExpressVPN" = 886492891;
+          # Has the built-in Bitwarden Safari extension
+          "Bitwarden" = 1352778147;
         };
         onActivation.cleanup = "zap";
       };
