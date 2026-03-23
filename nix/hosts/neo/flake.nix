@@ -51,7 +51,9 @@
           "mas"
         ];
         casks = [
-          # "firefox"
+          # The nixpkgs version of Anki was failing because of a problem
+          # with audo.
+          "anki"
         ];
         masApps = {
           #"Yoink" = 457622435;
