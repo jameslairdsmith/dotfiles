@@ -27,9 +27,10 @@
       environment.systemPackages = [
         pkgs.vim
         pkgs.neovim
+        pkgs.tree
         # pkgs.alacritty
         #pkgs.brave
-        pkgs.google-chrome
+        #pkgs.google-chrome
         pkgs.ghostty-bin
         pkgs.fish
         #pkgs.mullvad-vpn
@@ -54,6 +55,7 @@
           # The nixpkgs version of Anki was failing because of a problem
           # with audo.
           "anki"
+          "cmux"
         ];
         masApps = {
           #"Yoink" = 457622435;
