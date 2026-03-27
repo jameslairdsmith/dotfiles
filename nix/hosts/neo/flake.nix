@@ -9,6 +9,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     #nur.url = "github:nix-community/NUR";
+    plover-flake.url = "github:openstenoproject/plover-flake";
   };
 
   outputs = inputs @ {
@@ -18,6 +19,7 @@
     nix-homebrew,
     home-manager,
     #nur,
+    plover-flake,
   }: let
     configuration = {pkgs, ...}: {
       nixpkgs.config.allowUnfree = true;
@@ -138,6 +140,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = { inherit inputs; };
           #home-manager.users.jls = import "/Users/jls/.config/home-manager/home.nix";
           home-manager.users.jls = import ./home.nix;
         }
