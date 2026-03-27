@@ -58,10 +58,12 @@
           # with audo.
           "anki"
           "cmux"
+          "plover"
         ];
         masApps = {
           #"Yoink" = 457622435;
           "ExpressVPN" = 886492891;
+          "vimlike" = 1584519802;
           # Has the built-in Bitwarden Safari extension
           "Bitwarden" = 1352778147;
         };
@@ -140,7 +142,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.extraSpecialArgs = {inherit inputs;};
           #home-manager.users.jls = import "/Users/jls/.config/home-manager/home.nix";
           home-manager.users.jls = import ./home.nix;
         }

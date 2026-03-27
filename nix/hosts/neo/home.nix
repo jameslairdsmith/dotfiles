@@ -4,10 +4,6 @@
   inputs,
   ...
 }: {
-  imports = [
-    inputs.plover-flake.homeManagerModules.plover
-  ];
-
   home.username = "jls";
   home.homeDirectory = "/Users/jls";
   home.stateVersion = "25.11"; # Please read the comment before changing.
@@ -72,23 +68,6 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  programs.plover = {
-    enable = true;
-    package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover.withPlugins (ps:
-      with ps; [
-        plover-lapwing-aio
-        plover-console-ui
-      ]);
-    settings = {
-      "Plugins" = {
-        enabled_extensions = [
-          "plover_lapwing_aio"
-          "plover_console_ui"
-        ];
-      };
-    };
-  };
 
   # nixpkgs-firefox-darwin looks more promising
 
