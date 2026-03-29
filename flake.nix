@@ -18,7 +18,6 @@
     myVscode = pkgs.vscode-with-extensions.override {
       vscodeExtensions = with pkgs.vscode-extensions; [
         jnoortheen.nix-ide # Nix language support + formatting
-        sourcegraph.amp
       ];
     };
   in {
@@ -27,7 +26,7 @@
         pkgs.nixfmt
         pkgs.alejandra
         pkgs.nixd
-        # myVscode
+        myVscode
       ];
       shellHook = ''
         echo "welcome to the shell!"
