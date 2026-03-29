@@ -8,6 +8,7 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     #nur.url = "github:nix-community/NUR";
     plover-flake.url = "github:openstenoproject/plover-flake";
   };
@@ -18,11 +19,16 @@
     nixpkgs,
     nix-homebrew,
     home-manager,
+    nix-vscode-extensions,
     #nur,
     plover-flake,
   }: let
     configuration = {pkgs, ...}: {
       nixpkgs.config.allowUnfree = true;
+
+      nixpkgs.overlays = [
+          nix-vscode-extensions.overlays.default
+        ];
 
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget

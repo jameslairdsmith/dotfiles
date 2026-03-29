@@ -27,7 +27,7 @@
         pkgs.nixfmt
         pkgs.alejandra
         pkgs.nixd
-        myVscode
+        # myVscode
       ];
       shellHook = ''
         echo "welcome to the shell!"
