@@ -75,26 +75,35 @@
   programs.vscode = {
     enable = true;
 
-    profiles.default.extensions = with pkgs.vscode-marketplace; [
-      jnoortheen.nix-ide # Nix language support + formatting
-      sourcegraph.amp
-      #posit.air-vscode
-      #github.copilot
-      #databricks.databricks
-      #esbenp.prettier-vscode
-      #ms-python.python
-      #reditorsupport.r
-      #reditorsupport.r-syntax
-      #elmtooling.elm-ls-vscode
-      #elm-land.elm-land
-      #redhat.vscode-yaml
-      #tomoki1207.pdf
-      #quarto.quarto
-      vscodevim.vim
-      #vspacecode.vspacecode
-      #vspacecode.whichkey
-      #ms-vscode.powershell
-    ];
+    argvSettings = {
+      enable-crash-reporter = false;
+    };
+
+    profiles.default = {
+      userSettings = {
+        "update.mode" = "none";
+      };
+      extensions = with pkgs.vscode-marketplace; [
+        jnoortheen.nix-ide # Nix language support + formatting
+        sourcegraph.amp
+        #posit.air-vscode
+        #github.copilot
+        #databricks.databricks
+        #esbenp.prettier-vscode
+        #ms-python.python
+        #reditorsupport.r
+        #reditorsupport.r-syntax
+        #elmtooling.elm-ls-vscode
+        #elm-land.elm-land
+        #redhat.vscode-yaml
+        #tomoki1207.pdf
+        #quarto.quarto
+        vscodevim.vim
+        #vspacecode.vspacecode
+        #vspacecode.whichkey
+        #ms-vscode.powershell
+      ];
+    };
   };
 
   # nixpkgs-firefox-darwin looks more promising
