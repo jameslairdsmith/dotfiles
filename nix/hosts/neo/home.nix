@@ -3,10 +3,12 @@
   pkgs,
   inputs,
   ...
-}: let
+}:
+let
   dotsDir = ../../..;
   vscodeConfigDir = "Library/Application Support/Code/User";
-in {
+in
+{
   home.username = "jls";
   home.homeDirectory = "/Users/jls";
   home.stateVersion = "25.11"; # Please read the comment before changing.
@@ -39,8 +41,12 @@ in {
   ];
 
   home.file = {
-    "${vscodeConfigDir}/keybindings.json".source = "${dotsDir}/vscode/keybindings.json";
-    "${vscodeConfigDir}/settings.json".source = "${dotsDir}/vscode/settings.json";
+    "${vscodeConfigDir}/keybindings.json" = {
+      source = "${dotsDir}/vscode/keybindings.json";
+    };
+    "${vscodeConfigDir}/settings.json" = {
+      source = "${dotsDir}/vscode/settings.json";
+    };
   };
 
   # Home Manager can also manage your environment variables through
@@ -77,9 +83,9 @@ in {
     profiles.default = {
       # Changed to using dedicated settings.json because it also works on Windows.
       /*
-         userSettings = {
-        "update.mode" = "none";
-      };
+           userSettings = {
+          "update.mode" = "none";
+        };
       */
       extensions = with pkgs.vscode-marketplace; [
         jnoortheen.nix-ide # Nix language support + formatting
@@ -107,18 +113,18 @@ in {
   # nixpkgs-firefox-darwin looks more promising
 
   /*
-     programs.firefox = {
-    enable = true;
-    profiles.jls = {
-      isDefault = true;
-      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-        ublock-origin
-      ];
-      settings = {
-        "browser.startup.homepage" = "https://www.google.com";
+       programs.firefox = {
+      enable = true;
+      profiles.jls = {
+        isDefault = true;
+        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+          ublock-origin
+        ];
+        settings = {
+          "browser.startup.homepage" = "https://www.google.com";
+        };
       };
     };
-  };
   */
 
   programs.ghostty = {
@@ -155,16 +161,16 @@ in {
   };
 
   /*
-      programs.chromium = {
-    enable = true;
-    package = pkgs.brave;
-    extensions = [
-      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
-    ];
-    commandLineArgs = [
-      "--disable-features=WebRtcAllowInputVolumeAdjustment"
-    ];
-  };
+        programs.chromium = {
+      enable = true;
+      package = pkgs.brave;
+      extensions = [
+        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
+      ];
+      commandLineArgs = [
+        "--disable-features=WebRtcAllowInputVolumeAdjustment"
+      ];
+    };
   */
 
   #programs.git = {

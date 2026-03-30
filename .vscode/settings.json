@@ -1,6 +1,6 @@
 {
   "nix.formatterPath": [
-    "alejandra"
+    "nixfmt"
   ],
   "[nix]": {
     "editor.defaultFormatter": "jnoortheen.nix-ide",
@@ -12,8 +12,8 @@
     "nixd": {
       "formatting": {
         "command": [
-          "alejandra"
-        ], // or nixfmt or nixpkgs-fmt
+          "nixfmt"
+        ],
       }
     }
   }
