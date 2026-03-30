@@ -9,6 +9,10 @@ let
   vscodeConfigDir = "Library/Application Support/Code/User";
 in
 {
+  # imports = [
+  #   inputs.plover-flake.homeManagerModules.plover
+  # ];
+
   home.username = "jls";
   home.homeDirectory = "/Users/jls";
   home.stateVersion = "25.11"; # Please read the comment before changing.
@@ -48,6 +52,27 @@ in
       source = "${dotsDir}/vscode/settings.json";
     };
   };
+
+  # programs.plover = {
+  #   enable = true;
+  #   package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover.withPlugins (
+  #     ps: with ps; [
+  #       plover-lapwing-aio
+  #       plover-portuguese
+  #     ]
+  #   );
+
+  #   # Or, use `plover-full` if you want Plover with all the plugins installed:
+  #   # package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover-full;
+
+  #   settings = {
+  #     "Machine Configuration" = {
+  #       machine_type = "Gemini PR";
+  #       auto_start = true;
+  #     };
+  #     "Output Configuration".undo_levels = 100;
+  #   };
+  # };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a

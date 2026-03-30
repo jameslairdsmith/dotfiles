@@ -68,7 +68,8 @@
               # with audo.
               "anki"
               "cmux"
-              "plover"
+              # "plover"
+              # "https://github.com/opensteno/plover/releases/download/v5.2.3/plover-5.2.3-macosx_12_0_universal2.dmg"
             ];
             masApps = {
               #"Yoink" = 457622435;
@@ -112,6 +113,9 @@
             #CustomUserPreferences."com.apple.HIToolbox" = {
             #  AppleCurrentKeyboardLayoutInputSourceID = "com.apple.keylayout.US";
             #};
+            CustomUserPreferences."com.microsoft.VSCode" = {
+              ApplePressAndHoldEnabled = false;
+            };
           };
 
           system.keyboard = {

@@ -1,5 +1,10 @@
 [
 	{
+		"key": "shift+cmd+c",
+		"command": "editor.action.commentLine",
+		"when": "editorTextFocus"
+	},
+	{
 		"key": "ctrl+shift+alt+o",
 		"command": "workbench.action.quickOpen"
 	},
@@ -20,7 +25,7 @@
 			"text": " |>"
 		}
 	},
-		{
+	{
 		"key": "ctrl+l",
 		"command": "workbench.action.terminal.sendSequence",
 		"when": "terminalFocus && terminalFocusInAny",
@@ -51,7 +56,7 @@
 			"text": "devtools::load_all()\n"
 		}
 	},
-		{
+	{
 		"key": "ctrl+alt+shift+l",
 		"command": "workbench.action.terminal.sendSequence",
 		"when": "terminalFocus && terminalFocusInAny",
