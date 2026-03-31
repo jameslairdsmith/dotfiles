@@ -173,7 +173,6 @@ in
     enable = true;
     interactiveShellInit = builtins.readFile "${dotsDir}/fish/config.fish";
     shellAliases = {
-      gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     };
   };
@@ -182,7 +181,6 @@ in
     enable = true;
     initContent = builtins.readFile "${dotsDir}/zsh/zshrc";
     shellAliases = {
-      gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     };
   };
@@ -191,7 +189,6 @@ in
     enable = true;
     profileExtra = builtins.readFile "${dotsDir}/bash/bash-profile";
     shellAliases = {
-      gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     };
   };
@@ -209,14 +206,22 @@ in
     };
   */
 
-  #programs.git = {
-  #  enable = true;
-  #  settings = {
-  #    userName = "James Laird-Smith";
-  #    userEmail = "jameslairdsmith@gmail.com";
-  #  };
-  #  aliases = {
-  #    gs = "git status";
-  #  };
-  #};
+  programs.git = {
+    enable = true;
+    settings = {
+      user.name = "James Laird-Smith";
+      user.email = "jameslairdsmith@gmail.com";
+      submodule.recurse = true;
+      diff.submodule = "log";
+      push.recurseSubmodules = "check";
+      status.submoduleSummary = true;
+      aliases = {
+        gs = "status";
+        gcl = "clone --recurse-submodules";
+        gch = "checkout";
+        gc = "commit";
+        gd = "diff";
+      };
+    };
+  };
 }

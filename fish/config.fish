@@ -1,4 +1,4 @@
-function gcw
+function gclw
     set url $argv[1]
     set repo_name (basename $url .git)
 
@@ -24,4 +24,5 @@ function gchw
 
     set branch $argv[1]
     git worktree add $branch $branch
+    git -C $branch submodule update --init --recursive
 end

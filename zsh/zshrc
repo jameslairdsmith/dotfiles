@@ -1,4 +1,4 @@
-gcw() {
+gclw() {
   local url="$1"
   local repo_name
   repo_name=$(basename "$url" .git)
@@ -25,4 +25,5 @@ gchw() {
 
   local branch="$1"
   git worktree add "$branch" "$branch"
+  git -C "$branch" submodule update --init --recursive
 }
