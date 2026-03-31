@@ -171,6 +171,7 @@ in
 
   programs.fish = {
     enable = true;
+    interactiveShellInit = builtins.readFile "${dotsDir}/fish/config.fish";
     shellAliases = {
       gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
