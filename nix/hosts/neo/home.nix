@@ -7,11 +7,12 @@
 let
   dotsDir = ../../..;
   vscodeConfigDir = "Library/Application Support/Code/User";
+  dotConfig = "Library/Application Support";
 in
 {
-  # imports = [
-  #   inputs.plover-flake.homeManagerModules.plover
-  # ];
+  imports = [
+    inputs.plover-flake.homeManagerModules.plover
+  ];
 
   home.username = "jls";
   home.homeDirectory = "/Users/jls";
@@ -51,28 +52,35 @@ in
     "${vscodeConfigDir}/settings.json" = {
       source = "${dotsDir}/vscode/settings.json";
     };
+    # "${dotConfig}/plover/plover.cfg".source = "${dotsDir}/plover/plover.cfg";
   };
 
-  # programs.plover = {
-  #   enable = true;
-  #   package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover.withPlugins (
-  #     ps: with ps; [
-  #       plover-lapwing-aio
-  #       plover-portuguese
-  #     ]
-  #   );
+  programs.plover = {
+    enable = true;
+    package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover.withPlugins (
+      ps: with ps; [
+        plover-python-dictionary
+        plover-modal-dictionary
+        plover-dict-commands
+        plover-last-translation
+        plover-stitching
+      ]
+    );
 
-  #   # Or, use `plover-full` if you want Plover with all the plugins installed:
-  #   # package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover-full;
-
-  #   settings = {
-  #     "Machine Configuration" = {
-  #       machine_type = "Gemini PR";
-  #       auto_start = true;
-  #     };
-  #     "Output Configuration".undo_levels = 100;
-  #   };
-  # };
+    # settings = {
+    #   "Machine Configuration" = {
+    #     machine_type = "Gemini PR";
+    #     auto_start = true;
+    #   };
+    #   "System: Lapwing".dictionaries = [
+    #     {
+    #       enabled = true;
+    #       path = "~/projects/steno/src-dicts/emily-modifiers.py";
+    #     }
+    #   ]; # doesn't work
+    #   "Output Configuration".undo_levels = 100;
+    # };
+  };
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a

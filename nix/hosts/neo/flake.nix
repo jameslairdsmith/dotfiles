@@ -69,7 +69,6 @@
               "anki"
               "cmux"
               # "plover"
-              # "https://github.com/opensteno/plover/releases/download/v5.2.3/plover-5.2.3-macosx_12_0_universal2.dmg"
             ];
             masApps = {
               #"Yoink" = 457622435;
