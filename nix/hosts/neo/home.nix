@@ -45,6 +45,15 @@ in
     # '')
   ];
 
+  home.shellAliases = {
+    gs = "git status";
+    gcl = "git clone --recurse-submodules";
+    gch = "git checkout";
+    gc = "git commit";
+    gd = "git diff";
+    ga = "git add";
+  };
+
   home.file = {
     "${vscodeConfigDir}/keybindings.json" = {
       source = "${dotsDir}/vscode/keybindings.json";
@@ -215,13 +224,6 @@ in
       diff.submodule = "log";
       push.recurseSubmodules = "check";
       status.submoduleSummary = true;
-      aliases = {
-        gs = "status";
-        gcl = "clone --recurse-submodules";
-        gch = "checkout";
-        gc = "commit";
-        gd = "diff";
-      };
     };
   };
 }
