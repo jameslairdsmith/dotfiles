@@ -179,6 +179,7 @@ in
 
   programs.zsh = {
     enable = true;
+    initExtra = builtins.readFile "${dotsDir}/zsh/zshrc";
     shellAliases = {
       gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
@@ -187,6 +188,7 @@ in
 
   programs.bash = {
     enable = true;
+    profileExtra = builtins.readFile "${dotsDir}/bash/bash-profile";
     shellAliases = {
       gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
