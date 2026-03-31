@@ -9,7 +9,11 @@ gcw() {
 }
 
 _gchw() {
-  compadd $(git branch -a --format="%(refname:short)" 2>/dev/null)
+  local -a branches worktree_branches available
+  branches=(${(f)"$(git branch -a --format='%(refname:short)' 2>/dev/null)"})
+  worktree_branches=(${(f)"$(git worktree list --porcelain 2>/dev/null | grep '^branch ' | sed 's#branch refs/heads/##')"})
+  available=(${branches:|worktree_branches})
+  compadd $available
 }
 compdef _gchw gchw
 

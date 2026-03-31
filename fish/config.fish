@@ -7,7 +7,14 @@ function gcw
     echo "gitdir: ./.bare" > $repo_name/.git
 end
 
-complete -c gchw -f -a '(git branch -a --format="%(refname:short)" 2>/dev/null)'
+complete -c gchw -f -a '(begin
+    set -l worktree_branches (git worktree list --porcelain 2>/dev/null | grep "^branch " | string replace "branch refs/heads/" "")
+    for branch in (git branch -a --format="%(refname:short)" 2>/dev/null)
+        if not contains -- $branch $worktree_branches
+            echo $branch
+        end
+    end
+end)'
 
 function gchw
     if not git rev-parse --git-dir > /dev/null 2>&1

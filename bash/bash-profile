@@ -9,9 +9,11 @@ gcw() {
 }
 
 _gchw_completions() {
-  local branches
+  local branches worktree_branches available
   branches=$(git branch -a --format="%(refname:short)" 2>/dev/null)
-  COMPREPLY=($(compgen -W "$branches" -- "${COMP_WORDS[COMP_CWORD]}"))
+  worktree_branches=$(git worktree list --porcelain 2>/dev/null | grep '^branch ' | sed 's#branch refs/heads/##')
+  available=$(echo "$branches" | grep -vxF -f <(echo "$worktree_branches"))
+  COMPREPLY=($(compgen -W "$available" -- "${COMP_WORDS[COMP_CWORD]}"))
 }
 complete -F _gchw_completions gchw
 
