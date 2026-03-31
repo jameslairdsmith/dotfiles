@@ -179,7 +179,7 @@ in
 
   programs.zsh = {
     enable = true;
-    initExtra = builtins.readFile "${dotsDir}/zsh/zshrc";
+    initContent = builtins.readFile "${dotsDir}/zsh/zshrc";
     shellAliases = {
       gs = "git status";
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
