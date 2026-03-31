@@ -8,6 +8,13 @@ gcw() {
   echo "gitdir: ./.bare" > "$repo_name/.git"
 }
 
+_gchw_completions() {
+  local branches
+  branches=$(git branch -a --format="%(refname:short)" 2>/dev/null)
+  COMPREPLY=($(compgen -W "$branches" -- "${COMP_WORDS[COMP_CWORD]}"))
+}
+complete -F _gchw_completions gchw
+
 gchw() {
   if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "error: not in a git worktree repository" >&2
