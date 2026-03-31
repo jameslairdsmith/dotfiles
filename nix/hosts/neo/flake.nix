@@ -105,6 +105,8 @@
 
           users.users.jls.home = "/Users/jls";
 
+          security.pam.services.sudo_local.watchIdAuth = true;
+
           system.defaults = {
             dock.autohide = true;
             trackpad.TrackpadThreeFingerDrag = true;
