@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "jnoortheen.nix-ide",
-    "sourcegraph.amp"
+    "jnoortheen.nix-ide"
   ]
 }

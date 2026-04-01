@@ -77,5 +77,23 @@
     "explorer.confirmDragAndDrop": false,
     "update.mode": "none",
     "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 80
+    "editor.wordWrapColumn": 80,
+    "nix.formatterPath": [
+        "nixfmt"
+    ],
+    "[nix]": {
+        "editor.defaultFormatter": "jnoortheen.nix-ide",
+        "editor.formatOnSave": true
+    },
+    "nix.enableLanguageServer": true,
+    "nix.serverPath": "nixd",
+    "nix.serverSettings": {
+        "nixd": {
+            "formatting": {
+                "command": [
+                    "nixfmt"
+                ]
+            }
+        }
+    }
 }
