@@ -132,6 +132,7 @@ in
       extensions = with pkgs.vscode-marketplace; [
         jnoortheen.nix-ide # Nix language support + formatting
         sourcegraph.amp
+        elm-land.elm-land
         #posit.air-vscode
         #github.copilot
         #databricks.databricks
@@ -140,7 +141,6 @@ in
         #reditorsupport.r
         #reditorsupport.r-syntax
         #elmtooling.elm-ls-vscode
-        #elm-land.elm-land
         #redhat.vscode-yaml
         #tomoki1207.pdf
         #quarto.quarto

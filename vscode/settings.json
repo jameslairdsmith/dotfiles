@@ -71,6 +71,9 @@
     ],
     "editor.formatOnSave": true,
     "editor.minimap.enabled": false,
-    "editor.rulers": [80],
-    "explorer.confirmDragAndDrop": false
+    "editor.rulers": [
+        80
+    ],
+    "explorer.confirmDragAndDrop": false,
+    "update.mode": "none"
 }
