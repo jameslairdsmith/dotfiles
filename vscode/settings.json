@@ -75,5 +75,7 @@
         80
     ],
     "explorer.confirmDragAndDrop": false,
-    "update.mode": "none"
+    "update.mode": "none",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80
 }
