@@ -68,6 +68,7 @@
               # with audo.
               "anki"
               "cmux"
+              "sublime-text"
               # "plover"
             ];
             masApps = {
