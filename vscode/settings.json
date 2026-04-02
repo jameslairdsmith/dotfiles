@@ -82,7 +82,9 @@
         "nixfmt"
     ],
     "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "prettier.printWidth": 80,
+        "prettier.proseWrap": "always"
     },
     "[nix]": {
         "editor.defaultFormatter": "jnoortheen.nix-ide",
