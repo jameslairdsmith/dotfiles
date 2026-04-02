@@ -26,6 +26,8 @@ in
     nixfmt
     alejandra
     nixd
+    # Using VS Code extension's bundled version of prettier for now
+    #prettier
     #ghostty-bin
     #fish
     #pkgs.alacritty
@@ -140,9 +142,12 @@ in
         #ms-python.python
         #reditorsupport.r
         #reditorsupport.r-syntax
-        #elmtooling.elm-ls-vscode
+        elmtooling.elm-ls-vscode
         #redhat.vscode-yaml
+        esbenp.prettier-vscode
         #tomoki1207.pdf
+        # dependency of elm extension
+        hbenl.vscode-test-explorer
         #quarto.quarto
         vscodevim.vim
         #vspacecode.vspacecode
