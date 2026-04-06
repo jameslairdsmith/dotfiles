@@ -178,7 +178,11 @@ in
 
   programs.ghostty = {
     enable = true;
-    settings.command = "/run/current-system/sw/bin/fish";
+    settings = {
+      command = "/run/current-system/sw/bin/fish";
+      theme = "dark:Modus Vivendi,light:Modus Operandi";
+      font-size = 16;
+    };
     # Need this until pkgs.ghostty works on Mac
     #package = pkgs.ghostty-bin;
     package = null;
