@@ -48,6 +48,7 @@
             #pkgs.mullvad-vpn
             pkgs.git
             pkgs.obsidian
+            pkgs.positron-bin
           ];
 
           programs.fish.enable = true;
