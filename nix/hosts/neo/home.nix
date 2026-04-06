@@ -140,6 +140,8 @@ in
         #databricks.databricks
         #esbenp.prettier-vscode
         #ms-python.python
+        # Required by hbenl.vscode-test-explorer
+        ms-vscode.test-adapter-converter
         #reditorsupport.r
         #reditorsupport.r-syntax
         elmtooling.elm-ls-vscode
