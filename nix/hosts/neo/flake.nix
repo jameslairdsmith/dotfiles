@@ -69,6 +69,7 @@
               "anki"
               "cmux"
               "sublime-text"
+              "logi-options+"
               # "plover"
             ];
             masApps = {
@@ -115,6 +116,7 @@
             #CustomUserPreferences."com.apple.HIToolbox" = {
             #  AppleCurrentKeyboardLayoutInputSourceID = "com.apple.keylayout.US";
             #};
+            NSGlobalDomain."com.apple.swipescrolldirection" = false;
             CustomUserPreferences."com.microsoft.VSCode" = {
               ApplePressAndHoldEnabled = false;
             };
