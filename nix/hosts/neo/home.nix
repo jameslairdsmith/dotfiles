@@ -153,6 +153,7 @@ in
         hbenl.vscode-test-explorer
         #quarto.quarto
         vscodevim.vim
+        myriad-dreamin.tinymist
         #vspacecode.vspacecode
         #vspacecode.whichkey
         #ms-vscode.powershell
