@@ -184,6 +184,11 @@ in
       command = "/run/current-system/sw/bin/fish";
       theme = "dark:Modus Vivendi,light:Modus Operandi";
       font-size = 16;
+      # Set the internal margins (adjust the numbers to your liking)
+      window-padding-x = 20;
+      window-padding-y = 20;
+      # Distribute the "extra" space evenly to center the text grid
+      window-padding-balance = true;
     };
     # Need this until pkgs.ghostty works on Mac
     #package = pkgs.ghostty-bin;
