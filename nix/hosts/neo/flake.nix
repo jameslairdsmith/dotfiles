@@ -71,6 +71,7 @@
               "cmux"
               "sublime-text"
               "logi-options+"
+              "orion"
               # "plover"
             ];
             masApps = {
