@@ -76,8 +76,10 @@
     ],
     "explorer.confirmDragAndDrop": false,
     "update.mode": "none",
+    "window.autoDetectColorScheme": true,
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 80,
+    "workbench.preferredLightColorTheme": "Visual Studio Light",
     "nix.formatterPath": [
         "nixfmt"
     ],
