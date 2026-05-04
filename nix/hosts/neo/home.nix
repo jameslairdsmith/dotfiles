@@ -28,6 +28,7 @@ in
     nixd
     worktrunk
     R
+    amp-cli
     # Using VS Code extension's bundled version of prettier for now
     #prettier
     #ghostty-bin
