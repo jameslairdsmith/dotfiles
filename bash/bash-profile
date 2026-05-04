@@ -27,3 +27,17 @@ gchw() {
   git worktree add "$branch" "$branch"
   git -C "$branch" submodule update --init --recursive
 }
+
+# Worktrunk shell integration
+if command -v wt >/dev/null 2>&1; then
+  eval "$(command wt config shell init bash)"
+  eval "$(declare -f wt | sed '1s/wt/__wt_orig/')"
+  wt() {
+    if [ "$1" = "remove" ]; then
+      shift
+      __wt_orig remove --no-delete-branch "$@"
+    else
+      __wt_orig "$@"
+    fi
+  }
+fi

@@ -26,3 +26,16 @@ function gchw
     git worktree add $branch $branch
     git -C $branch submodule update --init --recursive
 end
+
+# Worktrunk shell integration
+if type -q wt
+    command wt config shell init fish | source
+    functions -c wt __wt_orig
+    function wt
+        if test (count $argv) -ge 1; and test "$argv[1]" = "remove"
+            __wt_orig remove --no-delete-branch $argv[2..]
+        else
+            __wt_orig $argv
+        end
+    end
+end
