@@ -26,6 +26,7 @@ in
     nixfmt
     alejandra
     nixd
+    worktrunk
     R
     # Using VS Code extension's bundled version of prettier for now
     #prettier
@@ -65,6 +66,7 @@ in
       source = "${dotsDir}/vscode/settings.json";
     };
     # "${dotConfig}/plover/plover.cfg".source = "${dotsDir}/plover/plover.cfg";
+    ".config/worktrunk/config.toml".source = "${dotsDir}/worktrunk/config.toml";
   };
 
   programs.plover = {
