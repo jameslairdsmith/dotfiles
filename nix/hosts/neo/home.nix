@@ -27,6 +27,14 @@ in
     alejandra
     nixd
     inputs.worktrunk.packages.${pkgs.stdenv.hostPlatform.system}.default
+    (pkgs.writeShellScriptBin "wt-clone" ''
+      set -e
+      url="$1"
+      repo_name="$(basename "$url" .git)"
+      mkdir -p "$repo_name"
+      git clone --bare "$url" "$repo_name/.bare"
+      echo "gitdir: ./.bare" > "$repo_name/.git"
+    '')
     R
     amp-cli
     # Using VS Code extension's bundled version of prettier for now

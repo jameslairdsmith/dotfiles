@@ -1,12 +1,3 @@
-function gclw
-    set url $argv[1]
-    set repo_name (basename $url .git)
-
-    mkdir -p $repo_name
-    git clone --bare $url $repo_name/.bare
-    echo "gitdir: ./.bare" > $repo_name/.git
-end
-
 complete -c gchw -f -a '(begin
     set -l worktree_branches (git worktree list --porcelain 2>/dev/null | grep "^branch " | string replace "branch refs/heads/" "")
     for branch in (git branch -a --format="%(refname:short)" 2>/dev/null)
@@ -30,6 +21,7 @@ end
 # Worktrunk shell integration
 if type -q wt
     command wt config shell init fish | source
+    complete --keep-order --exclusive --command wt --arguments "(test -n \"\$WORKTRUNK_BIN\"; or set -l WORKTRUNK_BIN (type -P wt 2>/dev/null); and COMPLETE=fish \$WORKTRUNK_BIN -- (commandline --current-process --tokenize --cut-at-cursor) (commandline --current-token))"
     functions -c wt __wt_orig
     function wt
         if test (count $argv) -ge 1; and test "$argv[1]" = "remove"
