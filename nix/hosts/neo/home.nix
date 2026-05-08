@@ -26,7 +26,7 @@ in
     nixfmt
     alejandra
     nixd
-    worktrunk
+    inputs.worktrunk.packages.${pkgs.stdenv.hostPlatform.system}.default
     R
     amp-cli
     # Using VS Code extension's bundled version of prettier for now

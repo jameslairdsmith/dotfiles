@@ -11,6 +11,7 @@
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     #nur.url = "github:nix-community/NUR";
     plover-flake.url = "github:openstenoproject/plover-flake";
+    worktrunk.url = "github:max-sixty/worktrunk";
   };
 
   outputs =
@@ -23,6 +24,7 @@
       nix-vscode-extensions,
       #nur,
       plover-flake,
+      worktrunk,
     }:
     let
       configuration =

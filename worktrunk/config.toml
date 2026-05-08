@@ -1,1 +1,4 @@
 worktree-path = "{{ repo_path }}/../{{ branch | sanitize }}"
+
+[remove]
+delete-branch = false
