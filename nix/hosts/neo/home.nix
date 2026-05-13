@@ -12,6 +12,7 @@ in
 {
   imports = [
     inputs.plover-flake.homeManagerModules.plover
+    ../../modules/emacs.nix
   ];
 
   home.username = "jls";
