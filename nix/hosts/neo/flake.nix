@@ -12,6 +12,7 @@
     #nur.url = "github:nix-community/NUR";
     plover-flake.url = "github:openstenoproject/plover-flake";
     worktrunk.url = "github:max-sixty/worktrunk";
+    arf.url = "github:jameslairdsmith/arf/nix-support";
   };
 
   outputs =
@@ -25,6 +26,7 @@
       #nur,
       plover-flake,
       worktrunk,
+      arf,
     }:
     let
       configuration =

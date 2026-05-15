@@ -28,6 +28,7 @@ in
     alejandra
     nixd
     inputs.worktrunk.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.arf.packages.${pkgs.stdenv.hostPlatform.system}.default
     (pkgs.writeShellScriptBin "wt-clone" ''
       set -e
       url="$1"
