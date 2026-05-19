@@ -13,6 +13,7 @@ in
   imports = [
     inputs.plover-flake.homeManagerModules.plover
     ../../modules/emacs.nix
+    ../../modules/r.nix
   ];
 
   home.username = "jls";
@@ -28,7 +29,6 @@ in
     alejandra
     nixd
     inputs.worktrunk.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.arf.packages.${pkgs.stdenv.hostPlatform.system}.default
     (pkgs.writeShellScriptBin "wt-clone" ''
       set -e
       url="$1"
@@ -37,7 +37,6 @@ in
       git clone --bare "$url" "$repo_name/.bare"
       echo "gitdir: ./.bare" > "$repo_name/.git"
     '')
-    R
     amp-cli
     # Using VS Code extension's bundled version of prettier for now
     #prettier
