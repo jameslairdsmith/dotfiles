@@ -77,6 +77,7 @@ in
     };
     # "${dotConfig}/plover/plover.cfg".source = "${dotsDir}/plover/plover.cfg";
     ".config/worktrunk/config.toml".source = "${dotsDir}/worktrunk/config.toml";
+    ".config/amp/AGENTS.md".source = "${dotsDir}/agents/AGENTS.md";
   };
 
   programs.plover = {

@@ -1,33 +1,3 @@
-gclw() {
-  local url="$1"
-  local repo_name
-  repo_name=$(basename "$url" .git)
-
-  mkdir -p "$repo_name"
-  git clone --bare "$url" "$repo_name/.bare"
-  echo "gitdir: ./.bare" > "$repo_name/.git"
-}
-
-_gchw() {
-  local -a branches worktree_branches available
-  branches=(${(f)"$(git branch -a --format='%(refname:short)' 2>/dev/null)"})
-  worktree_branches=(${(f)"$(git worktree list --porcelain 2>/dev/null | grep '^branch ' | sed 's#branch refs/heads/##')"})
-  available=(${branches:|worktree_branches})
-  compadd $available
-}
-compdef _gchw gchw
-
-gchw() {
-  if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "error: not in a git worktree repository" >&2
-    return 1
-  fi
-
-  local branch="$1"
-  git worktree add "$branch" "$branch"
-  git -C "$branch" submodule update --init --recursive
-}
-
 # Worktrunk shell integration
 if command -v wt >/dev/null 2>&1; then
   eval "$(command wt config shell init zsh)"
