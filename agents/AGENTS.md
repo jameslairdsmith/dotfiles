@@ -89,7 +89,8 @@ the skill into "~/projects/agent-skills".
 
 When deciding on the name of a new skill, be mindful of the flat nature of the
 repo. Use kebab case and prefixes to try separate the different kinds of tool
-use eg. r-ggplot2.
+use eg. r-ggplot2. Make sure they follow this convention, even if they are
+differently named where they currently are.
 
 ## Other languages & tools
 
