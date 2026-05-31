@@ -70,6 +70,23 @@ Other things:
   (checkout), `gc` (commit), `gd` (diff), `ga` (add).
 - Submodule recursion is enabled globally.
 
+## LLM agent skills
+
+I store LLM agent skills in a separate repository. On GitHub this is
+jameslairdsmith/agent-skills and locally into "~/projects/agent-skills". This
+repo follows a flat structure with the standard agent skills layout to allow
+them to be easily copied into a project.
+
+```
+skill-name/
+├── SKILL.md      # REQUIRED: Metadata and step-by-step instructions
+...
+```
+
+Whenever adding a new skill to a project, prompt the user as to whether they
+would also like to add it to the central repo. If the user approves, also copy
+the skill into "~/projects/agent-skills".
+
 ## Other languages & tools
 
 - **Python** — present but lightweight usage.
