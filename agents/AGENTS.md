@@ -3,6 +3,10 @@
 These are instructions for AI coding agents working in my repositories. For full
 configuration details, see my dotfiles repo at `~/projects/dotfiles/`.
 
+## English
+
+Use British English over American English.
+
 ## Nix
 
 Try to use Nix for everything. If there is ever a choice between the Nix way of
