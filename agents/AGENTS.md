@@ -87,6 +87,10 @@ Whenever adding a new skill to a project, prompt the user as to whether they
 would also like to add it to the central repo. If the user approves, also copy
 the skill into "~/projects/agent-skills".
 
+When deciding on the name of a new skill, be mindful of the flat nature of the
+repo. Use kebab case and prefixes to try separate the different kinds of tool
+use eg. r-ggplot2.
+
 ## Other languages & tools
 
 - **Python** — present but lightweight usage.
