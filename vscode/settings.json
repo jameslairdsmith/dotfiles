@@ -1,106 +1,88 @@
 {
-    "git.confirmSync": false,
-    "liveServer.settings.donotVerifyTags": true,
-    "liveServer.settings.donotShowInfoMsg": true,
-    "quarto.mathjax.theme": "dark",
-    "r.rterm.mac": "/usr/local/bin/radian",
-    "r.bracketedPaste": true,
-    "r.removeLeadingComments": true,
-    "r.plot.useHttpgd": true,
-    "vim.easymotion": true,
-    "vim.useSystemClipboard": true,
-    "vim.normalModeKeyBindingsNonRecursive": [
-        {
-            "before": [
-                "<space>"
-            ],
-            "commands": [
-                "vspacecode.space"
-            ]
-        },
-        {
-            "before": [
-                ","
-            ],
-            "commands": [
-                "vspacecode.space",
-                {
-                    "command": "whichkey.triggerKey",
-                    "args": "m"
-                }
-            ]
-        }
-    ],
-    "vim.visualModeKeyBindingsNonRecursive": [
-        {
-            "before": [
-                "<space>"
-            ],
-            "commands": [
-                "vspacecode.space"
-            ]
-        },
-        {
-            "before": [
-                ","
-            ],
-            "commands": [
-                "vspacecode.space",
-                {
-                    "command": "whichkey.triggerKey",
-                    "args": "m"
-                }
-            ]
-        },
-        {
-            "before": [
-                ">"
-            ],
-            "commands": [
-                "editor.action.indentLines"
-            ]
-        },
-        {
-            "before": [
-                "<"
-            ],
-            "commands": [
-                "editor.action.outdentLines"
-            ]
-        }
-    ],
-    "editor.formatOnSave": true,
-    "editor.minimap.enabled": false,
-    "editor.rulers": [
-        80
-    ],
-    "explorer.confirmDragAndDrop": false,
-    "update.mode": "none",
-    "window.autoDetectColorScheme": true,
-    "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 80,
-    "workbench.preferredLightColorTheme": "Visual Studio Light",
-    "nix.formatterPath": [
-        "nixfmt"
-    ],
-    "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "prettier.printWidth": 80,
-        "prettier.proseWrap": "always"
+  "git.confirmSync": false,
+  "liveServer.settings.donotVerifyTags": true,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "quarto.mathjax.theme": "dark",
+  "r.rterm.mac": "/usr/local/bin/radian",
+  "r.bracketedPaste": true,
+  "r.removeLeadingComments": true,
+  "r.plot.useHttpgd": true,
+  "vim.easymotion": true,
+  "vim.useSystemClipboard": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
     },
-    "[nix]": {
-        "editor.defaultFormatter": "jnoortheen.nix-ide",
-        "editor.formatOnSave": true
-    },
-    "nix.enableLanguageServer": true,
-    "nix.serverPath": "nixd",
-    "nix.serverSettings": {
-        "nixd": {
-            "formatting": {
-                "command": [
-                    "nixfmt"
-                ]
-            }
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "command": "whichkey.triggerKey",
+          "args": "m"
         }
+      ]
     }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "command": "whichkey.triggerKey",
+          "args": "m"
+        }
+      ]
+    },
+    {
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
+    }
+  ],
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.rulers": [80],
+  "explorer.confirmDragAndDrop": false,
+  "update.mode": "none",
+  "window.autoDetectColorScheme": true,
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 80,
+  "workbench.preferredLightColorTheme": "Visual Studio Light",
+  "nix.formatterPath": ["nixfmt"],
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.printWidth": 80,
+    "prettier.proseWrap": "always"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.formatOnSave": true
+  },
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "formatting": {
+        "command": ["nixfmt"]
+      }
+    }
+  },
+  "files.exclude": {
+    ".chrome-profile/": true
+  }
 }
+
