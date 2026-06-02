@@ -88,7 +88,8 @@ skill-name/
 
 Whenever adding a new skill to a project, prompt me as to whether I would also
 like to add it to my central repo. If I approve, also copy the skill into
-"~/projects/agent-skills".
+"~/projects/agent-skills". If the skill is being copied from elsewhere, make
+sure to include a refence and link to its origional location.
 
 When deciding on the name of a new skill, be mindful of the flat nature of the
 repo. Use kebab case and prefixes to try separate the different kinds of tool
