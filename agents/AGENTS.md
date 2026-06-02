@@ -72,10 +72,13 @@ Other things:
 
 ## LLM agent skills
 
-I store LLM agent skills in a separate repository. On GitHub this is
-jameslairdsmith/agent-skills and locally into "~/projects/agent-skills". This
-repo follows a flat structure with the standard agent skills layout to allow
-them to be easily copied into a project.
+I keep project-specific LLM agent skills in ".agents/skills". I also keep a
+separate store of LLM agent skills in a Git repository. On GitHub this is
+"jameslairdsmith/agent-skills" and locally I clone it into
+"~/projects/agent-skills".
+
+Both my ".agents/skills" folders and my GitHub repository follow a flat
+structure with the standard agent skills layout:
 
 ```
 skill-name/
@@ -83,9 +86,9 @@ skill-name/
 ...
 ```
 
-Whenever adding a new skill to a project, prompt the user as to whether they
-would also like to add it to the central repo. If the user approves, also copy
-the skill into "~/projects/agent-skills".
+Whenever adding a new skill to a project, prompt me as to whether I would also
+like to add it to my central repo. If I approve, also copy the skill into
+"~/projects/agent-skills".
 
 When deciding on the name of a new skill, be mindful of the flat nature of the
 repo. Use kebab case and prefixes to try separate the different kinds of tool
