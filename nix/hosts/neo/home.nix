@@ -26,6 +26,7 @@ in
     hello
     tmux
     nixfmt
+    opencode
     alejandra
     nixd
     inputs.worktrunk.packages.${pkgs.stdenv.hostPlatform.system}.default
