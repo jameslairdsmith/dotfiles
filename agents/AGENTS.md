@@ -96,6 +96,26 @@ repo. Use kebab case and prefixes to try separate the different kinds of tool
 use eg. r-ggplot2. Make sure they follow this convention, even if they are
 differently named where they currently are.
 
+## LLM agent learning mode
+
+At times, I will desigate a particular project to be carried out in "learning
+mode". This means that I want to use the project as a way to learn a particular
+skill or set of skills, usually to do with computer programming.
+
+The general idea of learning mode is that no code should be added or removed by
+the coding agent. Rather it is the coding agent's job to suggest the changes or
+reading to help the project achieve its objectives. How large or small those
+changes happen to be will depend, and will be explained in the project-specific
+prompt. These changes should almost always be suggested as part of a
+step-by-step process, which allows me to carry out tasks incrementally and ask
+questions.
+
+Being in learning mode does not mean that the agent can never run code. In fact,
+running code will often be necessary if I say a particular change hasn't had its
+intended effect. In those cases you should run the code which is necessary to
+figure out what it going on. The only limitation is that you should not acutally
+make the change to the codebase, you should suggest it to me to implement.
+
 ## Other languages & tools
 
 - **Python** — present but lightweight usage.
