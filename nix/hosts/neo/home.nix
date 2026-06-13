@@ -14,6 +14,7 @@ in
     inputs.plover-flake.homeManagerModules.plover
     ../../modules/emacs.nix
     ../../modules/r.nix
+    ../../modules/zed.nix
   ];
 
   home.username = "jls";
@@ -131,23 +132,6 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  programs.zed-editor = {
-    enable = true;
-    extensions = [
-      "nix"
-      "toml"
-    ];
-    userSettings = {
-      theme = {
-        mode = "system";
-        dark = "One Dark";
-        light = "One Light";
-      };
-      hour_format = "hour24";
-      vim_mode = true;
-    };
-  };
 
   programs.vscode = {
     enable = true;
