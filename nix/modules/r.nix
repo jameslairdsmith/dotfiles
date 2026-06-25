@@ -8,6 +8,11 @@ let
   myR = pkgs.rWrapper.override {
     packages = with pkgs.rPackages; [
       tidyverse
+      languageserver
+      devtools
+      usethis
+      tidymodels
+      data_table
     ];
   };
   rLibsSite = pkgs.lib.concatMapStringsSep ":" (pkg: "${pkg}/library") myR.buildInputs;
