@@ -114,5 +114,10 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
  :commands vterm
  :config (setq vterm-timer-delay nil))
 
+;;; Kitty keyboard protocol
+(use-package kkp :ensure nil :hook (tty-setup . global-kkp-mode))
+
+(xterm-mouse-mode 1)
+
 (provide 'init)
 ;;; init.el ends here
