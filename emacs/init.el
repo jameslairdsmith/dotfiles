@@ -100,9 +100,7 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
  :config (dashboard-setup-startup-hook))
 
 ;;; Vertico
-(use-package vertico
-  :ensure nil
-  :init  (vertico-mode 1))
+(use-package vertico :ensure nil :init (vertico-mode 1))
 
 ;;; Consult
 ;(use-package consult
@@ -110,10 +108,11 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
 ;  :)
 
 ;;; vterm
-(use-package vterm
-  :ensure nil
-  :commands vterm
-  :config (setq vterm-timer-delay nil))
+(use-package
+ vterm
+ :ensure nil
+ :commands vterm
+ :config (setq vterm-timer-delay nil))
 
 (provide 'init)
 ;;; init.el ends here
