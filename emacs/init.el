@@ -119,5 +119,13 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
 
 (xterm-mouse-mode 1)
 
+(use-package
+ eat
+ :ensure nil
+ :commands (eat eat-project)
+ :custom
+ (eat-minimum-latency 0.008)
+ (eat-minimum-latency 0.033))
+
 (provide 'init)
 ;;; init.el ends here

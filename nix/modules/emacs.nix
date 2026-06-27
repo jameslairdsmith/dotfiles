@@ -18,6 +18,7 @@ in
         consult
         vterm
         kkp
+        eat
       ];
   };
 
