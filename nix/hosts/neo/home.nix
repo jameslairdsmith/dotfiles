@@ -15,6 +15,7 @@ in
     ../../modules/emacs.nix
     ../../modules/r.nix
     ../../modules/zed.nix
+    ../../modules/treefmt.nix
   ];
 
   home.username = "jls";
