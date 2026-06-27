@@ -109,5 +109,11 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
 ;  :ensure nil
 ;  :)
 
+;;; vterm
+(use-package vterm
+  :ensure nil
+  :commands vterm
+  :config (setq vterm-timer-delay nil))
+
 (provide 'init)
 ;;; init.el ends here

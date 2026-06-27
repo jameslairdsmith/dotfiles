@@ -16,6 +16,7 @@ in
         dashboard
         vertico
         consult
+        vterm
       ];
   };
 
