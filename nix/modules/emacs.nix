@@ -17,6 +17,7 @@ in
         vertico
         consult
         vterm
+        kkp
       ];
   };
 
