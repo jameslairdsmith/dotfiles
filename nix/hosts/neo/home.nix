@@ -16,6 +16,7 @@ in
     ../../modules/r.nix
     ../../modules/zed.nix
     ../../modules/treefmt.nix
+    ../../modules/pi.nix
   ];
 
   home.username = "jls";
