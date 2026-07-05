@@ -1,28 +1,17 @@
 {
   pkgs,
-  inputs,
   ...
 }:
-let
-  # Build a self-contained treefmt wrapper that bundles its config and the
-  # formatters below. Installing the wrapper gives a `treefmt` command that
-  # already knows how to format Nix and Markdown.
-  treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs {
-    projectRootFile = "flake.nix";
-
-    # Nix files are formatted with nixfmt (see AGENTS.md).
-    programs.nixfmt.enable = true;
-
-    # Markdown formatted with Prettier (prose wrap always, print width 80).
-    programs.prettier = {
-      enable = true;
-      settings = {
-        proseWrap = "always";
-        printWidth = 80;
-      };
-    };
-  };
-in
 {
-  home.packages = [ treefmtEval.config.build.wrapper ];
+  # treefmt plus the formatters it drives. They need to be on PATH because a
+  # treefmt config references them by command name.
+  #
+  # The config itself lives at treefmt/treefmt.toml in this repo and is used as
+  # a template: copy it into a project root as treefmt.toml. treefmt then
+  # discovers it by walking upward from the working directory.
+  home.packages = with pkgs; [
+    treefmt
+    nixfmt
+    prettier
+  ];
 }

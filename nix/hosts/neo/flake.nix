@@ -13,8 +13,6 @@
     plover-flake.url = "github:openstenoproject/plover-flake";
     worktrunk.url = "github:max-sixty/worktrunk";
     arf.url = "github:jameslairdsmith/arf/nix-support";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -29,7 +27,6 @@
       plover-flake,
       worktrunk,
       arf,
-      treefmt-nix,
     }:
     let
       configuration =

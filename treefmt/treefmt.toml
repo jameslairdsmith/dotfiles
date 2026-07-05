@@ -1,0 +1,17 @@
+# treefmt configuration.
+#
+# Managed via dotfiles (nix/modules/treefmt.nix): this file is symlinked to
+# ~/.config/treefmt/treefmt.toml and used as the default config everywhere via
+# the $TREEFMT_CONFIG environment variable. When run inside a git repo, treefmt
+# uses that repo's root as the tree root automatically.
+
+# Nix files are formatted with nixfmt (see AGENTS.md). nixfmt edits in place.
+[formatter.nixfmt]
+command = "nixfmt"
+includes = ["*.nix"]
+
+# Markdown formatted with Prettier (prose wrap always, print width 80).
+[formatter.prettier]
+command = "prettier"
+options = ["--write", "--prose-wrap", "always", "--print-width", "80"]
+includes = ["*.md"]
