@@ -18,19 +18,18 @@ let
   };
 in
 {
-  home.packages = [
-    pkgs.pi-coding-agent
-  ];
+  programs.pi-coding-agent = {
+    enable = true;
 
-  # Pi loads global instructions from ~/.pi/agent/AGENTS.md. Reuse the shared
-  # agent instructions so pi and amp stay in sync.
-  home.file.".pi/agent/AGENTS.md".source = "${dotsDir}/agents/AGENTS.md";
+    # Global settings, hand-editable in pi/settings.json.
+    settings = builtins.fromJSON (builtins.readFile "${dotsDir}/pi/settings.json");
 
-  # Global pi settings live in the repo's pi/ folder. Individual files are
-  # symlinked (not the whole directory) so pi can still write sessions, auth,
-  # and installed packages into ~/.pi/agent/.
-  home.file.".pi/agent/settings.json".source = "${dotsDir}/pi/settings.json";
+    # Global instructions (~/.pi/agent/AGENTS.md). Reuse the shared agent
+    # instructions so pi and amp stay in sync.
+    context = ../../agents/AGENTS.md;
+  };
 
-  # Single-file extensions, auto-discovered from ~/.pi/agent/extensions/.
+  # Single-file extensions are not covered by the module option; drop them
+  # straight into ~/.pi/agent/extensions/ for auto-discovery.
   home.file.".pi/agent/extensions/mac-system-theme.ts".source = macSystemTheme;
 }
