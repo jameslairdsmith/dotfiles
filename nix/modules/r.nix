@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   inputs,
   ...
@@ -15,7 +16,8 @@ let
       data_table
     ];
   };
-  rLibsSite = pkgs.lib.concatMapStringsSep ":" (pkg: "${pkg}/library") myR.buildInputs;
+  rPackages = pkgs.lib.remove pkgs.R (pkgs.lib.closePropagation myR.buildInputs);
+  rLibsSite = pkgs.lib.concatMapStringsSep ":" (pkg: "${pkg}/library") rPackages;
   arf = inputs.arf.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
     postInstall = ''
       wrapProgram $out/bin/arf \
@@ -25,10 +27,34 @@ let
   });
 in
 {
-  home.packages = [
-    myR
-    arf
-  ];
+  options.jls.r = {
+    package = lib.mkOption {
+      type = lib.types.package;
+      readOnly = true;
+      description = "The configured R runtime and package environment.";
+    };
+    unwrappedPackage = lib.mkOption {
+      type = lib.types.package;
+      readOnly = true;
+      description = "The underlying unwrapped R installation.";
+    };
+    libraryPath = lib.mkOption {
+      type = lib.types.str;
+      readOnly = true;
+      description = "The R package library search path.";
+    };
+  };
 
-  home.file.".config/arf/arf.toml".source = "${dotsDir}/arf.toml";
+  config = {
+    jls.r.package = myR;
+    jls.r.unwrappedPackage = pkgs.R;
+    jls.r.libraryPath = rLibsSite;
+
+    home.packages = [
+      myR
+      arf
+    ];
+
+    home.file.".config/arf/arf.toml".source = "${dotsDir}/arf.toml";
+  };
 }

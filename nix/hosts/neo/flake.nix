@@ -52,7 +52,6 @@
             #pkgs.mullvad-vpn
             pkgs.git
             pkgs.obsidian
-            pkgs.positron-bin
           ];
 
           programs.fish.enable = true;
@@ -84,6 +83,7 @@
               "vimlike" = 1584519802;
               # Has the built-in Bitwarden Safari extension
               "Bitwarden" = 1352778147;
+              "KagiSafari" = 1622835804;
             };
             onActivation.cleanup = "zap";
           };

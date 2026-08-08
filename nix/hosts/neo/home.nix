@@ -14,6 +14,7 @@ in
     inputs.plover-flake.homeManagerModules.plover
     ../../modules/emacs.nix
     ../../modules/r.nix
+    ../../modules/positron.nix
     ../../modules/zed.nix
     ../../modules/treefmt.nix
     ../../modules/pi.nix
