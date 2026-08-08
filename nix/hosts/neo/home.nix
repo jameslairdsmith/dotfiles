@@ -43,6 +43,7 @@ in
     '')
     amp-cli
     onefetch
+    zoom-us
     # Using VS Code extension's bundled version of prettier for now
     #prettier
     #ghostty-bin
