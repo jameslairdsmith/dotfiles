@@ -19,6 +19,14 @@
 (show-paren-mode 1)
 (setq make-backup-files nil)
 
+(defun jls/hide-terminal-menu-bar (frame)
+  "Hide the menu bar in terminal FRAME, leaving graphical frames unchanged."
+  (unless (display-graphic-p frame)
+    (set-frame-parameter frame 'menu-bar-lines 0)))
+
+(jls/hide-terminal-menu-bar (selected-frame))
+(add-hook 'after-make-frame-functions #'jls/hide-terminal-menu-bar)
+
 ;;; Make ESC quit prompts without nuking your window layout.
 (defun jls/keyboard-escape-quit-adv (fun)
   "Around advice for `keyboard-escape-quit' FUN: keep window config."
