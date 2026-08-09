@@ -36,5 +36,15 @@
   "update.mode": "none",
   "vim.easymotion": true,
   "vim.useSystemClipboard": true,
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
+    }
+  ],
   "window.autoDetectColorScheme": true
 }
