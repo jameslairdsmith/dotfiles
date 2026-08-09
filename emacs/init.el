@@ -115,21 +115,47 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
  :config
  (keymap-set transient-base-map "<escape>" #'transient-quit-one))
 
-;;; Evil (Magit buffers only)
+;;; Evil (Magit and Git commit buffers only)
+(defun jls/git-commit-setup-evil ()
+  "Enable Evil with `with-editor' commands in a Git commit buffer."
+  (evil-local-mode 1)
+  (evil-local-set-key 'normal (kbd "Z Z") #'with-editor-finish)
+  (evil-local-set-key 'normal (kbd "Z Q") #'with-editor-cancel))
+
 (use-package
  evil
  :ensure nil
  :init (setq evil-want-keybinding nil)
- :hook (magit-mode . evil-local-mode))
+ :hook
+ ((magit-mode . evil-local-mode)
+  (git-commit-setup . jls/git-commit-setup-evil)))
 
 (use-package
  evil-collection
  :ensure nil
  :after (evil magit)
- :init (setq evil-collection-magit-use-z-for-folds t)
- :config (evil-collection-init 'magit))
+ :config
+ (evil-collection-init 'magit)
+ (evil-collection-define-key
+  'normal
+  'magit-mode-map
+  "z" #'magit-section-toggle)
+ (evil-collection-define-key
+  'normal
+  'magit-status-mode-map
+  "q" #'jls/magit-quit))
 
 ;;; Magit
+(defvar jls/quick-magit-session nil
+  "Whether this Emacs process is dedicated to a quick Magit session.")
+
+(defun jls/magit-quit ()
+  "Quit Magit, closing Emacs during a quick Magit session."
+  (interactive)
+  (if jls/quick-magit-session
+      (save-buffers-kill-terminal)
+    (magit-mode-bury-buffer)))
+
 (use-package
  magit
  :ensure nil

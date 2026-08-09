@@ -29,6 +29,7 @@ in
     (pkgs.writeShellScriptBin "magit" ''
       exec ${config.programs.emacs.finalPackage}/bin/emacs \
         --no-window-system --eval \
+        '(setq jls/quick-magit-session t)' --eval \
         '(magit-status default-directory)'
     '')
   ];
