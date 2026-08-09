@@ -186,6 +186,63 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
  (magit-display-buffer-function
   #'magit-display-buffer-same-window-except-diff-v1))
 
+;;; LLM-assisted Magit actions
+(defun jls/gptel-gemini-api-key ()
+  "Read the Gemini API key from its private configuration file."
+  (let ((key
+         (with-temp-buffer
+           (insert-file-contents "~/.config/google-gemini/api-key")
+           (string-trim (buffer-string)))))
+    (if (string-empty-p key)
+        (user-error "The Gemini API key file is empty")
+      key)))
+
+(use-package
+ gptel
+ :ensure nil
+ :defer t
+ :config
+ (require 'gptel-gemini)
+ (setq
+  gptel-include-reasoning nil
+  gptel-model 'gemini-2.5-flash
+  gptel-backend
+  (gptel-make-gemini
+   "Gemini"
+   :stream t
+   :key #'jls/gptel-gemini-api-key)))
+
+(defun jls/gptel-magit-generate-message (buffer)
+  "Generate a commit message and insert it into BUFFER."
+  (require 'gptel-magit)
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (gptel-magit--generate
+       (lambda (message)
+         (when (buffer-live-p buffer)
+           (with-current-buffer buffer
+             (save-excursion
+               (goto-char (point-min))
+               (insert message)))))))
+    (message "gptel-magit: Generating commit message...")))
+
+(defun jls/gptel-magit-generate-message-if-empty ()
+  "Generate a commit message when the commit buffer has no message."
+  (unless (git-commit-buffer-message)
+    (run-at-time
+     0
+     nil
+     #'jls/gptel-magit-generate-message
+     (current-buffer))))
+
+(use-package
+ gptel-magit
+ :ensure nil
+ :after magit
+ :hook
+ (git-commit-setup . jls/gptel-magit-generate-message-if-empty)
+ :config (gptel-magit-install))
+
 ;;; vterm
 (use-package
  vterm

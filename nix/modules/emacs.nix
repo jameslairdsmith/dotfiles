@@ -19,6 +19,9 @@ in
         evil
         evil-collection
         magit
+        gptel
+        gptel-magit
+        markdown-mode
         vterm
         kkp
         eat
