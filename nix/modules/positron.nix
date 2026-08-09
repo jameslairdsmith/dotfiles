@@ -18,12 +18,25 @@ let
     "positron.r.kernel.env".R_LIBS_SITE = config.jls.r.libraryPath;
   };
 
+  panacheExtension = pkgs.vscode-utils.buildVscodeExtension {
+    pname = "jolars-panache";
+    version = "3.3.0";
+    src = pkgs.fetchurl {
+      url = "https://open-vsx.org/api/jolars/panache/darwin-arm64/3.3.0/file/jolars.panache-3.3.0@darwin-arm64.vsix";
+      hash = "sha256-7sU3XqX7I4rFZiQSLp0SwZeBFVivBsx+tCNQr5x59nA=";
+    };
+    vscodeExtPublisher = "jolars";
+    vscodeExtName = "panache";
+    vscodeExtUniqueId = "jolars.panache";
+  };
+
   # Positron has no Home Manager extension option. Add packages here and
   # expose each one in Positron's normal extension directory, preserving
   # Positron's bundled and mutable extensions alongside the Nix-managed ones.
   extensions = with pkgs.vscode-extensions; [
     esbenp.prettier-vscode
     jnoortheen.nix-ide
+    panacheExtension
   ];
   extensionFiles = builtins.listToAttrs (
     map (extension: {

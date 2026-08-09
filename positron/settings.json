@@ -1,4 +1,19 @@
 {
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "jolars.panache"
+  },
+  "[quarto]": {
+    "editor.defaultFormatter": "jolars.panache"
+  },
+  "[rmarkdown]": {
+    "editor.defaultFormatter": "jolars.panache"
+  },
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
   "editor.rulers": [80],
@@ -12,6 +27,7 @@
     ".chrome-profile/": true
   },
   "git.confirmSync": false,
+  "panache.executableStrategy": "bundled",
   "update.mode": "none",
   "window.autoDetectColorScheme": true
 }
