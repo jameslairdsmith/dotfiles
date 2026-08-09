@@ -15,6 +15,7 @@
       "elm"
       "modus-themes"
       "typst"
+      "lean4"
     ];
     userSettings = {
       agent_servers = {
