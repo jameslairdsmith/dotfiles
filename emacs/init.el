@@ -107,6 +107,16 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
 ;  :ensure nil
 ;  :)
 
+;;; Magit
+(use-package
+ magit
+ :ensure nil
+ :commands magit-status
+ :bind ("s-m" . magit-status)
+ :custom
+ (magit-display-buffer-function
+  #'magit-display-buffer-same-window-except-diff-v1))
+
 ;;; vterm
 (use-package
  vterm

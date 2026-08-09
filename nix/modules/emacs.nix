@@ -16,11 +16,20 @@ in
         dashboard
         vertico
         consult
+        magit
         vterm
         kkp
         eat
       ];
   };
+
+  home.packages = [
+    (pkgs.writeShellScriptBin "magit" ''
+      exec ${config.programs.emacs.finalPackage}/bin/emacs \
+        --no-window-system --eval \
+        '(magit-status default-directory)'
+    '')
+  ];
 
   home.file.".config/emacs/init.el".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/projects/dotfiles/emacs/init.el";
