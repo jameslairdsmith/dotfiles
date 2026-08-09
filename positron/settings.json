@@ -1,5 +1,17 @@
 {
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.rulers": [80],
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 80,
+  "explorer.confirmDragAndDrop": false,
   "files.associations": {
     "renv.lock": "json"
-  }
+  },
+  "files.exclude": {
+    ".chrome-profile/": true
+  },
+  "git.confirmSync": false,
+  "update.mode": "none",
+  "window.autoDetectColorScheme": true
 }
