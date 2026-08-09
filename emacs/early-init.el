@@ -10,7 +10,8 @@
 (setq gc-cons-threshold (* 64 1024 1024))
 
 ;; Kill UI chrome before the frame is painted (no flicker).
-;;(menu-bar-mode -1)
+(when (and (not (daemonp)) (not initial-window-system))
+  (menu-bar-mode -1))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (tooltip-mode -1)
