@@ -208,6 +208,9 @@ in
     enable = true;
     settings = {
       command = "/run/current-system/sw/bin/fish";
+      keybind = [
+        "performable:super+c=copy_to_clipboard:mixed"
+      ];
       theme = "dark:Modus Vivendi,light:Modus Operandi";
       font-size = 16;
       # Set the internal margins (adjust the numbers to your liking)

@@ -58,7 +58,14 @@ plain `save-buffer' if no specific saver is registered."
 
 ;;; Other keybindings
 
-(global-set-key (kbd "s-c") #'kill-ring-save) ; copy
+(defun jls/copy-region (begin end)
+  "Copy the region from BEGIN to END, including to the macOS clipboard."
+  (interactive "r")
+  (kill-ring-save begin end)
+  (unless (display-graphic-p)
+    (call-process-region begin end "/usr/bin/pbcopy")))
+
+(global-set-key (kbd "s-c") #'jls/copy-region)
 (global-set-key (kbd "s-v") #'yank) ; paste
 (global-set-key (kbd "s-x") #'kill-region) ; cut
 (global-set-key (kbd "s-p") #'execute-extended-command)
@@ -251,7 +258,7 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
  :config (setq vterm-timer-delay nil))
 
 ;;; Kitty keyboard protocol
-(use-package kkp :ensure nil :hook (tty-setup . global-kkp-mode))
+(use-package kkp :ensure nil :config (global-kkp-mode 1))
 
 (xterm-mouse-mode 1)
 
