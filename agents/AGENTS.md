@@ -34,6 +34,12 @@ repository rather than a local Nix shell:
 Nix files should be formatted with `nixfmt` and the Nix language server of
 choice is `nixd`.
 
+When verifying Nix builds, prefer `--no-link` where the command supports it. If
+a verification command creates a repository-local `result` symlink, remove it
+before finishing by default. Check whether the path existed before running the
+command, and never remove a pre-existing `result` path or a path that is not a
+symlink.
+
 ## Text editing preferences
 
 - Format on save is enabled.
