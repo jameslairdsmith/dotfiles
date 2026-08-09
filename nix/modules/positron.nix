@@ -12,6 +12,9 @@ let
   # merged afterwards so they take precedence if a key appears in both sets.
   generalSettings = builtins.fromJSON (builtins.readFile "${dotsDir}/positron/settings.json");
   nixSettings = {
+    "nix.formatterPath" = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+    "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+    "nix.serverSettings".nixd.formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
     "positron.r.customBinaries" = [
       "${config.jls.r.unwrappedPackage}/bin/R"
     ];
@@ -37,6 +40,7 @@ let
     esbenp.prettier-vscode
     jnoortheen.nix-ide
     panacheExtension
+    vscodevim.vim
   ];
   extensionFiles = builtins.listToAttrs (
     map (extension: {
