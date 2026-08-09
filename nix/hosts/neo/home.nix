@@ -41,6 +41,12 @@ in
       mkdir -p "$repo_name"
       git clone --bare "$url" "$repo_name/.bare"
       echo "gitdir: ./.bare" > "$repo_name/.git"
+      git -C "$repo_name" config remote.origin.fetch \
+        "+refs/heads/*:refs/remotes/origin/*"
+      git -C "$repo_name" fetch origin
+      default_branch="$(git -C "$repo_name" symbolic-ref --short HEAD)"
+      git -C "$repo_name" branch \
+        --set-upstream-to="origin/$default_branch" "$default_branch"
     '')
     amp-cli
     onefetch
