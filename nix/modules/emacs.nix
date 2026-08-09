@@ -16,6 +16,8 @@ in
         dashboard
         vertico
         consult
+        evil
+        evil-collection
         magit
         vterm
         kkp

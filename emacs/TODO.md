@@ -10,8 +10,8 @@ the planned build-out, then enhancements and ideas.
       `ivy`/`counsel`/`swiper` stack (from the old config) and the modern
       `vertico` + `consult` + `marginalia` + `orderless` stack. Drives several
       keybindings below.
-- [ ] **Evil / Vim emulation** — keep `evil` + `evil-collection` (was present
-      but commented out in the old config) or stay with vanilla Emacs bindings.
+- [x] **Evil / Vim emulation** — enabled locally in Magit buffers only, with
+      the Magit integration from `evil-collection`.
 - [ ] **Modeline** — the old config used `doom-modeline`. Decide: keep it, use a
       lighter option, or stick with the built-in modeline (Modus styles it
       cleanly already).
@@ -27,7 +27,7 @@ the planned build-out, then enhancements and ideas.
       layout for `*R*`/`*R Dired*`/`*Help*`, and disable `ess-use-flymake`. Wire
       the R binary from `r.nix` the Nix way (inject its store path via
       `nix-paths.el` rather than relying on PATH).
-- [ ] **Magit** — add via Nix `extraPackages` and configure.
+- [x] **Magit** — added via Nix `extraPackages` and configured.
 - [ ] **Org mode** — minimal config for notes/capture. (Decided against the old
       literate/`org-transclusion` tangling workflow.)
 - [ ] **which-key** — discoverability for prefixes; was in the old config.

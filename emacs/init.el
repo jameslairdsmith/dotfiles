@@ -107,6 +107,28 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
 ;  :ensure nil
 ;  :)
 
+;;; Transient menus
+(use-package
+ transient
+ :ensure nil
+ :defer t
+ :config
+ (keymap-set transient-base-map "<escape>" #'transient-quit-one))
+
+;;; Evil (Magit buffers only)
+(use-package
+ evil
+ :ensure nil
+ :init (setq evil-want-keybinding nil)
+ :hook (magit-mode . evil-local-mode))
+
+(use-package
+ evil-collection
+ :ensure nil
+ :after (evil magit)
+ :init (setq evil-collection-magit-use-z-for-folds t)
+ :config (evil-collection-init 'magit))
+
 ;;; Magit
 (use-package
  magit
