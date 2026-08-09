@@ -149,6 +149,19 @@ something, since `save-buffer' is a no-op on an unmodified buffer."
 (defvar jls/quick-magit-session nil
   "Whether this Emacs process is dedicated to a quick Magit session.")
 
+(defvar jls/quick-magit-directory nil
+  "Repository directory of the current quick Magit session.")
+
+(defun jls/git-commit-use-quick-magit-directory ()
+  "Restore the repository directory before setting up a commit buffer."
+  (when (and jls/quick-magit-session jls/quick-magit-directory)
+    (setq default-directory jls/quick-magit-directory)))
+
+(with-eval-after-load 'git-commit
+  (advice-add
+   #'git-commit-setup
+   :before #'jls/git-commit-use-quick-magit-directory))
+
 (defun jls/magit-quit ()
   "Quit Magit, closing Emacs during a quick Magit session."
   (interactive)
