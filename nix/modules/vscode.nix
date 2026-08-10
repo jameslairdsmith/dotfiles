@@ -28,24 +28,33 @@ in
       # Data science extensions are absent because I instead use Positron
 
       extensions = with pkgs.vscode-marketplace; [
-        jnoortheen.nix-ide # Nix language support + formatting
-        sourcegraph.amp
-        elm-land.elm-land
-        #github.copilot
-        #esbenp.prettier-vscode
-        # Required by hbenl.vscode-test-explorer
-        ms-vscode.test-adapter-converter
-        elmtooling.elm-ls-vscode
-        #redhat.vscode-yaml
+        # Nix
+        jnoortheen.nix-ide
+
+        # YAML
+        redhat.vscode-yaml
+
+        # General formatting
         esbenp.prettier-vscode
-        #tomoki1207.pdf
+
+        # PDF
+        tomoki1207.pdf
+
+        # Elm
+        elmtooling.elm-ls-vscode
+        elm-land.elm-land
         # dependency of elm extension
         hbenl.vscode-test-explorer
+        # Required by hbenl.vscode-test-explorer
+        ms-vscode.test-adapter-converter
+
+        # General text editing
         vscodevim.vim
-        myriad-dreamin.tinymist
         #vspacecode.vspacecode
         #vspacecode.whichkey
-        #ms-vscode.powershell
+
+        # Typst
+        myriad-dreamin.tinymist
       ];
     };
   };
