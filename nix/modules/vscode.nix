@@ -2,12 +2,18 @@
 let
   dotsDir = ../..;
   vscodeConfigDir = "Library/Application Support/Code/User";
+
+  # Keep portable, hand-editable settings in JSON. Nix-derived values are
+  # merged afterwards so they take precedence if a key appears in both sets.
+  generalSettings = builtins.fromJSON (builtins.readFile "${dotsDir}/vscode/settings.json");
+  nixSettings = {
+    "nix.formatterPath" = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+    "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+    "nix.serverSettings".nixd.formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+  };
 in
 {
-  home.file = {
-    "${vscodeConfigDir}/keybindings.json".source = "${dotsDir}/vscode/keybindings.json";
-    "${vscodeConfigDir}/settings.json".source = "${dotsDir}/vscode/settings.json";
-  };
+  home.file."${vscodeConfigDir}/keybindings.json".source = "${dotsDir}/vscode/keybindings.json";
 
   programs.vscode = {
     enable = true;
@@ -17,12 +23,8 @@ in
     };
 
     profiles.default = {
-      # Changed to using dedicated settings.json because it also works on Windows.
-      /*
-           userSettings = {
-          "update.mode" = "none";
-        };
-      */
+      userSettings = generalSettings // nixSettings;
+
       extensions = with pkgs.vscode-marketplace; [
         jnoortheen.nix-ide # Nix language support + formatting
         sourcegraph.amp

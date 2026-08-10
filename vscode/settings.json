@@ -58,7 +58,6 @@
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 80,
   "workbench.preferredLightColorTheme": "Visual Studio Light",
-  "nix.formatterPath": ["nixfmt"],
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "prettier.printWidth": 80,
@@ -73,16 +72,7 @@
     "editor.formatOnSave": true
   },
   "nix.enableLanguageServer": true,
-  "nix.serverPath": "nixd",
-  "nix.serverSettings": {
-    "nixd": {
-      "formatting": {
-        "command": ["nixfmt"]
-      }
-    }
-  },
   "files.exclude": {
     ".chrome-profile/": true
   }
 }
-
