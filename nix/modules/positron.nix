@@ -40,6 +40,7 @@ let
     esbenp.prettier-vscode
     jnoortheen.nix-ide
     panacheExtension
+    databricks.databricks
     vscodevim.vim
   ];
   extensionFiles = builtins.listToAttrs (

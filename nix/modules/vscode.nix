@@ -25,26 +25,22 @@ in
     profiles.default = {
       userSettings = generalSettings // nixSettings;
 
+      # Data science extensions are absent because I instead use Positron
+
       extensions = with pkgs.vscode-marketplace; [
         jnoortheen.nix-ide # Nix language support + formatting
         sourcegraph.amp
         elm-land.elm-land
-        #posit.air-vscode
         #github.copilot
-        #databricks.databricks
         #esbenp.prettier-vscode
-        #ms-python.python
         # Required by hbenl.vscode-test-explorer
         ms-vscode.test-adapter-converter
-        #reditorsupport.r
-        #reditorsupport.r-syntax
         elmtooling.elm-ls-vscode
         #redhat.vscode-yaml
         esbenp.prettier-vscode
         #tomoki1207.pdf
         # dependency of elm extension
         hbenl.vscode-test-explorer
-        #quarto.quarto
         vscodevim.vim
         myriad-dreamin.tinymist
         #vspacecode.vspacecode
