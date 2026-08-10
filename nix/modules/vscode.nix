@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
   dotsDir = ../..;
   vscodeConfigDir = "Library/Application Support/Code/User";
@@ -10,6 +14,9 @@ let
     "nix.formatterPath" = [ "${pkgs.nixfmt}/bin/nixfmt" ];
     "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
     "nix.serverSettings".nixd.formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+    "treefmt.command" = "${pkgs.treefmt}/bin/treefmt";
+    "treefmt.config" = "${config.home.homeDirectory}/.config/treefmt/treefmt.toml";
+    "treefmt.useStdin" = true;
   };
 in
 {
@@ -36,6 +43,7 @@ in
 
         # General formatting
         esbenp.prettier-vscode
+        ibecker.treefmt-vscode
 
         # PDF
         tomoki1207.pdf

@@ -1,0 +1,11 @@
+# Project-local copy of treefmt/treefmt.toml. Its presence at the workspace
+# root also activates the treefmt VS Code extension.
+
+[formatter.nixfmt]
+command = "nixfmt"
+includes = ["*.nix"]
+
+[formatter.prettier]
+command = "prettier"
+options = ["--write", "--prose-wrap", "always", "--print-width", "80"]
+includes = ["*.md"]

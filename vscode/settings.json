@@ -59,16 +59,14 @@
   "editor.wordWrapColumn": 80,
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "prettier.printWidth": 80,
-    "prettier.proseWrap": "always"
+    "editor.defaultFormatter": "ibecker.treefmt-vscode"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[nix]": {
-    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.defaultFormatter": "ibecker.treefmt-vscode",
     "editor.formatOnSave": true
   },
   "nix.enableLanguageServer": true,

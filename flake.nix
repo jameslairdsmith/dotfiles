@@ -29,6 +29,8 @@
           pkgs.nixfmt
           pkgs.alejandra
           pkgs.nixd
+          pkgs.prettier
+          pkgs.treefmt
           myVscode
         ];
         shellHook = ''

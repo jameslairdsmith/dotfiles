@@ -3,7 +3,7 @@
     "nixfmt"
   ],
   "[nix]": {
-    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.defaultFormatter": "ibecker.treefmt-vscode",
     "editor.formatOnSave": true
   },
   "nix.enableLanguageServer": true,
