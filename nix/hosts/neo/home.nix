@@ -8,6 +8,7 @@ in
 {
   imports = [
     ../../modules/emacs.nix
+    ../../modules/git.nix
     ../../modules/ghostty.nix
     ../../modules/plover.nix
     ../../modules/r.nix
@@ -54,15 +55,6 @@ in
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
-
-  home.shellAliases = {
-    gs = "git status";
-    gcl = "git clone --recurse-submodules";
-    gch = "git checkout";
-    gc = "git commit";
-    gd = "git diff";
-    ga = "git add";
-  };
 
   home.file = {
     ".config/amp/AGENTS.md".source = "${dotsDir}/agents/AGENTS.md";
@@ -146,15 +138,4 @@ in
     };
   */
 
-  programs.git = {
-    enable = true;
-    settings = {
-      user.name = "James Laird-Smith";
-      user.email = "jameslairdsmith@gmail.com";
-      submodule.recurse = true;
-      diff.submodule = "log";
-      push.recurseSubmodules = "check";
-      status.submoduleSummary = true;
-    };
-  };
 }
