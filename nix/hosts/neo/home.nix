@@ -62,23 +62,6 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # nixpkgs-firefox-darwin looks more promising
-
-  /*
-       programs.firefox = {
-      enable = true;
-      profiles.jls = {
-        isDefault = true;
-        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-          ublock-origin
-        ];
-        settings = {
-          "browser.startup.homepage" = "https://www.google.com";
-        };
-      };
-    };
-  */
-
   programs.fish = {
     enable = true;
     interactiveShellInit = builtins.readFile "${dotsDir}/fish/config.fish";
@@ -102,18 +85,5 @@ in
       hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     };
   };
-
-  /*
-        programs.chromium = {
-      enable = true;
-      package = pkgs.brave;
-      extensions = [
-        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
-      ];
-      commandLineArgs = [
-        "--disable-features=WebRtcAllowInputVolumeAdjustment"
-      ];
-    };
-  */
 
 }
