@@ -10,6 +10,7 @@ in
 {
   imports = [
     ../../modules/emacs.nix
+    ../../modules/ghostty.nix
     ../../modules/plover.nix
     ../../modules/r.nix
     ../../modules/positron.nix
@@ -52,7 +53,6 @@ in
     zoom-us
     # Using VS Code extension's bundled version of prettier for now
     #prettier
-    #ghostty-bin
     #fish
     #pkgs.alacritty
     #pkgs.qbittorrent
@@ -125,27 +125,6 @@ in
       };
     };
   */
-
-  programs.ghostty = {
-    enable = true;
-    settings = {
-      command = "/run/current-system/sw/bin/fish";
-      keybind = [
-        "performable:super+c=copy_to_clipboard:mixed"
-      ];
-      theme = "dark:Modus Vivendi,light:Modus Operandi";
-      font-size = 16;
-      # Set the internal margins (adjust the numbers to your liking)
-      window-padding-x = 20;
-      window-padding-y = 20;
-      # Distribute the "extra" space evenly to center the text grid
-      window-padding-balance = true;
-    };
-    # Need this until pkgs.ghostty works on Mac
-    #package = pkgs.ghostty-bin;
-    package = null;
-    #enableBashIntegration = true;
-  };
 
   programs.fish = {
     enable = true;
