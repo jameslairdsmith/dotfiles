@@ -10,6 +10,7 @@ in
     ../../modules/emacs.nix
     ../../modules/git.nix
     ../../modules/ghostty.nix
+    ../../modules/nix-tools.nix
     ../../modules/plover.nix
     ../../modules/r.nix
     ../../modules/positron.nix
@@ -28,12 +29,10 @@ in
   home.packages = with pkgs; [
     hello
     tmux
-    nixfmt
     opencode
-    alejandra
-    nixd
     amp-cli
     onefetch
+    prettier
     zoom-us
   ];
 

@@ -7,13 +7,7 @@ let
   treefmtConfig = "${config.home.homeDirectory}/.config/treefmt/treefmt.toml";
 in
 {
-  # treefmt plus the formatters it drives. They need to be on PATH because a
-  # treefmt config references them by command name.
-  home.packages = with pkgs; [
-    treefmt
-    nixfmt
-    prettier
-  ];
+  home.packages = [ pkgs.treefmt ];
 
   home.file.".config/treefmt/treefmt.toml".source = ../../treefmt/treefmt.toml;
 
