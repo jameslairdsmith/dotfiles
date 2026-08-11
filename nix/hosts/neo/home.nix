@@ -13,6 +13,7 @@ in
     ../../modules/nix-tools.nix
     ../../modules/plover.nix
     ../../modules/r.nix
+    ../../modules/shells.nix
     ../../modules/positron.nix
     ../../modules/zed.nix
     ../../modules/vscode.nix
@@ -47,29 +48,5 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = builtins.readFile "${dotsDir}/fish/config.fish";
-    shellAliases = {
-      hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
-    };
-  };
-
-  programs.zsh = {
-    enable = true;
-    initContent = builtins.readFile "${dotsDir}/zsh/zshrc";
-    shellAliases = {
-      hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
-    };
-  };
-
-  programs.bash = {
-    enable = true;
-    profileExtra = builtins.readFile "${dotsDir}/bash/bash-profile";
-    shellAliases = {
-      hr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
-    };
-  };
 
 }
