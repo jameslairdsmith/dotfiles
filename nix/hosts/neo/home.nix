@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  inputs,
   ...
 }:
 let
@@ -16,6 +14,7 @@ in
     ../../modules/positron.nix
     ../../modules/zed.nix
     ../../modules/vscode.nix
+    ../../modules/worktrunk.nix
     ../../modules/treefmt.nix
     ../../modules/pi.nix
   ];
@@ -33,21 +32,6 @@ in
     opencode
     alejandra
     nixd
-    inputs.worktrunk.packages.${pkgs.stdenv.hostPlatform.system}.default
-    (pkgs.writeShellScriptBin "wt-clone" ''
-      set -e
-      url="$1"
-      repo_name="$(basename "$url" .git)"
-      mkdir -p "$repo_name"
-      git clone --bare "$url" "$repo_name/.bare"
-      echo "gitdir: ./.bare" > "$repo_name/.git"
-      git -C "$repo_name" config remote.origin.fetch \
-        "+refs/heads/*:refs/remotes/origin/*"
-      git -C "$repo_name" fetch origin
-      default_branch="$(git -C "$repo_name" symbolic-ref --short HEAD)"
-      git -C "$repo_name" branch \
-        --set-upstream-to="origin/$default_branch" "$default_branch"
-    '')
     amp-cli
     onefetch
     zoom-us
@@ -81,7 +65,6 @@ in
   };
 
   home.file = {
-    ".config/worktrunk/config.toml".source = "${dotsDir}/worktrunk/config.toml";
     ".config/amp/AGENTS.md".source = "${dotsDir}/agents/AGENTS.md";
   };
 
