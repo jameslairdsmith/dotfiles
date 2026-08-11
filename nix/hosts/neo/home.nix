@@ -6,12 +6,11 @@
 }:
 let
   dotsDir = ../../..;
-  dotConfig = "Library/Application Support";
 in
 {
   imports = [
-    inputs.plover-flake.homeManagerModules.plover
     ../../modules/emacs.nix
+    ../../modules/plover.nix
     ../../modules/r.nix
     ../../modules/positron.nix
     ../../modules/zed.nix
@@ -82,36 +81,8 @@ in
   };
 
   home.file = {
-    # "${dotConfig}/plover/plover.cfg".source = "${dotsDir}/plover/plover.cfg";
     ".config/worktrunk/config.toml".source = "${dotsDir}/worktrunk/config.toml";
     ".config/amp/AGENTS.md".source = "${dotsDir}/agents/AGENTS.md";
-  };
-
-  programs.plover = {
-    enable = true;
-    package = inputs.plover-flake.packages.${pkgs.stdenv.hostPlatform.system}.plover.withPlugins (
-      ps: with ps; [
-        plover-python-dictionary
-        plover-modal-dictionary
-        plover-dict-commands
-        plover-last-translation
-        plover-stitching
-      ]
-    );
-
-    # settings = {
-    #   "Machine Configuration" = {
-    #     machine_type = "Gemini PR";
-    #     auto_start = true;
-    #   };
-    #   "System: Lapwing".dictionaries = [
-    #     {
-    #       enabled = true;
-    #       path = "~/projects/steno/src-dicts/emily-modifiers.py";
-    #     }
-    #   ]; # doesn't work
-    #   "Output Configuration".undo_levels = 100;
-    # };
   };
 
   # Home Manager can also manage your environment variables through
