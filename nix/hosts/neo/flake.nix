@@ -29,14 +29,21 @@
       arf,
     }:
     let
+      system = "aarch64-darwin";
+      nixpkgsConfig.allowUnfree = true;
+      nixpkgsOverlays = [
+        nix-vscode-extensions.overlays.default
+      ];
+      homePkgs = import nixpkgs {
+        inherit system;
+        config = nixpkgsConfig;
+        overlays = nixpkgsOverlays;
+      };
       configuration =
         { pkgs, ... }:
         {
-          nixpkgs.config.allowUnfree = true;
-
-          nixpkgs.overlays = [
-            nix-vscode-extensions.overlays.default
-          ];
+          nixpkgs.config = nixpkgsConfig;
+          nixpkgs.overlays = nixpkgsOverlays;
 
           # List packages installed in system profile. To search by name, run:
           # $ nix-env -qaP | grep wget
@@ -51,6 +58,7 @@
             pkgs.fish
             #pkgs.mullvad-vpn
             pkgs.git
+            home-manager.packages.${system}.default
             pkgs.obsidian
           ];
 
@@ -140,10 +148,16 @@
           system.stateVersion = 6;
 
           # The platform the configuration will be used on.
-          nixpkgs.hostPlatform = "aarch64-darwin";
+          nixpkgs.hostPlatform = system;
         };
     in
     {
+      homeConfigurations."jls" = home-manager.lib.homeManagerConfiguration {
+        pkgs = homePkgs;
+        extraSpecialArgs = { inherit inputs; };
+        modules = [ ./home.nix ];
+      };
+
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
       darwinConfigurations."neo" = nix-darwin.lib.darwinSystem {
