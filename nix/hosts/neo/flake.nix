@@ -83,6 +83,7 @@
               "sublime-text"
               "logi-options+"
               "orion"
+	      "readest"
               # "plover"
             ];
             masApps = {
