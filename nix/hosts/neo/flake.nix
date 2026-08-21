@@ -84,6 +84,7 @@
               "logi-options+"
               "orion"
 	      "readest"
+              "sigil"
               # "plover"
             ];
             masApps = {
