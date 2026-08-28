@@ -28,7 +28,6 @@ in
 
   # Extra packages not covered in modules
   home.packages = with pkgs; [
-    hello
     tmux
     opencode
     amp-cli
