@@ -8,6 +8,8 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nvf.url = "github:NotAShelf/nvf";
+    nvf.inputs.nixpkgs.follows = "nixpkgs";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     #nur.url = "github:nix-community/NUR";
     plover-flake.url = "github:openstenoproject/plover-flake";
@@ -22,6 +24,7 @@
       nixpkgs,
       nix-homebrew,
       home-manager,
+      nvf,
       nix-vscode-extensions,
       #nur,
       plover-flake,
@@ -49,7 +52,6 @@
           # $ nix-env -qaP | grep wget
           environment.systemPackages = [
             pkgs.vim
-            pkgs.neovim
             pkgs.tree
             # pkgs.alacritty
             #pkgs.brave

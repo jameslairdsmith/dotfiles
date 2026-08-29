@@ -6,6 +6,7 @@
       command = "/run/current-system/sw/bin/fish";
       keybind = [
         "performable:super+c=copy_to_clipboard:mixed"
+        "super+s=unbind"
       ];
       theme = "dark:Modus Vivendi,light:Modus Operandi";
       font-size = 16;
