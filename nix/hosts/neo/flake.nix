@@ -10,6 +10,8 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nvf.url = "github:NotAShelf/nvf";
     nvf.inputs.nixpkgs.follows = "nixpkgs";
+    r-nvim.url = "git+https://github.com/R-nvim/R.nvim?submodules=1";
+    r-nvim.inputs.nixpkgs.follows = "nixpkgs";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     #nur.url = "github:nix-community/NUR";
     plover-flake.url = "github:openstenoproject/plover-flake";
@@ -25,6 +27,7 @@
       nix-homebrew,
       home-manager,
       nvf,
+      r-nvim,
       nix-vscode-extensions,
       #nur,
       plover-flake,
@@ -85,7 +88,7 @@
               "sublime-text"
               "logi-options+"
               "orion"
-	      "readest"
+              "readest"
               "sigil"
               # "plover"
             ];

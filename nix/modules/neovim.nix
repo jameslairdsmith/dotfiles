@@ -1,8 +1,29 @@
 {
+  config,
   inputs,
   pkgs,
   ...
 }:
+let
+  r-nvim = inputs.r-nvim.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+      pkgs.nodejs
+      pkgs.tree-sitter
+    ];
+    postPatch = (old.postPatch or "") + ''
+      substituteInPlace lua/r/config.lua \
+        --replace-fail "mt2 > mt1" "mt2 >= mt1"
+    '';
+    buildPhase = (old.buildPhase or "") + ''
+      export HOME="$TMPDIR"
+      pushd resources/tree-sitter-rout
+      tree-sitter generate
+      mkdir -p ../../parser
+      tree-sitter build -o ../../parser/rout.so
+      popd
+    '';
+  });
+in
 {
   imports = [ inputs.nvf.homeManagerModules.default ];
 
@@ -46,6 +67,17 @@
       telescope.enable = true;
       autocomplete.nvim-cmp.enable = true;
 
+      treesitter.grammars = with pkgs.vimPlugins.nvim-treesitter.grammarPlugins; [
+        csv
+        latex
+        markdown
+        markdown_inline
+        r
+        rnoweb
+        typst
+        yaml
+      ];
+
       keymaps = [
         {
           mode = [
@@ -65,13 +97,24 @@
         }
       ];
 
-      # extraPackages = with pkgs.elmPackages; [
-      #   elm
-      #   elm-format
-      #   elm-test
-      # ];
+      extraPackages = [
+        config.jls.r.package
+        pkgs.clang
+        pkgs.gnumake
+        pkgs.tree-sitter
+      ];
 
       extraPlugins = {
+        r-nvim = {
+          package = r-nvim;
+          setup = ''
+            require("r").setup({
+              R_app = "${config.jls.r.package}/bin/R",
+              R_cmd = "${config.jls.r.package}/bin/R",
+              Rout_follow_colorscheme = true,
+            })
+          '';
+        };
         modus-themes.package = pkgs.vimPlugins.modus-themes-nvim;
         auto-dark-mode = {
           package = pkgs.vimPlugins.auto-dark-mode-nvim;

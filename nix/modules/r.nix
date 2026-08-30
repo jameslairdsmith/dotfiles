@@ -14,6 +14,7 @@ let
       usethis
       tidymodels
       data_table
+      inputs.r-nvim.packages.${pkgs.stdenv.hostPlatform.system}.nvimcom
     ];
   };
   rPackages = pkgs.lib.remove pkgs.R (pkgs.lib.closePropagation myR.buildInputs);
