@@ -23,9 +23,27 @@ let
       popd
     '';
   });
+  modusThemeSetup = ''
+    require("auto-dark-mode").setup({
+      set_light_mode = function()
+        vim.o.background = "light"
+        vim.cmd.colorscheme("modus_operandi")
+      end,
+      set_dark_mode = function()
+        vim.o.background = "dark"
+        vim.cmd.colorscheme("modus_vivendi")
+      end,
+    })
+  '';
 in
 {
   imports = [ inputs.nvf.homeManagerModules.default ];
+
+  xdg.configFile."nvcat/init.lua".text = ''
+    vim.opt.rtp:append("${pkgs.vimPlugins.modus-themes-nvim}")
+    vim.opt.rtp:append("${pkgs.vimPlugins.auto-dark-mode-nvim}")
+    ${modusThemeSetup}
+  '';
 
   programs.nvf = {
     enable = true;
@@ -118,18 +136,7 @@ in
         modus-themes.package = pkgs.vimPlugins.modus-themes-nvim;
         auto-dark-mode = {
           package = pkgs.vimPlugins.auto-dark-mode-nvim;
-          setup = ''
-            require("auto-dark-mode").setup({
-              set_light_mode = function()
-                vim.o.background = "light"
-                vim.cmd.colorscheme("modus_operandi")
-              end,
-              set_dark_mode = function()
-                vim.o.background = "dark"
-                vim.cmd.colorscheme("modus_vivendi")
-              end,
-            })
-          '';
+          setup = modusThemeSetup;
         };
       };
     };

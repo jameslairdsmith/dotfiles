@@ -31,6 +31,9 @@ in
   home.packages = with pkgs; [
     tmux
     opencode
+    fzf
+    nvcat
+    page
     amp-cli
     onefetch
     prettier
