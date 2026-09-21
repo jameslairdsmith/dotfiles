@@ -20,4 +20,6 @@
       status.submoduleSummary = true;
     };
   };
+
+  programs.gh.enable = true;
 }
