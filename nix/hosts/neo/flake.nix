@@ -89,6 +89,7 @@
               "logi-options+"
               "orion"
               "readest"
+              "calibre"
               "sigil"
               # "plover"
             ];
