@@ -38,6 +38,7 @@ in
     onefetch
     prettier
     zoom-us
+    zotero
   ];
 
   home.file = {
