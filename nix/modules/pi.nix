@@ -28,4 +28,6 @@ in
     # instructions so pi and amp stay in sync.
     context = ../../agents/AGENTS.md;
   };
+
+  home.file.".pi/agent/extensions/exit-alias.ts".source = ../../pi/extensions/exit-alias.ts;
 }
