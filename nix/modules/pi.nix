@@ -15,6 +15,10 @@ let
       config.allowUnfree = true;
     }).pi-coding-agent;
 
+  piWebAccess = pkgs.callPackage ../../pi/packages/pi-web-access {
+    bun2nix = inputs.bun2nix.packages.${pkgs.system}.default;
+  };
+
 in
 {
   programs.pi-coding-agent = {
@@ -30,4 +34,5 @@ in
   };
 
   home.file.".pi/agent/extensions/exit-alias.ts".source = ../../pi/extensions/exit-alias.ts;
+  home.file.".pi/agent/packages/pi-web-access".source = piWebAccess;
 }

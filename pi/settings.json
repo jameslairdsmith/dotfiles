@@ -2,5 +2,6 @@
   "enableInstallTelemetry": false,
   "defaultProjectTrust": "ask",
   "tuiMode": "fullscreen",
-  "fullscreenExitOutput": "resume-hint"
+  "fullscreenExitOutput": "resume-hint",
+  "packages": ["./packages/pi-web-access"]
 }
