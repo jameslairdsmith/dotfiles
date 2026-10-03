@@ -1,4 +1,6 @@
 {
   "enableInstallTelemetry": false,
-  "defaultProjectTrust": "ask"
+  "defaultProjectTrust": "ask",
+  "tuiMode": "fullscreen",
+  "fullscreenExitOutput": "resume-hint"
 }
