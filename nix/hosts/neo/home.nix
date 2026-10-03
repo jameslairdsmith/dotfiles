@@ -1,9 +1,18 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 let
   dotsDir = ../../..;
+  # Tracks nixpkgs-unstable independently so claude-code can be bumped
+  # without updating every other package pinned by the main nixpkgs input.
+  # Update with: nix flake lock --update-input nixpkgs-claude-code
+  claude-code =
+    (import inputs.nixpkgs-claude-code {
+      system = pkgs.system;
+      config.allowUnfree = true;
+    }).claude-code;
 in
 {
   imports = [
@@ -38,6 +47,7 @@ in
     onefetch
     prettier
     zoom-us
+    claude-code
     zotero
   ];
 
