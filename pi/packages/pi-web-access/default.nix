@@ -60,8 +60,9 @@ stdenv.mkDerivation rec {
             if name.startswith("@earendil-works/"):
                 del pkg[section][name]
 
-    # Load the built extension bundle, not source TypeScript.
-    pkg.setdefault("pi", {})["extensions"] = ["./dist"]
+    # Load a stable, human-named wrapper directory rather than the dist/
+    # directory so Pi displays this extension as "web-access".
+    pkg.setdefault("pi", {})["extensions"] = ["./web-access"]
 
     with open(path, "w") as f:
         json.dump(pkg, f, indent=2)
@@ -105,6 +106,11 @@ stdenv.mkDerivation rec {
     cp package.json README.md CHANGELOG.md LICENSE banner.png \
       pi-web-fetch-demo.mp4 $out/
     cp -R dist $out/dist
+
+    mkdir -p $out/web-access
+    cat > $out/web-access/index.js <<'EOF'
+    export { default } from "../dist/index.js";
+    EOF
 
     mkdir -p $out/node_modules
     cp -R node_modules/. $out/node_modules/
