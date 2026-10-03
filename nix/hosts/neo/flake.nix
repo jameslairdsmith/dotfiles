@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-claude-code.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-pi-coding-agent.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
@@ -35,6 +36,7 @@
       worktrunk,
       arf,
       nixpkgs-claude-code,
+      nixpkgs-pi-coding-agent,
     }:
     let
       system = "aarch64-darwin";
