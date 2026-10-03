@@ -46,11 +46,11 @@ the planned build-out, then enhancements and ideas.
 
 ## Enhancements / ideas
 
-- [ ] **Theme follows macOS appearance** — auto-switch Modus light/dark with the
-      system setting using the Mac port's
-      `ns-system-appearance-change-functions` (operandi for light, vivendi for
-      dark). Mirrors the Ghostty config
-      (`dark:Modus Vivendi, light:Modus Operandi`). Currently a manual choice.
+- [x] **Theme follows macOS appearance** — auto-switches between Modus Operandi
+      and Modus Vivendi. GUI Emacs uses the Mac port's appearance-change hook;
+      terminal Emacs polls the macOS setting because application appearance
+      events are unavailable without a GUI frame. Mirrors the Ghostty config
+      (`dark:Modus Vivendi, light:Modus Operandi`).
 - [ ] **Lower GC after startup** — `early-init.el` raises `gc-cons-threshold` to
       64 MiB but never lowers it. Reset it (or a sensible value) after init, or
       adopt `gcmh`.

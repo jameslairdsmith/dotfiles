@@ -75,15 +75,45 @@ plain `save-buffer' if no specific saver is registered."
 ;; The library (toggle + options) ships in Emacs' own etc/themes dir,
 ;; which is on `custom-theme-load-path' but not `load-path'.  Add it so
 ;; `require' can find modus-themes.el.
+(defun jls/macos-dark-mode-p ()
+  "Return non-nil when macOS is using its dark appearance.
+Use the Mac port's application state in the GUI.  In a terminal that state is
+unavailable, so ask macOS directly instead."
+  (let* ((application-state
+          (and (fboundp 'mac-application-state) (mac-application-state)))
+         (appearance (plist-get application-state :appearance)))
+    (if appearance
+        (string-match-p "Dark" appearance)
+      (eq 0
+          (call-process
+           "/usr/bin/defaults"
+           nil nil nil
+           "read" "-g" "AppleInterfaceStyle")))))
+
+(defun jls/sync-theme-with-macos ()
+  "Use the Modus theme matching the current macOS appearance."
+  (let ((theme (if (jls/macos-dark-mode-p)
+                   'modus-vivendi
+                 'modus-operandi)))
+    (unless (and (memq theme custom-enabled-themes)
+                 (= (length custom-enabled-themes) 1))
+      (mapc #'disable-theme custom-enabled-themes)
+      (load-theme theme t))))
+
 (use-package
  modus-themes
  :ensure nil
  :init (add-to-list 'load-path (expand-file-name "themes" data-directory))
- ;(require 'modus-themes)
  (setq
   modus-themes-italic-constructs t
   modus-themes-bold-keywords t)
- :config (load-theme 'modus-operandi t))
+ :config
+ (jls/sync-theme-with-macos)
+ ;; GUI Emacs receives an immediate notification from the Mac port.  Polling
+ ;; also covers terminal Emacs, where `mac-application-state' returns nil.
+ (add-hook
+  'mac-effective-appearance-change-hook #'jls/sync-theme-with-macos)
+ (run-with-timer 2 2 #'jls/sync-theme-with-macos))
 
 ;;; Auto-formatting elisp
 (defun jls/save-buffer-el ()
