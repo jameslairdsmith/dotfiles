@@ -61,6 +61,10 @@
   "[markdown]": {
     "editor.defaultFormatter": "ibecker.treefmt-vscode"
   },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
