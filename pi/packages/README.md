@@ -53,6 +53,9 @@ This gives us:
 - `pi-subagents/` — subagent delegation, built-in specialist agents, workflow
   prompts, and background jobs for Pi. Built from the npm package with
   `bun2nix`.
+- `pi-subscription-usage/` — subscription quota reporting for Pi, including
+  regular OpenAI ChatGPT subscription plan limits. Built from the npm package
+  tarball.
 
 ## Regenerating a `bun2nix` package
 

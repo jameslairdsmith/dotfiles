@@ -27,6 +27,8 @@ let
     inherit bun2nix;
   };
 
+  piSubscriptionUsage = pkgs.callPackage ../../pi/packages/pi-subscription-usage { };
+
   mcpReplAsset =
     {
       aarch64-darwin = {
@@ -107,4 +109,5 @@ in
   home.file.".pi/agent/mcp.json".source = piMcpConfig;
   home.file.".pi/agent/packages/pi-web-access".source = piWebAccess;
   home.file.".pi/agent/packages/pi-subagents".source = piSubagents;
+  home.file.".pi/agent/packages/pi-subscription-usage".source = piSubscriptionUsage;
 }

@@ -3,5 +3,9 @@
   "defaultProjectTrust": "ask",
   "tuiMode": "fullscreen",
   "fullscreenExitOutput": "resume-hint",
-  "packages": ["./packages/pi-web-access", "./packages/pi-subagents"]
+  "packages": [
+    "./packages/pi-web-access",
+    "./packages/pi-subagents",
+    "./packages/pi-subscription-usage"
+  ]
 }
