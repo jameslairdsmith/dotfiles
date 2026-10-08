@@ -56,6 +56,8 @@ This gives us:
 - `pi-subscription-usage/` — subscription quota reporting for Pi, including
   regular OpenAI ChatGPT subscription plan limits. Built from the npm package
   tarball.
+- `pi-context-view/` — visualises Pi context usage and exposes commands for
+  inspecting hidden context injections. Built from the npm package tarball.
 
 ## Regenerating a `bun2nix` package
 

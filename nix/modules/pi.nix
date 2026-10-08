@@ -29,6 +29,8 @@ let
 
   piSubscriptionUsage = pkgs.callPackage ../../pi/packages/pi-subscription-usage { };
 
+  piContextView = pkgs.callPackage ../../pi/packages/pi-context-view { };
+
   mcpReplAsset =
     {
       aarch64-darwin = {
@@ -110,4 +112,5 @@ in
   home.file.".pi/agent/packages/pi-web-access".source = piWebAccess;
   home.file.".pi/agent/packages/pi-subagents".source = piSubagents;
   home.file.".pi/agent/packages/pi-subscription-usage".source = piSubscriptionUsage;
+  home.file.".pi/agent/packages/pi-context-view".source = piContextView;
 }

@@ -6,6 +6,7 @@
   "packages": [
     "./packages/pi-web-access",
     "./packages/pi-subagents",
-    "./packages/pi-subscription-usage"
+    "./packages/pi-subscription-usage",
+    "./packages/pi-context-view"
   ]
 }
