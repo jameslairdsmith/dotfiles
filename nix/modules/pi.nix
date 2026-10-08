@@ -103,7 +103,7 @@ in
     context = ../../agents/AGENTS.md;
   };
 
-  home.file.".pi/agent/extensions/exit-alias.ts".source = ../../pi/extensions/exit-alias.ts;
+  home.file.".pi/agent/extensions/exit-alias".source = ../../pi/extensions/exit-alias;
   home.file.".pi/agent/mcp.json".source = piMcpConfig;
   home.file.".pi/agent/packages/pi-web-access".source = piWebAccess;
   home.file.".pi/agent/packages/pi-subagents".source = piSubagents;
