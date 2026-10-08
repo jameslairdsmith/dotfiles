@@ -50,6 +50,9 @@ This gives us:
 
 - `pi-web-access/` — web search, URL fetching, PDF extraction, GitHub access,
   and related web tools for Pi. Built with `bun2nix`.
+- `pi-subagents/` — subagent delegation, built-in specialist agents, workflow
+  prompts, and background jobs for Pi. Built from the npm package with
+  `bun2nix`.
 
 ## Regenerating a `bun2nix` package
 
