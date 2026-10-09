@@ -74,6 +74,9 @@
     "editor.formatOnSave": true
   },
   "nix.enableLanguageServer": true,
+  "files.associations": {
+    "*.opf": "html"
+  },
   "files.exclude": {
     ".chrome-profile/": true
   }
