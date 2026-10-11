@@ -138,6 +138,22 @@ in
           package = pkgs.vimPlugins.auto-dark-mode-nvim;
           setup = modusThemeSetup;
         };
+        oil-nvim = {
+          package = pkgs.vimPlugins.oil-nvim;
+          setup = ''
+            require("oil").setup()
+
+            vim.api.nvim_create_autocmd("FileType", {
+              pattern = "oil",
+              callback = function(args)
+                vim.keymap.set("n", "q", "<Cmd>quit<CR>", {
+                  buffer = args.buf,
+                  desc = "Close Oil",
+                })
+              end,
+            })
+          '';
+        };
       };
     };
   };

@@ -3,6 +3,7 @@ let
   shellAliases = {
     dr = "sudo darwin-rebuild switch --flake ~/projects/dotfiles/nix/hosts/neo#neo";
     hr = "home-manager switch --flake ~/projects/dotfiles/nix/hosts/neo#jls";
+    oil = "nvim -c 'Oil .'";
   };
 in
 {
