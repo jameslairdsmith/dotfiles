@@ -23,6 +23,16 @@ let
       popd
     '';
   });
+  focal-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "focal.nvim";
+    version = "unstable-2026-04-05";
+    src = pkgs.fetchFromGitHub {
+      owner = "hmdfrds";
+      repo = "focal.nvim";
+      rev = "25c946b9ba57c394fbb8644f084a4cd6d0004e54";
+      hash = "sha256-tlTN4RTsKnj2TiSEM+OfMs02zS92P/jy7qK0LvmsFfI=";
+    };
+  };
   modusThemeSetup = ''
     require("auto-dark-mode").setup({
       set_light_mode = function()
@@ -117,6 +127,7 @@ in
 
       extraPackages = [
         config.jls.r.package
+        pkgs.chafa
         pkgs.clang
         pkgs.gnumake
         pkgs.tree-sitter
@@ -141,7 +152,23 @@ in
         oil-nvim = {
           package = pkgs.vimPlugins.oil-nvim;
           setup = ''
-            require("oil").setup()
+            require("oil").setup({
+              keymaps = {
+                ["z"] = {
+                  callback = function()
+                    local oil = require("oil")
+                    local entry = oil.get_cursor_entry()
+
+                    if entry and entry.type == "directory" then
+                      oil.select()
+                    else
+                      oil.open()
+                    end
+                  end,
+                  desc = "Enter directory or go to parent",
+                },
+              },
+            })
 
             vim.api.nvim_create_autocmd("FileType", {
               pattern = "oil",
@@ -151,6 +178,33 @@ in
                   desc = "Close Oil",
                 })
               end,
+            })
+          '';
+        };
+        mini-files = {
+          package = pkgs.vimPlugins.mini-files;
+          setup = ''
+            require("mini.files").setup()
+
+            vim.api.nvim_create_autocmd("User", {
+              pattern = "MiniFilesExplorerClose",
+              callback = function()
+                if vim.g.mini_files_standalone then
+                  vim.schedule(function()
+                    vim.cmd("quitall")
+                  end)
+                end
+              end,
+            })
+          '';
+        };
+        focal-nvim = {
+          package = focal-nvim;
+          setup = ''
+            vim.o.updatetime = 300
+
+            require("focal").setup({
+              backend = "chafa",
             })
           '';
         };
