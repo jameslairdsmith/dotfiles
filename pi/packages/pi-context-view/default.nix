@@ -22,6 +22,16 @@ stdenv.mkDerivation rec {
     mkdir -p $out
     cp -R . $out/
 
+    # Upstream declares its Pi extension as ./src/index.ts. Pi's compact
+    # header labels for local packages are path-based, so that shows up as
+    # "src". Expose a root index.ts wrapper instead so the label is the
+    # package directory, "pi-context-view".
+    substituteInPlace $out/package.json \
+      --replace-fail '"./src/index.ts"' '"./index.ts"'
+    cat > $out/index.ts <<'EOF'
+    export { default } from "./src/index.ts";
+    EOF
+
     runHook postInstall
   '';
 
