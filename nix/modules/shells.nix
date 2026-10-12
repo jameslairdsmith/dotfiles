@@ -8,6 +8,10 @@ let
   };
 in
 {
+  programs.fzf.enable = true;
+
+  programs.zoxide.enable = true;
+
   programs.fish = {
     enable = true;
     interactiveShellInit = builtins.readFile ../../fish/config.fish;
