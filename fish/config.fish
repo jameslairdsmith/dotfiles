@@ -11,3 +11,22 @@ if type -q wt
         end
     end
 end
+
+function cdp --description "Fuzzy cd into a project under ~/projects"
+    set -l projects_dir ~/projects
+
+    if not test -d $projects_dir
+        echo "cdp: $projects_dir does not exist" >&2
+        return 1
+    end
+
+    set -l project (
+        command find $projects_dir -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null \
+            | sort \
+            | fzf --prompt="projects> "
+    )
+
+    if test -n "$project"
+        cd "$projects_dir/$project"
+    end
+end
