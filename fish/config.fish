@@ -12,6 +12,39 @@ if type -q wt
     end
 end
 
+function cdf --description "Fuzzy cd into a directory from common roots"
+    if not type -q fzf
+        echo "cdf: fzf is not installed" >&2
+        return 1
+    end
+
+    set -l root_candidates ~ /Applications /Volumes /opt
+    set -l roots
+
+    for root in $root_candidates
+        if test -d $root
+            set -a roots $root
+        end
+    end
+
+    if test (count $roots) -eq 0
+        echo "cdf: no search roots exist" >&2
+        return 1
+    end
+
+    set -l dir (
+        fzf \
+            --prompt="cd> " \
+            --walker=dir,follow,hidden \
+            --walker-root $roots \
+            --walker-skip=.git,node_modules,.direnv,.devenv,.cache,.Trash,Library,result,dist,build,.next,target
+    )
+
+    if test -n "$dir"
+        cd "$dir"
+    end
+end
+
 function cdp --description "Fuzzy cd into a project under ~/projects"
     set -l projects_dir ~/projects
 
