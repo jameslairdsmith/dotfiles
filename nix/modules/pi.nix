@@ -31,6 +31,8 @@ let
 
   piContextView = pkgs.callPackage ../../pi/packages/pi-context-view { };
 
+  chromeDevtoolsMcp = pkgs.callPackage ../packages/chrome-devtools-mcp.nix { };
+
   mcpReplAsset =
     {
       aarch64-darwin = {
@@ -73,6 +75,17 @@ let
 
   piMcpConfig = (pkgs.formats.json { }).generate "pi-mcp.json" {
     mcpServers = {
+      chrome-devtools = {
+        command = "${chromeDevtoolsMcp}/bin/chrome-devtools-mcp";
+        args = [
+          "--executablePath"
+          "${pkgs.google-chrome}/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+          "--isolated"
+          "--no-usage-statistics"
+        ];
+        exposure = "codemode";
+      };
+
       r = {
         command = "${mcpRepl}/bin/mcp-repl";
         args = [

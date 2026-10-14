@@ -16,6 +16,7 @@ let
 in
 {
   imports = [
+    ../../modules/chromium.nix
     ../../modules/emacs.nix
     ../../modules/git.nix
     ../../modules/ghostty.nix
