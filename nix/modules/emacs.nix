@@ -30,6 +30,7 @@ in
 
   home.packages = [
     (pkgs.writeShellScriptBin "magit" ''
+      export JLS_EMACS_PROFILE=magit
       exec ${config.programs.emacs.finalPackage}/bin/emacs \
         --no-window-system --eval \
         '(setq jls/quick-magit-session t
@@ -43,6 +44,9 @@ in
 
   home.file.".config/emacs/early-init.el".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/projects/dotfiles/emacs/early-init.el";
+
+  home.file.".config/emacs/config-elisp".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/projects/dotfiles/emacs/config-elisp";
 
   home.file.".config/emacs/nix-paths.el".text = ''
     ;;; nix-paths.el --- Nix-injected store paths -*- lexical-binding: t; -*-
