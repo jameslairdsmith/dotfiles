@@ -33,9 +33,9 @@ in
       export JLS_EMACS_PROFILE=magit
       exec ${config.programs.emacs.finalPackage}/bin/emacs \
         --no-window-system --eval \
-        '(setq jls/quick-magit-session t
-               jls/quick-magit-directory default-directory)' --eval \
-        '(magit-status default-directory)'
+        '(setq jls/quick-magit-session t)' --eval \
+        '(magit-status)' --eval \
+        '(setq jls/quick-magit-directory default-directory)'
     '')
     (pkgs.writeShellScriptBin "dired" ''
       export JLS_EMACS_PROFILE=dired
