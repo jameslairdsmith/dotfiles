@@ -33,11 +33,26 @@ let
       hash = "sha256-tlTN4RTsKnj2TiSEM+OfMs02zS92P/jy7qK0LvmsFfI=";
     };
   };
-  modusThemeSetup = ''
+  appearanceThemeSetup = ''
+    require("onedark").setup({
+      style = "light",
+      colors = {
+        bg0 = "#fafafa",
+        fg = "#383a43",
+        red = "#f74840",
+        green = "#25a343",
+        orange = "#cc8100",
+        yellow = "#cc8100",
+        blue = "#0087c1",
+        purple = "#b50da9",
+        cyan = "#009ab7",
+      },
+    })
+
     require("auto-dark-mode").setup({
       set_light_mode = function()
         vim.o.background = "light"
-        vim.cmd.colorscheme("modus_operandi")
+        require("onedark").load()
       end,
       set_dark_mode = function()
         vim.o.background = "dark"
@@ -51,8 +66,9 @@ in
 
   xdg.configFile."nvcat/init.lua".text = ''
     vim.opt.rtp:append("${pkgs.vimPlugins.modus-themes-nvim}")
+    vim.opt.rtp:append("${pkgs.vimPlugins.onedark-nvim}")
     vim.opt.rtp:append("${pkgs.vimPlugins.auto-dark-mode-nvim}")
-    ${modusThemeSetup}
+    ${appearanceThemeSetup}
   '';
 
   programs.nvf = {
@@ -145,9 +161,10 @@ in
           '';
         };
         modus-themes.package = pkgs.vimPlugins.modus-themes-nvim;
+        onedark-nvim.package = pkgs.vimPlugins.onedark-nvim;
         auto-dark-mode = {
           package = pkgs.vimPlugins.auto-dark-mode-nvim;
-          setup = modusThemeSetup;
+          setup = appearanceThemeSetup;
         };
         oil-nvim = {
           package = pkgs.vimPlugins.oil-nvim;

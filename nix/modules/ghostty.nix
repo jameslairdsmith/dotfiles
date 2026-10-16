@@ -8,7 +8,10 @@
         "performable:super+c=copy_to_clipboard:mixed"
         "super+s=unbind"
       ];
-      theme = "dark:Modus Vivendi,light:Modus Operandi";
+      # Previous light themes:
+      # - Modus Operandi
+      # - Bluloco Light
+      theme = "dark:Modus Vivendi,light:One Double Light";
       font-size = 16;
       # Set the internal margins (adjust the numbers to your liking)
       window-padding-x = 20;
