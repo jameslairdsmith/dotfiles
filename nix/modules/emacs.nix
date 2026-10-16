@@ -37,6 +37,13 @@ in
                jls/quick-magit-directory default-directory)' --eval \
         '(magit-status default-directory)'
     '')
+    (pkgs.writeShellScriptBin "dired" ''
+      export JLS_EMACS_PROFILE=dired
+      export JLS_EMACS_DIRED_DIRECTORY="''${1:-$PWD}"
+      exec ${config.programs.emacs.finalPackage}/bin/emacs \
+        --no-window-system --eval \
+        '(dired (getenv "JLS_EMACS_DIRED_DIRECTORY"))'
+    '')
   ];
 
   home.file.".config/emacs/init.el".source =

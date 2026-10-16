@@ -13,6 +13,7 @@
      jls-appearance
      jls-editing-elisp
      jls-interface
+     jls-dired
      jls-magit
      jls-terminal-input
      jls-terminal-emulators)
@@ -20,7 +21,12 @@
      jls-core
      jls-appearance
      jls-terminal-input
-     jls-magit))
+     jls-magit)
+    (dired
+     jls-core
+     jls-appearance
+     jls-terminal-input
+     jls-dired))
   "Configuration modules loaded by each Emacs session profile.")
 
 (defvar jls/session-profile nil
