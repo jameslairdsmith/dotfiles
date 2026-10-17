@@ -1,7 +1,7 @@
 ;;; jls-appearance.el --- Appearance configuration -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; Keep the built-in Modus theme in step with the macOS appearance.
+;; Keep the configured light and dark themes in step with the macOS appearance.
 
 ;;; Code:
 
@@ -21,14 +21,18 @@ unavailable, so ask macOS directly instead."
            "read" "-g" "AppleInterfaceStyle")))))
 
 (defun jls/sync-theme-with-macos ()
-  "Use the Modus theme matching the current macOS appearance."
+  "Use the theme matching the current macOS appearance."
   (let ((theme (if (jls/macos-dark-mode-p)
                    'modus-vivendi
-                 'modus-operandi)))
+                 'doom-one-light)))
     (unless (and (memq theme custom-enabled-themes)
                  (= (length custom-enabled-themes) 1))
       (mapc #'disable-theme custom-enabled-themes)
       (load-theme theme t))))
+
+;; One Double Light is based on Atom One Light.  Doom One Light is its closest
+;; maintained Emacs equivalent and has nearly identical base colours.
+(use-package doom-themes :ensure nil)
 
 (use-package
  modus-themes

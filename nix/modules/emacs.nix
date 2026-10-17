@@ -14,6 +14,7 @@ in
       epkgs: with epkgs; [
         elisp-autofmt
         dashboard
+        doom-themes
         vertico
         consult
         evil
