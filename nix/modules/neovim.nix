@@ -34,6 +34,9 @@ let
     };
   };
   appearanceThemeSetup = ''
+    -- One Double Light is a terminal palette rather than a Neovim
+    -- colourscheme. Start with the related Atom One Light theme, then
+    -- override its principal colours to match the Ghostty palette.
     require("onedark").setup({
       style = "light",
       colors = {
