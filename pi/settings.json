@@ -9,6 +9,11 @@
     "./packages/pi-web-access",
     "./packages/pi-subagents",
     "./packages/pi-subscription-usage",
-    "./packages/pi-context-view"
+    "./packages/pi-context-view",
+    {
+      "source": "./packages/pi-ask-user",
+      "skills": []
+    },
+    "./packages/jls-study-mode"
   ]
 }

@@ -58,6 +58,11 @@ This gives us:
   tarball.
 - `pi-context-view/` — visualises Pi context usage and exposes commands for
   inspecting hidden context injections. Built from the npm package tarball.
+- `pi-ask-user/` — interactive structured questions for Pi. Built from the npm
+  package tarball; its bundled skill is disabled so only the tool is loaded.
+- `jls-study-mode/` — James's local study-mode package. Its explicit
+  `study-mode` skill currently trials model-graded quizzes through
+  `pi-ask-user`.
 
 ## Regenerating a `bun2nix` package
 

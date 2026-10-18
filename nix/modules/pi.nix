@@ -31,6 +31,10 @@ let
 
   piContextView = pkgs.callPackage ../../pi/packages/pi-context-view { };
 
+  piAskUser = pkgs.callPackage ../../pi/packages/pi-ask-user { };
+
+  jlsStudyMode = pkgs.callPackage ../../pi/packages/jls-study-mode { };
+
   chromeDevtoolsMcp = pkgs.callPackage ../packages/chrome-devtools-mcp.nix { };
 
   mcpReplAsset =
@@ -126,4 +130,6 @@ in
   home.file.".pi/agent/packages/pi-subagents".source = piSubagents;
   home.file.".pi/agent/packages/pi-subscription-usage".source = piSubscriptionUsage;
   home.file.".pi/agent/packages/pi-context-view".source = piContextView;
+  home.file.".pi/agent/packages/pi-ask-user".source = piAskUser;
+  home.file.".pi/agent/packages/jls-study-mode".source = jlsStudyMode;
 }

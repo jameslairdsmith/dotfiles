@@ -1,0 +1,11 @@
+{
+  "name": "jls-study-mode",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  }
+}
