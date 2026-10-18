@@ -26,7 +26,12 @@
      jls-core
      jls-appearance
      jls-terminal-input
-     jls-dired))
+     jls-dired)
+    (agent-shell
+     jls-core
+     jls-appearance
+     jls-terminal-input
+     jls-agent-shell))
   "Configuration modules loaded by each Emacs session profile.")
 
 (defvar jls/session-profile nil

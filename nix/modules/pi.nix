@@ -35,6 +35,8 @@ let
 
   jlsStudyMode = pkgs.callPackage ../../pi/packages/jls-study-mode { };
 
+  piAcp = pkgs.callPackage ../packages/pi-acp.nix { };
+
   chromeDevtoolsMcp = pkgs.callPackage ../packages/chrome-devtools-mcp.nix { };
 
   mcpReplAsset =
@@ -112,6 +114,8 @@ let
 
 in
 {
+  home.packages = [ piAcp ];
+
   programs.pi-coding-agent = {
     enable = true;
     package = piCodingAgentPackage;

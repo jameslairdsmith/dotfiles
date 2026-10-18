@@ -26,6 +26,7 @@ in
         vterm
         kkp
         eat
+        agent-shell
       ];
   };
 
@@ -44,6 +45,12 @@ in
       exec ${config.programs.emacs.finalPackage}/bin/emacs \
         --no-window-system --eval \
         '(dired (getenv "JLS_EMACS_DIRED_DIRECTORY"))'
+    '')
+    (pkgs.writeShellScriptBin "pimacs" ''
+      export JLS_EMACS_PROFILE=agent-shell
+      exec ${config.programs.emacs.finalPackage}/bin/emacs \
+        --no-window-system --eval \
+        '(agent-shell-pi-start-agent)'
     '')
   ];
 
