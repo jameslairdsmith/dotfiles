@@ -33,24 +33,29 @@ in
   home.packages = [
     (pkgs.writeShellScriptBin "magit" ''
       export JLS_EMACS_PROFILE=magit
-      exec ${config.programs.emacs.finalPackage}/bin/emacs \
-        --no-window-system --eval \
-        '(setq jls/quick-magit-session t)' --eval \
-        '(magit-status)' --eval \
-        '(setq jls/quick-magit-directory default-directory)'
+      exec ${config.programs.emacs.finalPackage}/bin/emacsclient \
+        --socket-name=magit \
+        --alternate-editor="" \
+        --tty \
+        --eval '(setq jls/quick-magit-session t)' \
+        --eval '(magit-status)' \
+        --eval '(setq jls/quick-magit-directory default-directory)'
     '')
     (pkgs.writeShellScriptBin "dired" ''
       export JLS_EMACS_PROFILE=dired
-      export JLS_EMACS_DIRED_DIRECTORY="''${1:-$PWD}"
-      exec ${config.programs.emacs.finalPackage}/bin/emacs \
-        --no-window-system --eval \
-        '(dired (getenv "JLS_EMACS_DIRED_DIRECTORY"))'
+      exec ${config.programs.emacs.finalPackage}/bin/emacsclient \
+        --socket-name=dired \
+        --alternate-editor="" \
+        --tty \
+        -- "''${1:-$PWD}"
     '')
     (pkgs.writeShellScriptBin "pimacs" ''
       export JLS_EMACS_PROFILE=agent-shell
-      exec ${config.programs.emacs.finalPackage}/bin/emacs \
-        --no-window-system --eval \
-        '(agent-shell-pi-start-agent)'
+      exec ${config.programs.emacs.finalPackage}/bin/emacsclient \
+        --socket-name=agent-shell \
+        --alternate-editor="" \
+        --tty \
+        --eval '(agent-shell-pi-start-agent)'
     '')
   ];
 
