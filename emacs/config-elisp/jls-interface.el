@@ -15,6 +15,12 @@
 
 (use-package vertico :ensure nil :init (vertico-mode 1))
 
+(use-package
+ vertico-posframe
+ :ensure nil
+ :after vertico
+ :config (vertico-posframe-mode 1))
+
 ;; Consult is installed by Nix as a dependency of Consult Dir, but its own
 ;; commands are not configured yet.
 

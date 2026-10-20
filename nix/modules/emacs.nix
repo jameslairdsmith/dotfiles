@@ -16,6 +16,7 @@ in
         dashboard
         doom-themes
         vertico
+        vertico-posframe
         consult
         consult-dir
         evil
