@@ -45,6 +45,29 @@ function cdf --description "Fuzzy cd into a directory from common roots"
     end
 end
 
+function cdmacs --description "Choose a directory with Emacs and cd into it"
+    if not type -q cdmacs-picker
+        echo "cdmacs: cdmacs-picker is not installed" >&2
+        return 1
+    end
+
+    set -l output (mktemp -t cdmacs.XXXXXX); or return
+    command cdmacs-picker "$output"
+    set -l picker_status $status
+    set -l directory
+
+    if test $picker_status -eq 0; and test -s "$output"
+        read -z directory < "$output"
+    end
+    command rm -f "$output"
+
+    if test -n "$directory"; and test -d "$directory"
+        cd "$directory"
+    else
+        return $picker_status
+    end
+end
+
 function cdp --description "Fuzzy cd into a project under ~/projects"
     set -l projects_dir ~/projects
 

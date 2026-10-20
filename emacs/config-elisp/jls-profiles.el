@@ -27,6 +27,11 @@
      jls-appearance
      jls-terminal-input
      jls-dired)
+    (cdmacs
+     jls-core
+     jls-appearance
+     jls-terminal-input
+     jls-cdmacs)
     (agent-shell
      jls-core
      jls-appearance

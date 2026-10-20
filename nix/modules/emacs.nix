@@ -51,6 +51,20 @@ in
         --tty \
         -- "''${1:-$PWD}"
     '')
+    (pkgs.writeShellScriptBin "cdmacs-picker" ''
+      if [ "$#" -ne 1 ]; then
+        echo "usage: cdmacs-picker OUTPUT-FILE" >&2
+        exit 2
+      fi
+
+      : > "$1"
+      export JLS_EMACS_PROFILE=cdmacs
+      exec ${config.programs.emacs.finalPackage}/bin/emacsclient \
+        --socket-name=cdmacs \
+        --alternate-editor="" \
+        --tty \
+        --eval "(jls/cdmacs-start \"$1\")"
+    '')
     (pkgs.writeShellScriptBin "pimacs" ''
       export JLS_EMACS_PROFILE=agent-shell
       exec ${config.programs.emacs.finalPackage}/bin/emacsclient \

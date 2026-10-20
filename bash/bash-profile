@@ -11,3 +11,26 @@ if command -v wt >/dev/null 2>&1; then
     fi
   }
 fi
+
+cdmacs() {
+  local output directory picker_status
+
+  if ! command -v cdmacs-picker >/dev/null 2>&1; then
+    echo "cdmacs: cdmacs-picker is not installed" >&2
+    return 1
+  fi
+
+  output="$(mktemp -t cdmacs.XXXXXX)" || return
+  command cdmacs-picker "$output"
+  picker_status=$?
+  if [ "$picker_status" -eq 0 ] && [ -s "$output" ]; then
+    IFS= read -r directory < "$output"
+  fi
+  command rm -f "$output"
+
+  if [ -n "$directory" ] && [ -d "$directory" ]; then
+    builtin cd -- "$directory"
+  else
+    return "$picker_status"
+  fi
+}
