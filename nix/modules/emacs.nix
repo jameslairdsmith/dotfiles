@@ -17,6 +17,7 @@ in
         doom-themes
         vertico
         consult
+        consult-dir
         evil
         evil-collection
         magit

@@ -15,7 +15,17 @@
 
 (use-package vertico :ensure nil :init (vertico-mode 1))
 
-;; Consult is installed by Nix but not configured yet.
+;; Consult is installed by Nix as a dependency of Consult Dir, but its own
+;; commands are not configured yet.
+
+(use-package
+ consult-dir
+ :ensure nil
+ :bind
+ (("C-x C-d" . consult-dir)
+  :map vertico-map
+  ("C-x C-d" . consult-dir)
+  ("C-x C-j" . consult-dir-jump-file)))
 
 (provide 'jls-interface)
 ;;; jls-interface.el ends here
