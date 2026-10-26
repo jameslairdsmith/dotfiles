@@ -33,7 +33,7 @@
   "Path to the fd executable used to find directory candidates.")
 
 (defconst jls/cdmacs-search-roots '("~" "/Applications" "/Volumes" "/opt")
-  "Filesystem roots searched by `jls/cdmacs-filesystem-dirs'.")
+  "Filesystem roots searched by the cdmacs filesystem source.")
 
 (defconst
   jls/cdmacs-excluded-directories
@@ -44,6 +44,7 @@
     ".cache"
     ".Trash"
     "Library"
+    "**/jellyfin/Config"
     "result"
     "dist"
     "build"
@@ -51,40 +52,45 @@
     "target")
   "Directory names excluded from the cdmacs filesystem search.")
 
-(defun jls/cdmacs-filesystem-dirs ()
-  "Return directories under `jls/cdmacs-search-roots' using fd."
-  (let* ((roots
-          (mapcar
-           #'file-truename
-           (seq-filter
-            #'file-directory-p
-            (mapcar #'expand-file-name jls/cdmacs-search-roots))))
-         ;; Consult Dir materialises every candidate, unlike fzf's streaming
-         ;; walker, so avoid following symlinks into millions of duplicates.
-         (arguments '("--type" "directory" "--hidden" "--absolute-path")))
+(defun jls/cdmacs-split-local-filter (_input _plist)
+  "Send no input to fd and apply all input as a local Consult filter."
+  '("" 0))
+
+(add-to-list
+ 'consult-async-split-styles-alist
+ `(cdmacs :function ,#'jls/cdmacs-split-local-filter))
+
+(defun jls/cdmacs-fd-command (_input)
+  "Return the fd command used to stream directory candidates."
+  (let ((arguments
+         (list
+          jls-cdmacs-fd-program
+          "--type"
+          "directory"
+          "--hidden"
+          "--absolute-path")))
     (dolist (excluded jls/cdmacs-excluded-directories)
       (setq arguments (append arguments (list "--exclude" excluded))))
-    (dolist (root roots)
-      (setq arguments (append arguments (list "--search-path" root))))
-    (condition-case error-data
-        (delete-dups
-         (append
-          roots
-          (apply #'process-lines jls-cdmacs-fd-program arguments)))
-      (error
-       (message
-        "cdmacs filesystem search failed: %s"
-        (error-message-string error-data))
-       roots))))
+    (dolist
+        (root
+         (seq-filter
+          #'file-directory-p
+          (mapcar #'expand-file-name jls/cdmacs-search-roots)))
+      (setq arguments
+            (append arguments (list "--search-path" (file-truename root)))))
+    arguments))
 
 (defvar jls/cdmacs-source-filesystem
   `(:name "Filesystem"
-	  :narrow ?f
-	  :category file
-	  :face consult-file
-	  :history file-name-history
-	  :items ,#'jls/cdmacs-filesystem-dirs)
-  "Consult Dir source matching the roots and exclusions used by cdf.")
+    :narrow ?f
+    :category file
+    :face consult-file
+    :history file-name-history
+    :async ,(consult--process-collection
+              #'jls/cdmacs-fd-command
+              :min-input 0
+              :debounce 0))
+  "Asynchronous filesystem source matching the roots used by cdf.")
 
 ;; The invoking local shell cannot `cd' into a TRAMP path.
 (setq consult-dir-sources
@@ -107,11 +113,22 @@
   (when-let ((project (project-current nil directory)))
     (project-remember-project project)))
 
+(defun jls/cdmacs-handle-terminal-deletion (_terminal)
+  "Abort the active picker after its client terminal disappears."
+  (when (active-minibuffer-window)
+    ;; Let terminal deletion finish before unwinding the recursive minibuffer.
+    (run-at-time 0 nil #'abort-recursive-edit)))
+
+(add-hook
+ 'delete-terminal-functions
+ #'jls/cdmacs-handle-terminal-deletion)
+
 (defun jls/cdmacs-start (output-file)
   "Choose a directory and write it to OUTPUT-FILE, then close this client."
   (jls/cdmacs-remember-projects)
   (delete-other-windows)
   (let* ((selected-directory nil)
+         (consult-async-split-style 'cdmacs)
          (consult-dir-default-command
           (lambda ()
             (interactive)
