@@ -8,10 +8,18 @@
 (use-package
  dashboard
  :ensure nil
+ :demand t
  :custom
  (dashboard-items '((recents . 10) (projects . 5) (bookmarks . 5)))
  (dashboard-center-content t)
+ :hook (dashboard-mode . evil-local-mode)
  :config (dashboard-setup-startup-hook))
+
+(use-package
+ evil-collection
+ :ensure nil
+ :after (evil dashboard)
+ :config (evil-collection-init 'dashboard))
 
 (use-package vertico :ensure nil :init (vertico-mode 1))
 
