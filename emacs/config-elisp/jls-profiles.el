@@ -13,6 +13,7 @@
      jls-appearance
      jls-evil
      jls-editing-elisp
+     jls-editing-r
      jls-interface
      jls-dired
      jls-magit

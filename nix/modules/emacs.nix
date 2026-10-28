@@ -22,6 +22,7 @@ in
         consult-dir
         evil
         evil-collection
+        ess
         magit
         gptel
         gptel-magit

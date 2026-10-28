@@ -22,11 +22,12 @@ the planned build-out, then enhancements and ideas.
 ## Planned build-out (next steps)
 
 - [ ] **Completion stack** — implement once decided (see above).
-- [ ] **R / ESS** — port the old setup: `ess-r-mode`, `company` (script-only),
-      `company-R-args`, `ess-rdired` on a key, the `display-buffer-alist` window
-      layout for `*R*`/`*R Dired*`/`*Help*`, and disable `ess-use-flymake`. Wire
-      the R binary from `r.nix` the Nix way (inject its store path via
-      `nix-paths.el` rather than relying on PATH).
+- [ ] **R / ESS** — minimal `ess-r-mode` editing support is in place. Port
+      the rest of the old setup: `company` (script-only), `company-R-args`,
+      `ess-rdired` on a key, the `display-buffer-alist` window layout for
+      `*R*`/`*R Dired*`/`*Help*`, and disable `ess-use-flymake`. Wire the R
+      binary from `r.nix` the Nix way (inject its store path via `nix-paths.el`
+      rather than relying on PATH).
 - [x] **Magit** — added via Nix `extraPackages` and configured.
 - [ ] **Org mode** — minimal config for notes/capture. (Decided against the old
       literate/`org-transclusion` tangling workflow.)
