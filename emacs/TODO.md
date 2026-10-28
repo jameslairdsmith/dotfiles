@@ -10,8 +10,8 @@ the planned build-out, then enhancements and ideas.
       `ivy`/`counsel`/`swiper` stack (from the old config) and the modern
       `vertico` + `consult` + `marginalia` + `orderless` stack. Drives several
       keybindings below.
-- [x] **Evil / Vim emulation** — enabled locally in Magit buffers only, with
-      the Magit integration from `evil-collection`.
+- [x] **Evil / Vim emulation** — enabled locally in programming, Magit and
+      Dired buffers, with mode-specific integrations from `evil-collection`.
 - [ ] **Modeline** — the old config used `doom-modeline`. Decide: keep it, use a
       lighter option, or stick with the built-in modeline (Modus styles it
       cleanly already).

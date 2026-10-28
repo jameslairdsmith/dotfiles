@@ -22,17 +22,12 @@
   (evil-local-set-key 'normal (kbd "Z Q") #'with-editor-cancel))
 
 (use-package
- evil
- :ensure nil
- :init (setq evil-want-keybinding nil)
- :hook
- ((magit-mode . evil-local-mode)
-  (git-commit-setup . jls/git-commit-setup-evil)))
-
-(use-package
  evil-collection
  :ensure nil
  :after (evil magit)
+ :hook
+ ((magit-mode . evil-local-mode)
+  (git-commit-setup . jls/git-commit-setup-evil))
  :config
  (evil-collection-init 'magit)
  (evil-collection-define-key

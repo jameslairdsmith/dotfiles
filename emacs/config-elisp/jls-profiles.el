@@ -11,6 +11,7 @@
   '((full
      jls-core
      jls-appearance
+     jls-evil
      jls-editing-elisp
      jls-interface
      jls-dired
@@ -20,11 +21,13 @@
     (magit
      jls-core
      jls-appearance
+     jls-evil
      jls-terminal-input
      jls-magit)
     (dired
      jls-core
      jls-appearance
+     jls-evil
      jls-terminal-input
      jls-dired)
     (cdmacs

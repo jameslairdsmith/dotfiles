@@ -14,15 +14,10 @@
     (quit-window)))
 
 (use-package
- evil
- :ensure nil
- :init (setq evil-want-keybinding nil)
- :hook (dired-mode . evil-local-mode))
-
-(use-package
  evil-collection
  :ensure nil
  :after (evil dired)
+ :hook (dired-mode . evil-local-mode)
  :config
  (evil-collection-init 'dired)
  (evil-collection-define-key
