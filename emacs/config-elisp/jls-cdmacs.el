@@ -29,8 +29,11 @@
 
 (use-package consult-dir :ensure nil :demand t)
 
-(defvar jls-cdmacs-fd-program "fd"
-  "Path to the fd executable used to find directory candidates.")
+(defvar jls-fd-program
+  (if (boundp 'jls-cdmacs-fd-program)
+      jls-cdmacs-fd-program
+    "fd")
+  "Path to the fd executable used by Consult commands.")
 
 (defconst jls/cdmacs-search-roots '("~" "/Applications" "/Volumes" "/opt")
   "Filesystem roots searched by the cdmacs filesystem source.")
@@ -64,7 +67,7 @@
   "Return the fd command used to stream directory candidates."
   (let ((arguments
          (list
-          jls-cdmacs-fd-program
+          jls-fd-program
           "--type"
           "directory"
           "--hidden"

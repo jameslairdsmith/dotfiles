@@ -21,8 +21,20 @@
  :after vertico
  :config (vertico-posframe-mode 1))
 
-;; Consult is installed by Nix as a dependency of Consult Dir, but its own
-;; commands are not configured yet.
+(defvar jls-fd-program
+  (if (boundp 'jls-cdmacs-fd-program)
+      jls-cdmacs-fd-program
+    "fd")
+  "Path to the fd executable used by Consult commands.")
+
+(use-package
+ consult
+ :ensure nil
+ :commands consult-fd
+ :custom
+ (consult-async-min-input 1)
+ (consult-fd-args
+  (list jls-fd-program "--full-path --color=never")))
 
 (use-package
  consult-dir
