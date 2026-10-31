@@ -1,0 +1,5 @@
+#:schema https://panache.bz/panache.schema.json
+
+[format]
+line-width = 80
+wrap = "reflow"
