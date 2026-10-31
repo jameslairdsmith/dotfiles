@@ -24,20 +24,21 @@
 (use-package
  evil-collection
  :ensure nil
- :after (evil magit)
+ :demand t
  :hook
  ((magit-mode . evil-local-mode)
   (git-commit-setup . jls/git-commit-setup-evil))
- :config
- (evil-collection-init 'magit)
- (evil-collection-define-key
-  'normal
-  'magit-mode-map
-  "z" #'magit-section-toggle)
- (evil-collection-define-key
-  'normal
-  'magit-status-mode-map
-  "q" #'jls/magit-quit))
+ :config (evil-collection-init 'magit))
+
+(with-eval-after-load 'magit
+  (evil-collection-define-key
+   'normal
+   'magit-mode-map
+   "z" #'magit-section-toggle)
+  (evil-collection-define-key
+   'normal
+   'magit-status-mode-map
+   "q" #'jls/magit-quit))
 
 (defvar jls/quick-magit-session nil
   "Whether this Emacs process is dedicated to a quick Magit session.")

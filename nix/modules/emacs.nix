@@ -37,9 +37,15 @@ in
   home.packages = [
     (pkgs.writeShellScriptBin "magit" ''
       export JLS_EMACS_PROFILE=magit
+
+      if ! ${config.programs.emacs.finalPackage}/bin/emacsclient \
+        --socket-name=magit \
+        --eval t >/dev/null 2>&1; then
+        ${config.programs.emacs.finalPackage}/bin/emacs --daemon=magit
+      fi
+
       exec ${config.programs.emacs.finalPackage}/bin/emacsclient \
         --socket-name=magit \
-        --alternate-editor="" \
         --tty \
         --eval '(setq jls/quick-magit-session t)' \
         --eval '(magit-status)' \
