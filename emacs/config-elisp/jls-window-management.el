@@ -197,11 +197,24 @@ chosen buffer returns to the vterm."
        :inverse-video t
        :box (:line-width 2))))))
 
+(defun jls/visual-select-window ()
+  "Select a window visually, then choose what to do with it."
+  (interactive)
+  (call-interactively #'ace-window)
+  (pcase
+      (car
+       (read-multiple-choice
+        "Window action"
+        '((?g "go" "Keep the chosen window selected")
+          (?x "delete" "Delete the chosen window"))))
+    (?g nil)
+    (?x (delete-window))))
+
 (defvar-keymap jls/window-map
   "s"
   jls/split-map
-  "w"
-  #'ace-window)
+  "v"
+  #'jls/visual-select-window)
 
 (defvar-keymap jls/leader-map
   "w"
@@ -217,8 +230,8 @@ chosen buffer returns to the vterm."
  (which-key-add-key-based-replacements
   "SPC w"
   "window"
-  "SPC w w"
-  "select"
+  "SPC w v"
+  "visual"
   "SPC w s"
   "split"
   "SPC w s h"
