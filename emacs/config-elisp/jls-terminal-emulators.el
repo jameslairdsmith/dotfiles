@@ -5,11 +5,23 @@
 
 ;;; Code:
 
+(declare-function evil-collection-init "evil-collection" (&optional modes))
+
 (use-package
  vterm
  :ensure nil
  :commands vterm
- :config (setq vterm-timer-delay nil))
+ ;; Keep vterm's refresh delay non-nil.  Nil refreshes after every output
+ ;; update, which can overwhelm Emacs's redisplay when several vterms run.
+ :custom (vterm-timer-delay 0.1))
+
+(use-package
+ evil-collection
+ :ensure nil
+ :after (evil vterm)
+ :demand t
+ :hook (vterm-mode . evil-local-mode)
+ :config (evil-collection-init 'vterm))
 
 (use-package
  eat

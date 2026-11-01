@@ -17,25 +17,32 @@
     (select-window new-window)
     (funcall opener)))
 
+(defun jls/open-new-vterm ()
+  "Create and select a new vterm session."
+  ;; Without a non-numeric argument, `vterm' reuses its existing buffer.
+  ;; Showing one live terminal in differently sized windows can cause its
+  ;; process and the windows to repeatedly resize each other and hang Emacs.
+  (vterm t))
+
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
   (interactive)
-  (jls/split-window-and-open 'left #'vterm))
+  (jls/split-window-and-open 'left #'jls/open-new-vterm))
 
 (defun jls/split-vterm-below ()
   "Open a new vterm in a window below."
   (interactive)
-  (jls/split-window-and-open 'below #'vterm))
+  (jls/split-window-and-open 'below #'jls/open-new-vterm))
 
 (defun jls/split-vterm-above ()
   "Open a new vterm in a window above."
   (interactive)
-  (jls/split-window-and-open 'above #'vterm))
+  (jls/split-window-and-open 'above #'jls/open-new-vterm))
 
 (defun jls/split-vterm-right ()
   "Open a new vterm in a window to the right."
   (interactive)
-  (jls/split-window-and-open 'right #'vterm))
+  (jls/split-window-and-open 'right #'jls/open-new-vterm))
 
 (defvar-keymap jls/split-left-map
   "v"
