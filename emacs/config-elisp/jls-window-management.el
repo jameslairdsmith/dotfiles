@@ -2,8 +2,8 @@
 
 ;;; Commentary:
 ;; Window-management bindings for full editor sessions.  Space is a leader in
-;; Evil's normal and motion states; split commands choose a direction and then
-;; the kind of buffer to open.
+;; Evil's normal and motion states; Vim-inspired position commands choose an
+;; ordinary or side window and then the kind of buffer to open.
 
 ;;; Code:
 
@@ -20,6 +20,23 @@
   (let ((new-window (split-window nil nil side)))
     (select-window new-window)
     (funcall opener)))
+
+(defun jls/open-in-side-window (side opener)
+  "Create a window on frame SIDE and call OPENER in it."
+  (let* ((placeholder (generate-new-buffer " *jls-side-window*"))
+         (window
+          (display-buffer-in-side-window placeholder `((side . ,side)))))
+    ;; Side windows are dedicated by default.  Temporarily allow OPENER to
+    ;; replace the placeholder in this window rather than another one.
+    (set-window-dedicated-p window nil)
+    (set-window-parameter window 'quit-restore nil)
+    (select-window window)
+    (unwind-protect
+        (funcall opener)
+      (when (window-live-p window)
+        (set-window-dedicated-p window 'side))
+      (when (buffer-live-p placeholder)
+        (kill-buffer placeholder)))))
 
 (defun jls/open-new-vterm ()
   "Create and select a new vterm session."
@@ -132,6 +149,46 @@ chosen buffer returns to the vterm."
   (jls/split-window-and-open
    'right #'jls/open-new-vterm-then-consult-buffer))
 
+(defun jls/side-consult-buffer-left ()
+  "Choose a buffer for a new left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-new-vterm-then-consult-buffer))
+
+(defun jls/side-dired-left ()
+  "Open Dired in a new left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-dired-here))
+
+(defun jls/side-eshell-left ()
+  "Open a new Eshell session in a left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-new-eshell))
+
+(defun jls/side-vterm-left ()
+  "Open a new vterm session in a left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-new-vterm))
+
+(defun jls/side-consult-buffer-right ()
+  "Choose a buffer for a new right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-new-vterm-then-consult-buffer))
+
+(defun jls/side-dired-right ()
+  "Open Dired in a new right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-dired-here))
+
+(defun jls/side-eshell-right ()
+  "Open a new Eshell session in a right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-new-eshell))
+
+(defun jls/side-vterm-right ()
+  "Open a new vterm session in a right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-new-vterm))
+
 (defvar-keymap jls/split-left-map
   "b"
   #'jls/split-consult-buffer-left
@@ -169,15 +226,24 @@ chosen buffer returns to the vterm."
   "v"
   #'jls/split-vterm-right)
 
-(defvar-keymap jls/split-map
-  "h"
-  jls/split-left-map
-  "j"
-  jls/split-below-map
-  "k"
-  jls/split-above-map
-  "l"
-  jls/split-right-map)
+(defvar-keymap jls/side-left-map
+  "b"
+  #'jls/side-consult-buffer-left
+  "d"
+  #'jls/side-dired-left
+  "e"
+  #'jls/side-eshell-left
+  "v"
+  #'jls/side-vterm-left)
+(defvar-keymap jls/side-right-map
+  "b"
+  #'jls/side-consult-buffer-right
+  "d"
+  #'jls/side-dired-right
+  "e"
+  #'jls/side-eshell-right
+  "v"
+  #'jls/side-vterm-right)
 
 (use-package
  ace-window
@@ -211,8 +277,18 @@ chosen buffer returns to the vterm."
     (?x (delete-window))))
 
 (defvar-keymap jls/window-map
-  "s"
-  jls/split-map
+  "i"
+  jls/split-left-map
+  "a"
+  jls/split-right-map
+  "I"
+  jls/side-left-map
+  "A"
+  jls/side-right-map
+  "o"
+  jls/split-below-map
+  "O"
+  jls/split-above-map
   "v"
   #'jls/visual-select-window)
 
@@ -232,48 +308,29 @@ chosen buffer returns to the vterm."
   "window"
   "SPC w v"
   "visual"
-  "SPC w s"
-  "split"
-  "SPC w s h"
-  "left"
-  "SPC w s j"
-  "below"
-  "SPC w s k"
-  "above"
-  "SPC w s l"
-  "right"
-  "SPC w s h b"
-  "buffer"
-  "SPC w s h d"
-  "dired"
-  "SPC w s h e"
-  "eshell"
-  "SPC w s h v"
-  "vterm"
-  "SPC w s j b"
-  "buffer"
-  "SPC w s j d"
-  "dired"
-  "SPC w s j e"
-  "eshell"
-  "SPC w s j v"
-  "vterm"
-  "SPC w s k b"
-  "buffer"
-  "SPC w s k d"
-  "dired"
-  "SPC w s k e"
-  "eshell"
-  "SPC w s k v"
-  "vterm"
-  "SPC w s l b"
-  "buffer"
-  "SPC w s l d"
-  "dired"
-  "SPC w s l e"
-  "eshell"
-  "SPC w s l v"
-  "vterm"))
+  "SPC w i"
+  "insert left"
+  "SPC w a"
+  "append right"
+  "SPC w I"
+  "left side"
+  "SPC w A"
+  "right side"
+  "SPC w o"
+  "open below"
+  "SPC w O"
+  "open above")
+ (dolist (prefix '("SPC w i" "SPC w a" "SPC w I"
+                   "SPC w A" "SPC w o" "SPC w O"))
+   (which-key-add-key-based-replacements
+    (concat prefix " b")
+    "buffer"
+    (concat prefix " d")
+    "dired"
+    (concat prefix " e")
+    "eshell"
+    (concat prefix " v")
+    "vterm")))
 
 (provide 'jls-window-management)
 ;;; jls-window-management.el ends here
