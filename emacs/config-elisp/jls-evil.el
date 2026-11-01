@@ -23,5 +23,18 @@
  ((prog-mode text-mode) . evil-local-mode)
  (find-file . jls/evil-enable-in-file-buffer))
 
+(use-package
+ evil-collection
+ :ensure nil
+ :after evil
+ :demand t
+ :hook (messages-buffer-mode . evil-local-mode)
+ :config
+ (evil-collection-init 'simple)
+ ;; `*Messages*' normally exists before its mode hook is configured.
+ (when-let ((buffer (get-buffer "*Messages*")))
+   (with-current-buffer buffer
+     (evil-local-mode 1))))
+
 (provide 'jls-evil)
 ;;; jls-evil.el ends here
