@@ -293,6 +293,8 @@ chosen buffer returns to the vterm."
   #'jls/visual-select-window)
 
 (defvar-keymap jls/leader-map
+  "b"
+  #'consult-buffer
   "w"
   jls/window-map)
 
@@ -304,6 +306,8 @@ chosen buffer returns to the vterm."
  :init (which-key-mode 1)
  :config
  (which-key-add-key-based-replacements
+  "SPC b"
+  "buffer"
   "SPC w"
   "window"
   "SPC w v"
