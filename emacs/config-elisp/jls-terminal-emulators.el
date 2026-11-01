@@ -7,13 +7,23 @@
 
 (declare-function evil-collection-init "evil-collection" (&optional modes))
 
-(defun jls/vterm-delete-windows-on-exit (buffer _event)
-  "Delete deletable windows displaying the exited vterm BUFFER."
+(defun jls/delete-deletable-buffer-windows (buffer)
+  "Delete every deletable window displaying BUFFER."
   (when (buffer-live-p buffer)
     (dolist (window (get-buffer-window-list buffer nil t))
-      ;; Do not delete a frame when its sole window displays the vterm.
+      ;; Do not delete a frame when its sole window displays the buffer.
       (when (eq (window-deletable-p window) t)
         (delete-window window)))))
+
+(defun jls/vterm-delete-windows-on-exit (buffer _event)
+  "Delete deletable windows displaying the exited vterm BUFFER."
+  (jls/delete-deletable-buffer-windows buffer))
+
+(defun jls/eshell-delete-windows-on-exit ()
+  "Delete deletable windows displaying the exiting Eshell buffer."
+  (jls/delete-deletable-buffer-windows (current-buffer)))
+
+(add-hook 'eshell-exit-hook #'jls/eshell-delete-windows-on-exit)
 
 (use-package
  vterm
