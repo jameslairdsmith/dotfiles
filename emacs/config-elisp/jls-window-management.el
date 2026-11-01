@@ -10,6 +10,8 @@
 (require 'evil)
 
 (declare-function consult-buffer "consult" (&optional sources))
+(declare-function dired "dired" (dirname &optional switches))
+(declare-function eshell "esh-mode" (&optional arg))
 (declare-function vterm "vterm" (&optional arg))
 
 (defun jls/split-window-and-open (side opener)
@@ -24,6 +26,14 @@
   ;; Showing one live terminal in differently sized windows can cause its
   ;; process and the windows to repeatedly resize each other and hang Emacs.
   (vterm t))
+
+(defun jls/open-new-eshell ()
+  "Create and select a new Eshell session."
+  (eshell t))
+
+(defun jls/open-dired-here ()
+  "Open Dired in the current buffer's directory."
+  (dired default-directory))
 
 (defun jls/open-new-vterm-then-consult-buffer ()
   "Create a vterm, then choose another buffer to display over it.
@@ -57,6 +67,46 @@ chosen buffer returns to the vterm."
   (interactive)
   (jls/split-window-and-open 'right #'jls/open-new-vterm))
 
+(defun jls/split-eshell-left ()
+  "Open a new Eshell session in a window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'jls/open-new-eshell))
+
+(defun jls/split-eshell-below ()
+  "Open a new Eshell session in a window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'jls/open-new-eshell))
+
+(defun jls/split-eshell-above ()
+  "Open a new Eshell session in a window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'jls/open-new-eshell))
+
+(defun jls/split-eshell-right ()
+  "Open a new Eshell session in a window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'jls/open-new-eshell))
+
+(defun jls/split-dired-left ()
+  "Open Dired in a window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'jls/open-dired-here))
+
+(defun jls/split-dired-below ()
+  "Open Dired in a window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'jls/open-dired-here))
+
+(defun jls/split-dired-above ()
+  "Open Dired in a window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'jls/open-dired-here))
+
+(defun jls/split-dired-right ()
+  "Open Dired in a window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'jls/open-dired-here))
+
 (defun jls/split-consult-buffer-left ()
   "Choose a buffer for a new window to the left."
   (interactive)
@@ -84,21 +134,37 @@ chosen buffer returns to the vterm."
 (defvar-keymap jls/split-left-map
   "b"
   #'jls/split-consult-buffer-left
+  "d"
+  #'jls/split-dired-left
+  "e"
+  #'jls/split-eshell-left
   "v"
   #'jls/split-vterm-left)
 (defvar-keymap jls/split-below-map
   "b"
   #'jls/split-consult-buffer-below
+  "d"
+  #'jls/split-dired-below
+  "e"
+  #'jls/split-eshell-below
   "v"
   #'jls/split-vterm-below)
 (defvar-keymap jls/split-above-map
   "b"
   #'jls/split-consult-buffer-above
+  "d"
+  #'jls/split-dired-above
+  "e"
+  #'jls/split-eshell-above
   "v"
   #'jls/split-vterm-above)
 (defvar-keymap jls/split-right-map
   "b"
   #'jls/split-consult-buffer-right
+  "d"
+  #'jls/split-dired-right
+  "e"
+  #'jls/split-eshell-right
   "v"
   #'jls/split-vterm-right)
 
@@ -142,18 +208,34 @@ chosen buffer returns to the vterm."
   "right"
   "SPC w s h b"
   "buffer"
+  "SPC w s h d"
+  "dired"
+  "SPC w s h e"
+  "eshell"
   "SPC w s h v"
   "vterm"
   "SPC w s j b"
   "buffer"
+  "SPC w s j d"
+  "dired"
+  "SPC w s j e"
+  "eshell"
   "SPC w s j v"
   "vterm"
   "SPC w s k b"
   "buffer"
+  "SPC w s k d"
+  "dired"
+  "SPC w s k e"
+  "eshell"
   "SPC w s k v"
   "vterm"
   "SPC w s l b"
   "buffer"
+  "SPC w s l d"
+  "dired"
+  "SPC w s l e"
+  "eshell"
   "SPC w s l v"
   "vterm"))
 
