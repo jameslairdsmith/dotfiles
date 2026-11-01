@@ -9,6 +9,7 @@
 
 (require 'evil)
 
+(declare-function consult-buffer "consult" (&optional sources))
 (declare-function vterm "vterm" (&optional arg))
 
 (defun jls/split-window-and-open (side opener)
@@ -44,16 +45,44 @@
   (interactive)
   (jls/split-window-and-open 'right #'jls/open-new-vterm))
 
+(defun jls/split-consult-buffer-left ()
+  "Choose a buffer for a new window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'consult-buffer))
+
+(defun jls/split-consult-buffer-below ()
+  "Choose a buffer for a new window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'consult-buffer))
+
+(defun jls/split-consult-buffer-above ()
+  "Choose a buffer for a new window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'consult-buffer))
+
+(defun jls/split-consult-buffer-right ()
+  "Choose a buffer for a new window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'consult-buffer))
+
 (defvar-keymap jls/split-left-map
+  "b"
+  #'jls/split-consult-buffer-left
   "v"
   #'jls/split-vterm-left)
 (defvar-keymap jls/split-below-map
+  "b"
+  #'jls/split-consult-buffer-below
   "v"
   #'jls/split-vterm-below)
 (defvar-keymap jls/split-above-map
+  "b"
+  #'jls/split-consult-buffer-above
   "v"
   #'jls/split-vterm-above)
 (defvar-keymap jls/split-right-map
+  "b"
+  #'jls/split-consult-buffer-right
   "v"
   #'jls/split-vterm-right)
 
@@ -67,9 +96,13 @@
   "l"
   jls/split-right-map)
 
-(defvar-keymap jls/leader-map
+(defvar-keymap jls/window-map
   "s"
   jls/split-map)
+
+(defvar-keymap jls/leader-map
+  "w"
+  jls/window-map)
 
 (evil-define-key '(normal motion) 'global (kbd "SPC") jls/leader-map)
 
@@ -79,23 +112,33 @@
  :init (which-key-mode 1)
  :config
  (which-key-add-key-based-replacements
-  "SPC s"
+  "SPC w"
+  "window"
+  "SPC w s"
   "split"
-  "SPC s h"
+  "SPC w s h"
   "left"
-  "SPC s j"
+  "SPC w s j"
   "below"
-  "SPC s k"
+  "SPC w s k"
   "above"
-  "SPC s l"
+  "SPC w s l"
   "right"
-  "SPC s h v"
+  "SPC w s h b"
+  "buffer"
+  "SPC w s h v"
   "vterm"
-  "SPC s j v"
+  "SPC w s j b"
+  "buffer"
+  "SPC w s j v"
   "vterm"
-  "SPC s k v"
+  "SPC w s k b"
+  "buffer"
+  "SPC w s k v"
   "vterm"
-  "SPC s l v"
+  "SPC w s l b"
+  "buffer"
+  "SPC w s l v"
   "vterm"))
 
 (provide 'jls-window-management)
