@@ -29,6 +29,14 @@
  :after vertico
  :config (vertico-posframe-mode 1))
 
+(use-package
+ vertico-multiform
+ :ensure nil
+ :after (vertico vertico-posframe)
+ :custom
+ (vertico-multiform-commands '((consult-buffer (:not posframe))))
+ :config (vertico-multiform-mode 1))
+
 (defvar jls-fd-program
   (if (boundp 'jls-cdmacs-fd-program)
       jls-cdmacs-fd-program
@@ -38,7 +46,7 @@
 (use-package
  consult
  :ensure nil
- :commands consult-fd
+ :commands (consult-buffer consult-fd)
  :custom
  (consult-async-min-input 1)
  (consult-fd-args

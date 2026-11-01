@@ -31,7 +31,11 @@
 The vterm remains in the selected window's buffer history, so quitting the
 chosen buffer returns to the vterm."
   (jls/open-new-vterm)
-  (consult-buffer))
+  ;; `vertico-multiform-mode' dispatches on `this-command'.  This command is
+  ;; normally reached through a directional split command, so identify the
+  ;; nested command explicitly to apply the `consult-buffer' display settings.
+  (let ((this-command 'consult-buffer))
+    (consult-buffer)))
 
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
