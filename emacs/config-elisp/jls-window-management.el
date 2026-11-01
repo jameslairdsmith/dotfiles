@@ -25,6 +25,14 @@
   ;; process and the windows to repeatedly resize each other and hang Emacs.
   (vterm t))
 
+(defun jls/open-new-vterm-then-consult-buffer ()
+  "Create a vterm, then choose another buffer to display over it.
+
+The vterm remains in the selected window's buffer history, so quitting the
+chosen buffer returns to the vterm."
+  (jls/open-new-vterm)
+  (consult-buffer))
+
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
   (interactive)
@@ -48,22 +56,26 @@
 (defun jls/split-consult-buffer-left ()
   "Choose a buffer for a new window to the left."
   (interactive)
-  (jls/split-window-and-open 'left #'consult-buffer))
+  (jls/split-window-and-open
+   'left #'jls/open-new-vterm-then-consult-buffer))
 
 (defun jls/split-consult-buffer-below ()
   "Choose a buffer for a new window below."
   (interactive)
-  (jls/split-window-and-open 'below #'consult-buffer))
+  (jls/split-window-and-open
+   'below #'jls/open-new-vterm-then-consult-buffer))
 
 (defun jls/split-consult-buffer-above ()
   "Choose a buffer for a new window above."
   (interactive)
-  (jls/split-window-and-open 'above #'consult-buffer))
+  (jls/split-window-and-open
+   'above #'jls/open-new-vterm-then-consult-buffer))
 
 (defun jls/split-consult-buffer-right ()
   "Choose a buffer for a new window to the right."
   (interactive)
-  (jls/split-window-and-open 'right #'consult-buffer))
+  (jls/split-window-and-open
+   'right #'jls/open-new-vterm-then-consult-buffer))
 
 (defvar-keymap jls/split-left-map
   "b"
