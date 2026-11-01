@@ -7,6 +7,8 @@
 
 (declare-function evil-collection-init "evil-collection" (&optional modes))
 
+(defvar eshell-last-output-end)
+
 (defun jls/delete-deletable-buffer-windows (buffer)
   "Delete every deletable window displaying BUFFER."
   (when (buffer-live-p buffer)
@@ -23,12 +25,23 @@
   "Delete deletable windows displaying the exiting Eshell buffer."
   (jls/delete-deletable-buffer-windows (current-buffer)))
 
-(defun jls/evil-collection-eshell-bind-return ()
-  "Make Return submit input from Evil's insert state in Eshell."
+(defun jls/eshell-return-to-input-on-insert ()
+  "Move from Eshell scrollback to the active input on entering insert state."
+  (when (and (derived-mode-p 'eshell-mode)
+             (markerp eshell-last-output-end)
+             (< (point) eshell-last-output-end))
+    (goto-char (point-max))))
+
+(defun jls/evil-collection-eshell-setup ()
+  "Configure Evil Collection behaviour in Eshell."
   (evil-define-key 'insert eshell-mode-map
     (kbd "RET") #'eshell-send-input
     (kbd "<return>") #'eshell-send-input
-    (kbd "C-m") #'eshell-send-input))
+    (kbd "C-m") #'eshell-send-input)
+  (add-hook
+   'evil-insert-state-entry-hook #'jls/eshell-return-to-input-on-insert nil t)
+  (add-hook
+   'evil-replace-state-entry-hook #'jls/eshell-return-to-input-on-insert nil t))
 
 (add-hook 'eshell-exit-hook #'jls/eshell-delete-windows-on-exit)
 
@@ -57,7 +70,7 @@
  :demand t
  :hook
  (eshell-mode . evil-local-mode)
- (eshell-mode . jls/evil-collection-eshell-bind-return)
+ (eshell-mode . jls/evil-collection-eshell-setup)
  :config (evil-collection-init 'eshell))
 
 (use-package
