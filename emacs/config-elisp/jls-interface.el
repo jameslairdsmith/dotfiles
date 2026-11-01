@@ -30,11 +30,19 @@
  :config (vertico-posframe-mode 1))
 
 (use-package
+ vertico-quick
+ :ensure nil
+ :commands vertico-quick-exit)
+
+(use-package
  vertico-multiform
  :ensure nil
  :after (vertico vertico-posframe)
  :custom
- (vertico-multiform-commands '((consult-buffer (:not posframe))))
+ (vertico-multiform-commands
+  '((consult-buffer
+     (:not posframe)
+     (:keymap "C-q" vertico-quick-exit))))
  :config (vertico-multiform-mode 1))
 
 (defvar jls-fd-program
