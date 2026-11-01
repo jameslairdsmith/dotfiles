@@ -18,7 +18,8 @@
      jls-dired
      jls-magit
      jls-terminal-input
-     jls-terminal-emulators)
+     jls-terminal-emulators
+     jls-window-management)
     (magit
      jls-core
      jls-appearance
