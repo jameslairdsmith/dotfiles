@@ -36,7 +36,12 @@
 (use-package
  eat
  :ensure nil
- :commands (eat eat-project)
+ :commands (eat eat-project eat-eshell-mode)
+ :init
+ (add-hook 'eshell-load-hook #'eat-eshell-mode)
+ ;; Keep `eshell-visual-commands' at its default for now.  If Eshell sends a
+ ;; command through its old `term' path unnecessarily, consider setting it to
+ ;; nil so Eat handles terminal emulation directly in the Eshell buffer.
  :custom
  (eat-minimum-latency 0.008)
  (eat-minimum-latency 0.033))
