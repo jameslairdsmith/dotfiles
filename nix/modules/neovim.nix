@@ -81,6 +81,13 @@ in
   programs.nvf = {
     enable = true;
     settings.vim = {
+      options = {
+        wrap = true;
+        breakindent = true;
+        linebreak = true;
+        showbreak = "↪ ";
+      };
+
       lsp.enable = true;
       lsp.formatOnSave = true;
       lsp.servers = {
