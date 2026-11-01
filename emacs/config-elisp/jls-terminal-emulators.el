@@ -49,12 +49,17 @@
  :commands (eat eat-project eat-eshell-mode)
  :init
  (add-hook 'eshell-load-hook #'eat-eshell-mode)
- ;; Keep `eshell-visual-commands' at its default for now.  If Eshell sends a
- ;; command through its old `term' path unnecessarily, consider setting it to
- ;; nil so Eat handles terminal emulation directly in the Eshell buffer.
  :custom
+ ;; Prevent commands such as `top' from bypassing Eat via Eshell's old `term'
+ ;; path; Eat provides terminal emulation directly in the Eshell buffer.
+ (eshell-visual-commands nil)
+ ;; macOS's system ncurses cannot read Eat's Nix-built `eat-truecolor'
+ ;; terminfo entry.  Use a terminal type understood by both macOS and Nix.
+ ;; This limits applications to the 256-colour palette instead of advertising
+ ;; true-colour support; see the corresponding entry in emacs/TODO.md.
+ (eat-term-name "xterm-256color")
  (eat-minimum-latency 0.008)
- (eat-minimum-latency 0.033))
+ (eat-maximum-latency 0.033))
 
 (provide 'jls-terminal-emulators)
 ;;; jls-terminal-emulators.el ends here
