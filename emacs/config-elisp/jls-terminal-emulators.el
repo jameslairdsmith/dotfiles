@@ -23,6 +23,13 @@
   "Delete deletable windows displaying the exiting Eshell buffer."
   (jls/delete-deletable-buffer-windows (current-buffer)))
 
+(defun jls/evil-collection-eshell-bind-return ()
+  "Make Return submit input from Evil's insert state in Eshell."
+  (evil-define-key 'insert eshell-mode-map
+    (kbd "RET") #'eshell-send-input
+    (kbd "<return>") #'eshell-send-input
+    (kbd "C-m") #'eshell-send-input))
+
 (add-hook 'eshell-exit-hook #'jls/eshell-delete-windows-on-exit)
 
 (use-package
@@ -42,6 +49,16 @@
  :demand t
  :hook (vterm-mode . evil-local-mode)
  :config (evil-collection-init 'vterm))
+
+(use-package
+ evil-collection
+ :ensure nil
+ :after (evil eshell)
+ :demand t
+ :hook
+ (eshell-mode . evil-local-mode)
+ (eshell-mode . jls/evil-collection-eshell-bind-return)
+ :config (evil-collection-init 'eshell))
 
 (use-package
  eat
