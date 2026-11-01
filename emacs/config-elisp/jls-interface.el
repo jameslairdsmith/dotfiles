@@ -24,6 +24,15 @@
 (use-package vertico :ensure nil :init (vertico-mode 1))
 
 (use-package
+ orderless
+ :ensure nil
+ :custom
+ (completion-styles '(orderless basic))
+ (completion-category-defaults nil)
+ (completion-category-overrides
+  '((file (styles orderless partial-completion)))))
+
+(use-package
  vertico-posframe
  :ensure nil
  :after vertico
