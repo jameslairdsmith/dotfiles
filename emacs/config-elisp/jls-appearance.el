@@ -20,15 +20,19 @@ unavailable, so ask macOS directly instead."
            nil nil nil
            "read" "-g" "AppleInterfaceStyle")))))
 
+(defvar jls/last-macos-dark-mode 'unknown
+  "Last macOS appearance observed while synchronising the theme.")
+
 (defun jls/sync-theme-with-macos ()
-  "Use the theme matching the current macOS appearance."
-  (let ((theme (if (jls/macos-dark-mode-p)
-                   'modus-vivendi
-                 'doom-one-light)))
-    (unless (and (memq theme custom-enabled-themes)
-                 (= (length custom-enabled-themes) 1))
-      (mapc #'disable-theme custom-enabled-themes)
-      (load-theme theme t))))
+  "Update the theme when the macOS appearance changes.
+Do not continually enforce the corresponding theme, so commands such as
+`consult-theme' can preview and select a different theme between changes."
+  (let ((dark-mode (and (jls/macos-dark-mode-p) t)))
+    (unless (eq dark-mode jls/last-macos-dark-mode)
+      (setq jls/last-macos-dark-mode dark-mode)
+      (let ((theme (if dark-mode 'modus-vivendi 'doom-one-light)))
+        (mapc #'disable-theme custom-enabled-themes)
+        (load-theme theme t)))))
 
 ;; One Double Light is based on Atom One Light.  Doom One Light is its closest
 ;; maintained Emacs equivalent and has nearly identical base colours.
