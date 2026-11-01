@@ -9,6 +9,7 @@
 
 (require 'evil)
 
+(declare-function ace-window "ace-window" (&optional arg))
 (declare-function consult-buffer "consult" (&optional sources))
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eshell "esh-mode" (&optional arg))
@@ -178,9 +179,29 @@ chosen buffer returns to the vterm."
   "l"
   jls/split-right-map)
 
+(use-package
+ ace-window
+ :ensure nil
+ :commands ace-window
+ :custom
+ (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+ (aw-scope 'visible)
+ ;; Show labels whenever there is a choice instead of silently behaving like
+ ;; `other-window' when only two windows are visible.
+ (aw-dispatch-when-more-than 1)
+ :custom-face
+ (aw-leading-char-face
+  ((t (:inherit error
+       :weight bold
+       :height 2.5
+       :inverse-video t
+       :box (:line-width 2))))))
+
 (defvar-keymap jls/window-map
   "s"
-  jls/split-map)
+  jls/split-map
+  "w"
+  #'ace-window)
 
 (defvar-keymap jls/leader-map
   "w"
@@ -196,6 +217,8 @@ chosen buffer returns to the vterm."
  (which-key-add-key-based-replacements
   "SPC w"
   "window"
+  "SPC w w"
+  "select"
   "SPC w s"
   "split"
   "SPC w s h"

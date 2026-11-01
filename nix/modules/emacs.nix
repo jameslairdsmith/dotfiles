@@ -20,6 +20,7 @@ in
         orderless
         consult
         consult-dir
+        ace-window
         evil
         evil-collection
         ess
