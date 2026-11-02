@@ -15,6 +15,7 @@ in
         elisp-autofmt
         dashboard
         doom-themes
+        mini-echo
         vertico
         vertico-posframe
         marginalia

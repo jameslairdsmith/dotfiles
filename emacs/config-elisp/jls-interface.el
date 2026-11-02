@@ -16,6 +16,11 @@
  :config (dashboard-setup-startup-hook))
 
 (use-package
+ mini-echo
+ :ensure nil
+ :config (mini-echo-mode 1))
+
+(use-package
  evil-collection
  :ensure nil
  :after (evil dashboard)

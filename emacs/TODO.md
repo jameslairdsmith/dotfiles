@@ -12,9 +12,8 @@ the planned build-out, then enhancements and ideas.
       keybindings below.
 - [x] **Evil / Vim emulation** — enabled locally in programming, Magit and
       Dired buffers, with mode-specific integrations from `evil-collection`.
-- [ ] **Modeline** — the old config used `doom-modeline`. Decide: keep it, use a
-      lighter option, or stick with the built-in modeline (Modus styles it
-      cleanly already).
+- [x] **Modeline** — `mini-echo` provides one frame-wide status line in the
+      echo area for full editor sessions.
 - [ ] **Line numbers** — re-add `column-number-mode` and
       `global-display-line-numbers-mode` (with the per-mode disable for org,
       term, shell and eshell), or leave them off. Removed during Step 2a.
