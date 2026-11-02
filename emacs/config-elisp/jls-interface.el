@@ -18,6 +18,24 @@
 (use-package
  mini-echo
  :ensure nil
+ :custom
+ (mini-echo-persistent-rule
+  '(:long
+    ("evil"
+     "major-mode"
+     "shrink-path"
+     "project"
+     "vcs"
+     "flymake"
+     "buffer-position"
+     "buffer-size")
+    :short
+    ("evil" "buffer-name" "flymake" "buffer-position")))
+ (mini-echo-buffer-status-style 'both)
+ (mini-echo-separator "  ")
+ :custom-face
+ (mini-echo-minibuffer-window ((t (:inherit mode-line :box nil))))
+ (mini-echo-major-mode ((t (:inherit mode-line-emphasis :weight bold))))
  :config (mini-echo-mode 1))
 
 (use-package
