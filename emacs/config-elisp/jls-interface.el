@@ -25,6 +25,8 @@
 
 (use-package marginalia :ensure nil :init (marginalia-mode 1))
 
+(use-package savehist :ensure nil :init (savehist-mode 1))
+
 (use-package
  orderless
  :ensure nil
