@@ -17,6 +17,7 @@ in
         doom-themes
         vertico
         vertico-posframe
+        marginalia
         orderless
         consult
         consult-dir

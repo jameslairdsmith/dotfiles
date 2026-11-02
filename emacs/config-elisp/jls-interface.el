@@ -23,6 +23,8 @@
 
 (use-package vertico :ensure nil :init (vertico-mode 1))
 
+(use-package marginalia :ensure nil :init (marginalia-mode 1))
+
 (use-package
  orderless
  :ensure nil
