@@ -21,6 +21,26 @@ the planned build-out, then enhancements and ideas.
 ## Planned build-out (next steps)
 
 - [ ] **Completion stack** — implement once decided (see above).
+- [ ] **Nix editing support** — add the complete Nix-first editing stack:
+  - [ ] Add `nix-mode` through Nix `extraPackages` for `.nix` file detection,
+        syntax highlighting, indentation and Nix commands.
+  - [ ] Configure built-in Eglot to start `nixd` automatically in `nix-mode`,
+        providing completion, Flymake diagnostics, Eldoc documentation, xref
+        navigation/references and symbol renaming.
+  - [ ] Inject absolute `nixd` and `nixfmt` store paths through the generated
+        `nix-paths.el`, rather than relying on the environment inherited by
+        GUI Emacs.
+  - [ ] Enable `nix-format-on-save-mode` with `nixfmt`; integrate Nix buffers
+        with `jls/save-buffer` as appropriate.
+  - [ ] Add project-local nixd/Eglot workspace configuration for this dotfiles
+        flake, reusing the nixpkgs, Home Manager (`homeConfigurations.jls`) and
+        nix-darwin (`darwinConfigurations.neo`) option expressions from
+        `nix/modules/neovim.nix`.
+  - [ ] Add Nix-managed `corfu` and initially enable `corfu-mode` only in Nix
+        buffers for popup completion supplied by Eglot; consider enabling it
+        more broadly later.
+  - [ ] Put the configuration in a new lexical-binding module,
+        `emacs/config-elisp/jls-editing-nix.el`, loaded by the `full` profile.
 - [ ] **R / ESS** — minimal `ess-r-mode` editing support is in place. Port
       the rest of the old setup: `company` (script-only), `company-R-args`,
       `ess-rdired` on a key, the `display-buffer-alist` window layout for
@@ -58,10 +78,10 @@ the planned build-out, then enhancements and ideas.
       font and provide it via Nix (a font package) rather than assuming it's
       installed.
 - [ ] **Extend the save dispatch** — `jls/save-buffer` dispatches on major mode;
-      add savers/formatters for other languages (e.g. Nix via `nixfmt` or
-      `alejandra`, R, etc.), each wired the Nix way. Alternatively evaluate
-      `apheleia` as a unified async format-on-save framework instead of the
-      bespoke dispatch.
+      add savers/formatters for other languages (Nix is covered in the planned
+      editing stack above; add R and others), each wired the Nix way.
+      Alternatively evaluate `apheleia` as a unified async format-on-save
+      framework instead of the bespoke dispatch.
 - [ ] **CLI elisp formatter** — wrap a batch invocation of
       `elisp-autofmt-buffer-to-file` in a Nix `writeShellScriptBin` (e.g.
       `fmt-elisp`) so elisp can be formatted from the command line / CI, reusing
