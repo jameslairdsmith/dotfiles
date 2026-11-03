@@ -147,12 +147,21 @@ chosen buffer returns to the vterm."
   (bury-buffer)
   (force-mode-line-update))
 
+(defun jls/tab-line-format-when-multiple
+    (format-function &rest arguments)
+  "Call FORMAT-FUNCTION with ARGUMENTS when multiple tabs are present."
+  (when (> (length (funcall tab-line-tabs-function)) 1)
+    (apply format-function arguments)))
+
 (use-package
  tab-line
  :ensure nil
- :custom
- (tab-line-tabs-function #'tab-line-tabs-fixed-window-buffers)
- :init (global-tab-line-mode 1))
+ :custom (tab-line-tabs-function #'tab-line-tabs-fixed-window-buffers)
+ :config
+ (advice-add
+  #'tab-line-format
+  :around #'jls/tab-line-format-when-multiple)
+ (global-tab-line-mode 1))
 
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
