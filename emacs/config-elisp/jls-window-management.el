@@ -207,6 +207,12 @@ chosen buffer returns to the vterm."
   :around #'jls/tab-line-format-when-multiple)
  (global-tab-line-mode 1))
 
+(use-package
+ tabgo
+ :ensure nil
+ :commands tabgo-line
+ :custom (tabgo-tab-line-keys "asdfghjkl"))
+
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
   (interactive)
@@ -453,6 +459,8 @@ chosen buffer returns to the vterm."
   #'jls/add-tab-start
   "A"
   #'jls/add-tab-end
+  "v"
+  #'tabgo-line
   "x"
   #'jls/close-current-tab)
 
@@ -484,6 +492,8 @@ chosen buffer returns to the vterm."
   "insert at start"
   "SPC t A"
   "append at end"
+  "SPC t v"
+  "visual"
   "SPC t x"
   "close"
   "SPC w"

@@ -23,6 +23,7 @@ in
         consult
         consult-dir
         ace-window
+        tabgo
         evil
         evil-collection
         ess
