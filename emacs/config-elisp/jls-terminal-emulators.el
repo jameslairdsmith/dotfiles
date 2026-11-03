@@ -5,16 +5,33 @@
 
 ;;; Code:
 
-(declare-function evil-collection-init "evil-collection" (&optional modes))
+(require 'seq)
+
+(declare-function evil-collection-init "evil-collection"
+                  (&optional modes))
 
 (defvar eshell-last-output-end)
 
+(defun jls/window-has-other-buffer-tabs-p (window buffer)
+  "Return non-nil if WINDOW has a buffer-history tab besides BUFFER."
+  (seq-some
+   (lambda (candidate)
+     (and (buffer-live-p candidate) (not (eq candidate buffer))))
+   (append
+    (mapcar #'car (window-prev-buffers window))
+    (window-next-buffers window))))
+
 (defun jls/delete-deletable-buffer-windows (buffer)
-  "Delete every deletable window displaying BUFFER."
+  "Delete deletable windows displaying sole-tab BUFFER."
   (when (buffer-live-p buffer)
     (dolist (window (get-buffer-window-list buffer nil t))
-      ;; Do not delete a frame when its sole window displays the buffer.
-      (when (eq (window-deletable-p window) t)
+      ;; The terminal exit hooks run before their buffers are killed.  Preserve
+      ;; a window that has other tabs: killing BUFFER will make Emacs select one
+      ;; from its history.  Delete only terminal-only windows, while still not
+      ;; deleting a frame when its sole window displays the terminal.
+      (when (and (eq (window-deletable-p window) t)
+                 (not
+                  (jls/window-has-other-buffer-tabs-p window buffer)))
         (delete-window window)))))
 
 (defun jls/vterm-delete-windows-on-exit (buffer _event)
@@ -34,14 +51,23 @@
 
 (defun jls/evil-collection-eshell-setup ()
   "Configure Evil Collection behaviour in Eshell."
-  (evil-define-key 'insert eshell-mode-map
-    (kbd "RET") #'eshell-send-input
-    (kbd "<return>") #'eshell-send-input
-    (kbd "C-m") #'eshell-send-input)
-  (add-hook
-   'evil-insert-state-entry-hook #'jls/eshell-return-to-input-on-insert nil t)
-  (add-hook
-   'evil-replace-state-entry-hook #'jls/eshell-return-to-input-on-insert nil t))
+  (evil-define-key
+   'insert
+   eshell-mode-map
+   (kbd "RET")
+   #'eshell-send-input
+   (kbd "<return>")
+   #'eshell-send-input
+   (kbd "C-m")
+   #'eshell-send-input)
+  (add-hook 'evil-insert-state-entry-hook
+            #'jls/eshell-return-to-input-on-insert
+            nil
+            t)
+  (add-hook 'evil-replace-state-entry-hook
+            #'jls/eshell-return-to-input-on-insert
+            nil
+            t))
 
 (add-hook 'eshell-exit-hook #'jls/eshell-delete-windows-on-exit)
 
@@ -49,8 +75,7 @@
  vterm
  :ensure nil
  :commands vterm
- :init
- (add-hook 'vterm-exit-functions #'jls/vterm-delete-windows-on-exit)
+ :init (add-hook 'vterm-exit-functions #'jls/vterm-delete-windows-on-exit)
  ;; Keep vterm's refresh delay non-nil.  Nil refreshes after every output
  ;; update, which can overwhelm Emacs's redisplay when several vterms run.
  :custom (vterm-timer-delay 0.1))
@@ -77,8 +102,7 @@
  eat
  :ensure nil
  :commands (eat eat-project eat-eshell-mode)
- :init
- (add-hook 'eshell-load-hook #'eat-eshell-mode)
+ :init (add-hook 'eshell-load-hook #'eat-eshell-mode)
  :custom
  ;; Prevent commands such as `top' from bypassing Eat via Eshell's old `term'
  ;; path; Eat provides terminal emulation directly in the Eshell buffer.
