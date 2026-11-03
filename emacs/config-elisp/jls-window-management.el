@@ -16,11 +16,55 @@
 (declare-function eshell "esh-mode" (&optional arg))
 (declare-function vterm "vterm" (&optional arg))
 
+;; `tab-line-mode' derives its tabs from each window's buffer history rather
+;; than maintaining independent tab objects.  Remove incidental buffers from
+;; both histories so they do not become tabs merely because Emacs displayed
+;; them while setting up a window.
+(defun jls/remove-buffer-from-window-history (window buffer)
+  "Remove BUFFER from WINDOW's buffer and tab history."
+  (when (and (window-live-p window)
+             (not (eq buffer (window-buffer window))))
+    (set-window-prev-buffers
+     window (assq-delete-all buffer (window-prev-buffers window)))
+    (set-window-next-buffers
+     window (delq buffer (window-next-buffers window)))
+    (set-window-parameter
+     window
+     'tab-line-buffers
+     (delq buffer (window-parameter window 'tab-line-buffers)))
+    (set-window-parameter window 'tab-line-cache nil)
+    (force-mode-line-update)))
+
+(defun jls/reset-current-window-buffer-history ()
+  "Keep only the current buffer in the selected window's history."
+  (let ((window (selected-window))
+        (buffer (current-buffer)))
+    (set-window-prev-buffers window nil)
+    (set-window-next-buffers window nil)
+    (set-window-parameter window 'tab-line-buffers (list buffer))
+    (set-window-parameter window 'tab-line-cache nil)
+    (force-mode-line-update)))
+
+;; Emacs shows `*scratch*' before Dashboard replaces it during startup.  Reset
+;; the window history afterwards so `*scratch*' remains available globally but
+;; does not appear as a tab that the user never opened.
+(add-hook
+ 'dashboard-after-initialize-hook
+ #'jls/reset-current-window-buffer-history)
+
 (defun jls/split-window-and-open (side opener)
   "Split the selected window on SIDE and call OPENER in the new window."
-  (let ((new-window (split-window nil nil side)))
+  (let ((inherited-buffer (current-buffer))
+        (new-window (split-window nil nil side)))
+    ;; A split initially displays the original window's buffer.  Let OPENER use
+    ;; that buffer's context (notably `default-directory'), then remove the
+    ;; inherited buffer unless OPENER deliberately leaves it selected.  The
+    ;; cleanup also runs when an interactive opener is quit.
     (select-window new-window)
-    (funcall opener)))
+    (unwind-protect
+        (funcall opener)
+      (jls/remove-buffer-from-window-history
+       new-window inherited-buffer))))
 
 (defun jls/open-in-side-window (side opener)
   "Create a window on frame SIDE and call OPENER in it."
