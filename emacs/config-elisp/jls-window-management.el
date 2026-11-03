@@ -472,6 +472,21 @@ chosen buffer returns to the vterm."
   "w"
   jls/window-map)
 
+;; Escape should abandon a partially entered leader sequence at any depth.  Add
+;; it to every prefix map rather than allowing it to begin Emacs' Meta prefix.
+(dolist (map
+         (list
+          jls/leader-map
+          jls/window-map
+          jls/tab-map
+          jls/split-left-map
+          jls/split-right-map
+          jls/split-below-map
+          jls/split-above-map
+          jls/side-left-map
+          jls/side-right-map))
+  (keymap-set map "<escape>" #'keyboard-quit))
+
 (evil-define-key '(normal motion) 'global (kbd "SPC") jls/leader-map)
 
 (use-package
