@@ -7,9 +7,12 @@
 
 (require 'seq)
 
+(declare-function eat-self-input "eat" (n &optional event))
 (declare-function evil-collection-init "evil-collection"
                   (&optional modes))
+(declare-function vterm-send-escape "vterm" ())
 
+(defvar eat-terminal)
 (defvar eshell-last-output-end)
 
 (defun jls/window-has-other-buffer-tabs-p (window buffer)
@@ -49,6 +52,13 @@
              (< (point) eshell-last-output-end))
     (goto-char (point-max))))
 
+(defun jls/eshell-send-escape-to-tui ()
+  "Send Escape to an Eat-managed TUI from Evil normal state."
+  (interactive)
+  (if (bound-and-true-p eat-terminal)
+      (eat-self-input 1 'escape)
+    (keyboard-escape-quit)))
+
 (defun jls/evil-collection-eshell-setup ()
   "Configure Evil Collection behaviour in Eshell."
   (evil-define-key
@@ -86,7 +96,12 @@
  :after (evil vterm)
  :demand t
  :hook (vterm-mode . evil-local-mode)
- :config (evil-collection-init 'vterm))
+ :config (evil-collection-init 'vterm)
+ ;; Evil still consumes the first Escape in insert state to enter normal state.
+ ;; Once there, subsequent Escapes must reach the TUI rather than repeatedly
+ ;; invoking Evil's normal-state escape behaviour.
+ (evil-define-key
+  'normal vterm-mode-map (kbd "<escape>") #'vterm-send-escape))
 
 (use-package
  evil-collection
@@ -96,7 +111,15 @@
  :hook
  (eshell-mode . evil-local-mode)
  (eshell-mode . jls/evil-collection-eshell-setup)
- :config (evil-collection-init 'eshell))
+ :config (evil-collection-init 'eshell)
+ ;; As in vterm, the first Escape leaves insert state.  In normal state, pass
+ ;; later Escapes to an active Eat terminal; at an ordinary Eshell prompt the
+ ;; wrapper retains Emacs' normal escape behaviour.
+ (evil-define-key
+  'normal
+  eshell-mode-map
+  (kbd "<escape>")
+  #'jls/eshell-send-escape-to-tui))
 
 (use-package
  eat
