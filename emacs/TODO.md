@@ -52,8 +52,8 @@ the planned build-out, then enhancements and ideas.
       literate/`org-transclusion` tangling workflow.)
 - [ ] **which-key** — discoverability for prefixes; was in the old config.
 - [ ] **helpful** — nicer `*Help*` buffers; was in the old config.
-- [ ] **Project management** — decide built-in `project.el` vs `projectile` (+
-      the old R-project detection / open-project helpers).
+- [x] **Project management** — built-in `project.el` with Tabspaces project
+      workspaces, isolated buffer lists and Consult/Vertico project commands.
 - [ ] **rainbow-delimiters** — from the old config, for prog modes.
 
 ## Restore / rebind (deferred from earlier steps)

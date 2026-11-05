@@ -467,6 +467,8 @@ chosen buffer returns to the vterm."
 (defvar-keymap jls/leader-map
   "b"
   #'consult-buffer
+  "p"
+  jls/project-map
   "t"
   jls/tab-map
   "w"
@@ -477,6 +479,7 @@ chosen buffer returns to the vterm."
 (dolist (map
          (list
           jls/leader-map
+          jls/project-map
           jls/window-map
           jls/tab-map
           jls/split-left-map
@@ -489,6 +492,20 @@ chosen buffer returns to the vterm."
 
 (evil-define-key '(normal motion) 'global (kbd "SPC") jls/leader-map)
 
+(defun jls/dired-bind-leader (&rest _arguments)
+  "Make Space open the leader map in Evil's Dired normal state."
+  (evil-collection-define-key
+   'normal 'dired-mode-map (kbd "SPC") jls/leader-map))
+
+;; Evil Collection deliberately gives Dired a local Space binding, which takes
+;; precedence over the global leader.  Reapply the leader after Dired's Evil
+;; Collection setup, including when that setup runs after this module loads.
+(with-eval-after-load 'evil-collection-dired
+  (advice-add
+   #'evil-collection-dired-setup
+   :after #'jls/dired-bind-leader)
+  (jls/dired-bind-leader))
+
 (use-package
  which-key
  :ensure nil
@@ -497,6 +514,12 @@ chosen buffer returns to the vterm."
  (which-key-add-key-based-replacements
   "SPC b"
   "buffer"
+  "SPC p"
+  "project"
+  "SPC p o"
+  "open"
+  "SPC p s"
+  "switch"
   "SPC t"
   "tab"
   "SPC t i"

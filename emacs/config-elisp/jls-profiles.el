@@ -19,6 +19,7 @@
      jls-magit
      jls-terminal-input
      jls-terminal-emulators
+     jls-projects
      jls-window-management)
     (magit
      jls-core

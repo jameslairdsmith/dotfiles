@@ -24,6 +24,7 @@ in
         consult-dir
         ace-window
         tabgo
+        tabspaces
         evil
         evil-collection
         ess
