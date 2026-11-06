@@ -16,6 +16,7 @@
 (declare-function consult--read "consult")
 (declare-function jls/reset-current-window-buffer-history
                   "jls-window-management")
+(declare-function projdash-open "projdash" (&optional prompt))
 (declare-function tabspaces--current-tab-name "tabspaces")
 (declare-function tabspaces-clear-buffers "tabspaces")
 (declare-function tabspaces--list-tabspaces "tabspaces")
@@ -24,6 +25,15 @@
 
 (defvar jls/project-history nil
   "Minibuffer history for project workspace commands.")
+
+;; Temporary local checkout for evaluating Projdash before packaging it with
+;; Nix.  Removing this form and restoring `project-dired' below removes the
+;; experiment completely.
+(use-package
+ projdash
+ :ensure nil
+ :load-path "~/projects/projdash/main"
+ :commands projdash-open)
 
 (defun jls/open-project ()
   "Open a known project in a new Tabspaces workspace.
@@ -91,7 +101,7 @@ The candidates come from project.el and are selected with Consult and Vertico."
  (tabspaces-default-tab "*none*")
  (tabspaces-include-buffers nil)
  (tabspaces-keymap-prefix nil)
- (tabspaces-project-switch-commands #'project-dired)
+ (tabspaces-project-switch-commands #'projdash-open)
  (tabspaces-session nil)
  (tabspaces-session-auto-restore nil)
  (tabspaces-use-filtered-buffers-as-default t)
