@@ -16,12 +16,16 @@
 (declare-function consult--read "consult")
 (declare-function jls/reset-current-window-buffer-history
                   "jls-window-management")
+(declare-function popper-select-popup-at-bottom
+                  "popper" (buffer &optional alist))
 (declare-function projdash-open "projdash" (&optional prompt))
 (declare-function tabspaces--current-tab-name "tabspaces")
 (declare-function tabspaces-clear-buffers "tabspaces")
 (declare-function tabspaces--list-tabspaces "tabspaces")
 (declare-function tabspaces--local-buffer-p "tabspaces" (buffer))
 (declare-function tabspaces-open-or-create-project-and-workspace "tabspaces")
+(declare-function treemacs-add-and-display-current-project-exclusively
+                  "treemacs" ())
 
 (defvar jls/project-history nil
   "Minibuffer history for project workspace commands.")
@@ -44,6 +48,63 @@ than from the selected buffer."
  :ensure nil
  :load-path "~/projects/projdash/main"
  :commands projdash-open)
+
+(defun jls/display-popup (buffer &optional alist)
+  "Display popup BUFFER according to its type and action ALIST.
+
+Keep Treemacs in a left side window; use Popper's normal bottom placement for
+other popup types that may be added later."
+  (if (eq (buffer-local-value 'major-mode buffer) 'treemacs-mode)
+      (display-buffer-in-side-window
+       buffer
+       '((side . left)
+         (slot . -1)
+         (window-width . 35)
+         (dedicated . t)))
+    (popper-select-popup-at-bottom buffer alist)))
+
+(use-package
+ popper
+ :ensure nil
+ :demand t
+ :bind
+ (("C-`" . popper-toggle)
+  ("M-`" . popper-cycle)
+  ("C-M-`" . popper-toggle-type))
+ :custom
+ (popper-display-function #'jls/display-popup)
+ (popper-reference-buffers '(treemacs-mode))
+ :config (popper-mode 1))
+
+(use-package
+ treemacs
+ :ensure nil
+ :commands treemacs-add-and-display-current-project-exclusively
+ :custom (treemacs-position 'left))
+
+(use-package
+ treemacs-nerd-icons
+ :ensure nil
+ :after treemacs
+ :custom
+ ;; nerd-icons defaults to Symbols Nerd Font Mono.  Use the Nerd Font already
+ ;; installed by the system configuration instead.
+ (nerd-icons-font-family "JetBrainsMono Nerd Font Mono")
+ :config (treemacs-nerd-icons-config))
+
+(defun jls/open-project-dashboard ()
+  "Open Projdash with the current project in Treemacs on its left."
+  (interactive)
+  ;; `project-switch-project' exposes the chosen project through a buffer-local
+  ;; `project-current-directory-override' while invoking this command.  Resolve
+  ;; it before Projdash changes buffers and loses that override.
+  (let ((project-root (project-root (project-current t))))
+    (projdash-open)
+    ;; Treemacs selects its own side window while opening.  Leave Projdash
+    ;; selected so subsequent project setup applies to the main window.
+    (save-selected-window
+      (let ((default-directory project-root))
+        (treemacs-add-and-display-current-project-exclusively)))))
 
 (defun jls/open-project ()
   "Open a known project in a new Tabspaces workspace.
@@ -75,7 +136,7 @@ The candidates come from project.el and are selected with Consult and Vertico."
       :sort nil))
     ;; Tabspaces creates the workspace through *scratch*, while tab-bar copies
     ;; the selected window's buffer history from the previous workspace.  Once
-    ;; Dired is open, discard both kinds of transitional state.
+    ;; Projdash and Treemacs are open, discard both kinds of transitional state.
     (tabspaces-clear-buffers)
     (jls/reset-current-window-buffer-history)))
 
@@ -111,7 +172,7 @@ The candidates come from project.el and are selected with Consult and Vertico."
  (tabspaces-default-tab "*none*")
  (tabspaces-include-buffers nil)
  (tabspaces-keymap-prefix nil)
- (tabspaces-project-switch-commands #'projdash-open)
+ (tabspaces-project-switch-commands #'jls/open-project-dashboard)
  (tabspaces-session nil)
  (tabspaces-session-auto-restore nil)
  (tabspaces-use-filtered-buffers-as-default t)

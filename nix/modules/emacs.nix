@@ -25,6 +25,9 @@ in
         ace-window
         tabgo
         tabspaces
+        treemacs
+        treemacs-nerd-icons
+        popper
         evil
         evil-collection
         ess
