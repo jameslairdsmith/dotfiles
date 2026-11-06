@@ -26,6 +26,16 @@
 (defvar jls/project-history nil
   "Minibuffer history for project workspace commands.")
 
+(defun jls/current-project-root ()
+  "Return the current workspace's project root, or nil.
+
+The current project is determined from the active Tabspaces workspace rather
+than from the selected buffer."
+  (when-let ((entry
+              (rassoc (tabspaces--current-tab-name)
+                      tabspaces-project-tab-map)))
+    (expand-file-name (car entry))))
+
 ;; Temporary local checkout for evaluating Projdash before packaging it with
 ;; Nix.  Removing this form and restoring `project-dired' below removes the
 ;; experiment completely.
