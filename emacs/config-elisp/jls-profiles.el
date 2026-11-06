@@ -14,6 +14,7 @@
      jls-evil
      jls-editing-elisp
      jls-editing-r
+     jls-olivetti
      jls-interface
      jls-dired
      jls-magit

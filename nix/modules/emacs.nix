@@ -32,6 +32,7 @@ in
         gptel
         gptel-magit
         markdown-mode
+        olivetti
         vterm
         kkp
         eat
