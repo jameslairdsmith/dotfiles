@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'consult)
 (require 'project)
 (require 'seq)
@@ -19,8 +20,10 @@
 (declare-function popper-select-popup-at-bottom
                   "popper" (buffer &optional alist))
 (declare-function projdash-open "projdash" (&optional prompt))
+(declare-function tabspaces--buffer-list "tabspaces" (&optional frame tabnum))
 (declare-function tabspaces--current-tab-name "tabspaces")
 (declare-function tabspaces-clear-buffers "tabspaces")
+(declare-function tabspaces-close-workspace "tabspaces")
 (declare-function tabspaces--list-tabspaces "tabspaces")
 (declare-function tabspaces--local-buffer-p "tabspaces" (buffer))
 (declare-function tabspaces-open-or-create-project-and-workspace "tabspaces")
@@ -140,6 +143,38 @@ The candidates come from project.el and are selected with Consult and Vertico."
     (tabspaces-clear-buffers)
     (jls/reset-current-window-buffer-history)))
 
+(defun jls/project-unique-buffers ()
+  "Return live buffers belonging only to the current Tabspaces workspace."
+  (let* ((current-tab-name (tabspaces--current-tab-name))
+         (current-buffers (tabspaces--buffer-list))
+         (other-buffers
+          (cl-loop
+           for tab in (tab-bar-tabs)
+           for tab-index from 0
+           unless (equal (alist-get 'name tab) current-tab-name)
+           append (tabspaces--buffer-list nil tab-index))))
+    (seq-remove
+     (lambda (buffer) (memq buffer other-buffers))
+     current-buffers)))
+
+(defun jls/close-project ()
+  "Kill the current project's unique buffers and close its workspace.
+
+Buffers which also belong to another Tabspaces workspace remain alive.  Honour
+Tabspaces' included and excluded buffer lists in the same way as its standard
+kill-and-close command."
+  (interactive)
+  (unless (jls/current-project-root)
+    (user-error "The current workspace is not a project"))
+  (let ((buffers (jls/project-unique-buffers)))
+    (unwind-protect
+        (dolist (buffer buffers)
+          (let ((name (buffer-name buffer)))
+            (unless (or (member name tabspaces-exclude-buffers)
+                        (member name tabspaces-include-buffers))
+              (kill-buffer buffer))))
+      (tabspaces-close-workspace))))
+
 (defun jls/switch-project ()
   "Switch to an open project or the default workspace with Consult and Vertico."
   (interactive)
@@ -211,7 +246,9 @@ The candidates come from project.el and are selected with Consult and Vertico."
   "o"
   #'jls/open-project
   "s"
-  #'jls/switch-project)
+  #'jls/switch-project
+  "x"
+  #'jls/close-project)
 
 (provide 'jls-projects)
 ;;; jls-projects.el ends here
