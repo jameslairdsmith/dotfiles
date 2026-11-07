@@ -86,6 +86,14 @@ other popup types that may be added later."
  :custom (treemacs-position 'left))
 
 (use-package
+ treemacs-evil
+ :ensure nil
+ :after (evil treemacs)
+ :config
+ ;; Match the section-toggle binding used in Magit and other special buffers.
+ (keymap-set evil-treemacs-state-map "z" #'treemacs-TAB-action))
+
+(use-package
  treemacs-nerd-icons
  :ensure nil
  :after treemacs

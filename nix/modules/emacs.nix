@@ -26,6 +26,7 @@ in
         tabgo
         tabspaces
         treemacs
+        treemacs-evil
         treemacs-nerd-icons
         popper
         evil
