@@ -10,6 +10,7 @@
 (declare-function eat-self-input "eat" (n &optional event))
 (declare-function evil-collection-init "evil-collection"
                   (&optional modes))
+(declare-function jls/current-project-root "jls-projects" ())
 (declare-function vterm-send-escape "vterm" ())
 
 (defvar eat-terminal)
@@ -81,6 +82,17 @@
 
 (add-hook 'eshell-exit-hook #'jls/eshell-delete-windows-on-exit)
 
+(defun jls/vterm-use-project-directory (function &rest arguments)
+  "Call vterm FUNCTION with the current project as its working directory.
+
+Use the selected buffer's directory when the current Tabspaces workspace is
+not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
+  (let ((default-directory
+         (or (and (fboundp #'jls/current-project-root)
+                  (jls/current-project-root))
+             default-directory)))
+    (apply function arguments)))
+
 (use-package
  vterm
  :ensure nil
@@ -88,7 +100,9 @@
  :init (add-hook 'vterm-exit-functions #'jls/vterm-delete-windows-on-exit)
  ;; Keep vterm's refresh delay non-nil.  Nil refreshes after every output
  ;; update, which can overwhelm Emacs's redisplay when several vterms run.
- :custom (vterm-timer-delay 0.1))
+ :custom (vterm-timer-delay 0.1)
+ :config
+ (advice-add #'vterm :around #'jls/vterm-use-project-directory))
 
 (use-package
  evil-collection
