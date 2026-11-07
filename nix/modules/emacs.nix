@@ -11,7 +11,25 @@ in
     enable = true;
     package = pkgs.emacs-macport;
     extraPackages =
-      epkgs: with epkgs; [
+      epkgs:
+      let
+        grease = epkgs.trivialBuild {
+          pname = "grease";
+          version = "0-unstable-2026-07-21";
+          src = pkgs.fetchFromGitHub {
+            owner = "mwac-dev";
+            repo = "grease.el";
+            rev = "5e65843f257b71d195a59d1f4e66570e9b5107fc";
+            hash = "sha256-yDfiXEARN61Bh9QV29HGe9llwP9GY6R2PCac1Fo7rhw=";
+          };
+          packageRequires = with epkgs; [
+            evil
+            nerd-icons
+          ];
+        };
+      in
+      with epkgs;
+      [
         elisp-autofmt
         dashboard
         doom-themes
@@ -43,6 +61,7 @@ in
         kkp
         eat
         agent-shell
+        grease
       ];
   };
 

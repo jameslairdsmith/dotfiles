@@ -17,6 +17,7 @@
      jls-olivetti
      jls-interface
      jls-dired
+     jls-grease
      jls-magit
      jls-terminal-input
      jls-terminal-emulators
