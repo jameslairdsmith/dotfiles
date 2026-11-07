@@ -82,15 +82,18 @@
 
 (add-hook 'eshell-exit-hook #'jls/eshell-delete-windows-on-exit)
 
-(defun jls/vterm-use-project-directory (function &rest arguments)
-  "Call vterm FUNCTION with the current project as its working directory.
+(defun jls/terminal-use-project-directory (function &rest arguments)
+  "Call terminal FUNCTION with the current project as its working directory.
 
 Use the selected buffer's directory when the current Tabspaces workspace is
 not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
-  (let ((default-directory
-         (or (and (fboundp #'jls/current-project-root)
-                  (jls/current-project-root))
-             default-directory)))
+  (let* ((project-root
+          (and (fboundp #'jls/current-project-root)
+               (jls/current-project-root)))
+         (default-directory
+          (if project-root
+              (file-name-as-directory project-root)
+            default-directory)))
     (apply function arguments)))
 
 (use-package
@@ -102,7 +105,7 @@ not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
  ;; update, which can overwhelm Emacs's redisplay when several vterms run.
  :custom (vterm-timer-delay 0.1)
  :config
- (advice-add #'vterm :around #'jls/vterm-use-project-directory))
+ (advice-add #'vterm :around #'jls/terminal-use-project-directory))
 
 (use-package
  evil-collection
@@ -116,6 +119,13 @@ not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
  ;; invoking Evil's normal-state escape behaviour.
  (evil-define-key
   'normal vterm-mode-map (kbd "<escape>") #'vterm-send-escape))
+
+(use-package
+ eshell
+ :ensure nil
+ :commands eshell
+ :config
+ (advice-add #'eshell :around #'jls/terminal-use-project-directory))
 
 (use-package
  evil-collection
