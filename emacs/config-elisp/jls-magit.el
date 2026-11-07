@@ -50,15 +50,29 @@
 (defvar jls/quick-magit-directory nil
   "Repository directory of the current quick Magit session.")
 
-(defun jls/git-commit-use-quick-magit-directory ()
-  "Restore the repository directory before setting up a commit buffer."
-  (when (and jls/quick-magit-session jls/quick-magit-directory)
-    (setq default-directory jls/quick-magit-directory)))
+(defun jls/git-worktree-from-gitdir (gitdir)
+  "Return the worktree associated with GITDIR, when it can be inferred."
+  (cond
+   ((equal (file-name-nondirectory (directory-file-name gitdir)) ".git")
+    (file-name-directory (directory-file-name gitdir)))
+   ((file-readable-p (expand-file-name "gitdir" gitdir))
+    (with-temp-buffer
+      (insert-file-contents (expand-file-name "gitdir" gitdir))
+      (file-name-directory
+       (directory-file-name (string-trim (buffer-string))))))))
+
+(defun jls/git-commit-use-worktree-directory ()
+  "Restore the worktree before setting up a Git commit buffer."
+  (when-let ((worktree
+              (or (and jls/quick-magit-session
+                       jls/quick-magit-directory)
+                  (jls/git-worktree-from-gitdir default-directory))))
+    (setq default-directory worktree)))
 
 (with-eval-after-load 'git-commit
   (advice-add
    #'git-commit-setup
-   :before #'jls/git-commit-use-quick-magit-directory))
+   :before #'jls/git-commit-use-worktree-directory))
 
 (defun jls/magit-quit ()
   "Quit Magit, closing Emacs during a quick Magit session."
@@ -88,6 +102,7 @@ With a prefix argument, retain `magit-status' standard prompting behaviour."
  :commands magit-status
  :bind ("s-m" . magit-status)
  :custom
+ (git-commit-cd-to-toplevel t)
  (magit-display-buffer-function
   #'magit-display-buffer-same-window-except-diff-v1))
 
