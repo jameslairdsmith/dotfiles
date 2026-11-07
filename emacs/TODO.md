@@ -90,6 +90,8 @@ the planned build-out, then enhancements and ideas.
       `nerd-icons` (Nix `extraPackages`), running `nerd-icons-install-fonts`,
       and setting `dashboard-set-heading-icons`/`dashboard-set-file-icons` to
       `t` (both default to `nil`). Currently the dashboard runs icon-free.
+- [ ] **Treemacs extensions** — investigate further optional Treemacs
+      extensions and built-in modes.
 - [ ] **elisp-autofmt options** — explore its config (line length, etc.) and
       whether a `.elisp-autofmt` file is wanted; currently `on-save-p` is
       `'always`.
