@@ -6,7 +6,10 @@
 
 ;;; Code:
 
+(require 'project)
 (require 'subr-x)
+
+(declare-function jls/current-project-root "jls-projects")
 
 (use-package
  transient
@@ -63,6 +66,21 @@
       (save-buffers-kill-terminal)
     (magit-mode-bury-buffer)))
 
+(defun jls/magit ()
+  "Show Magit status for the current project when there is one.
+
+With a prefix argument, retain `magit-status' standard prompting behaviour."
+  (interactive)
+  (let ((project-root
+         (unless current-prefix-arg
+           (if (fboundp #'jls/current-project-root)
+               (jls/current-project-root)
+             (when-let ((project (project-current)))
+               (project-root project))))))
+    (if project-root
+        (magit-status project-root)
+      (call-interactively #'magit-status))))
+
 (use-package
  magit
  :ensure nil
@@ -71,6 +89,9 @@
  :custom
  (magit-display-buffer-function
   #'magit-display-buffer-same-window-except-diff-v1))
+
+(with-eval-after-load 'magit-status
+  (defalias 'magit #'jls/magit))
 
 (defun jls/gptel-gemini-api-key ()
   "Read the Gemini API key from its private configuration file."
