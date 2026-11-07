@@ -16,7 +16,8 @@
  :ensure nil
  :defer t
  :config
- (keymap-set transient-base-map "<escape>" #'transient-quit-one))
+ (dolist (key '("<escape>" "ESC"))
+   (keymap-set transient-base-map key #'transient-quit-one)))
 
 (defun jls/git-commit-setup-evil ()
   "Enable Evil with `with-editor' commands in a Git commit buffer."

@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'evil)
 (require 'seq)
 
@@ -115,10 +116,21 @@ chosen buffer returns to the vterm."
   (jls/open-new-vterm)
   (jls/open-consult-buffer))
 
+(defun jls/read-multiple-choice (prompt choices)
+  "Read one of CHOICES using PROMPT, with Escape as an explicit quit key."
+  (let ((read-event-function (symbol-function #'read-event)))
+    (cl-letf (((symbol-function #'read-event)
+               (lambda (&rest arguments)
+                 (let ((event (apply read-event-function arguments)))
+                   (if (memq event '(escape ?\e))
+                       (keyboard-quit)
+                     event)))))
+      (read-multiple-choice prompt choices))))
+
 (defun jls/read-new-tab-opener ()
   "Prompt for and return the function used to populate a new tab."
   (pcase (car
-          (read-multiple-choice
+          (jls/read-multiple-choice
            "New tab contents"
            '((?b "buffer" "Choose a buffer with Consult")
              (?d "dired" "Open Dired in the current directory")
@@ -418,7 +430,7 @@ chosen buffer returns to the vterm."
   (interactive)
   (call-interactively #'ace-window)
   (pcase (car
-          (read-multiple-choice
+          (jls/read-multiple-choice
            "Window action"
            '((?g "go" "Keep the chosen window selected")
              (?x "delete" "Delete the chosen window"))))
@@ -474,8 +486,10 @@ chosen buffer returns to the vterm."
   "w"
   jls/window-map)
 
-;; Escape should abandon a partially entered leader sequence at any depth.  Add
-;; it to every prefix map rather than allowing it to begin Emacs' Meta prefix.
+;; Escape should abandon a partially entered leader sequence at any depth rather
+;; than begin Emacs' Meta prefix.  GUI Emacs reports the Escape function key as
+;; <escape>, while terminal Emacs reports the ASCII ESC event, so bind both in
+;; every custom prefix map.
 (dolist (map
          (list
           jls/leader-map
@@ -488,7 +502,8 @@ chosen buffer returns to the vterm."
           jls/split-above-map
           jls/side-left-map
           jls/side-right-map))
-  (keymap-set map "<escape>" #'keyboard-quit))
+  (dolist (key '("<escape>" "ESC"))
+    (keymap-set map key #'keyboard-quit)))
 
 (evil-define-key '(normal motion) 'global (kbd "SPC") jls/leader-map)
 
