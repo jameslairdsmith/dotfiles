@@ -41,6 +41,7 @@ in
         consult
         consult-dir
         ace-window
+        avy
         tabgo
         tabspaces
         treemacs

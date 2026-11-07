@@ -7,14 +7,18 @@
 
 ;;; Code:
 
+(require 'avy)
 (require 'cl-lib)
 (require 'evil)
 (require 'seq)
 
 (declare-function ace-window "ace-window" (&optional arg))
+(declare-function avy-read "avy" (tree display-function cleanup-function))
+(declare-function avy-tree "avy" (candidates keys))
 (declare-function consult-buffer "consult" (&optional sources))
 (declare-function jls/consult-project-buffer "jls-projects" ())
 (declare-function jls/consult-project-file "jls-projects" ())
+(declare-function tabgo--select-tab-line "tabgo" (tabline))
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eshell "esh-mode" (&optional arg))
 (declare-function vterm "vterm" (&optional arg))
@@ -22,6 +26,8 @@
 (defvar aw-dispatch-alist)
 (defvar aw-ignore-on)
 (defvar aw-make-frame-char)
+(defvar avy-dispatch-alist)
+(defvar avy-keys)
 
 ;; `tab-line-mode' derives its tabs from each window's buffer history rather
 ;; than maintaining independent tab objects.  Remove incidental buffers from
@@ -228,10 +234,14 @@ chosen buffer returns to the vterm."
   (bury-buffer)
   (force-mode-line-update))
 
+(defvar jls/tab-line-show-single-tab nil
+  "Whether to show tab lines containing only one tab.")
+
 (defun jls/tab-line-format-when-multiple
     (format-function &rest arguments)
-  "Call FORMAT-FUNCTION with ARGUMENTS when multiple tabs are present."
-  (when (> (length (funcall tab-line-tabs-function)) 1)
+  "Call FORMAT-FUNCTION when this window's tab line should be visible."
+  (when (or jls/tab-line-show-single-tab
+            (> (length (funcall tab-line-tabs-function)) 1))
     (apply format-function arguments)))
 
 (use-package
@@ -244,11 +254,63 @@ chosen buffer returns to the vterm."
   :around #'jls/tab-line-format-when-multiple)
  (global-tab-line-mode 1))
 
-(use-package
- tabgo
- :ensure nil
- :commands tabgo-line
- :custom (tabgo-tab-line-keys "asdfghjkl"))
+(use-package tabgo :ensure nil :demand t)
+
+(defun jls/tabgo-frame ()
+  "Select a tab from any window in the frame using Avy-style hints."
+  (interactive)
+  (let ((windows (window-list nil 'no-minibuffer))
+        (old-format tab-line-tab-name-format-function)
+        entries
+        paths)
+    (dolist (window windows)
+      (with-selected-window window
+        (dolist (tab (funcall tab-line-tabs-function))
+          (push (list window tab) entries))))
+    (setq entries (nreverse entries))
+    (cl-labels
+        ((refresh ()
+           (dolist (window windows)
+             (when (window-live-p window)
+               (set-window-parameter window 'tab-line-cache nil)))
+           (force-mode-line-update t)))
+      (let ((avy-dispatch-alist nil)
+            (jls/tab-line-show-single-tab t)
+            (tab-line-tab-name-format-function
+             (lambda (tab tabs)
+               (let* ((window (selected-window))
+                      (entry
+                       (seq-find
+                        (lambda (candidate)
+                          (and (eq window (caar candidate))
+                               (equal tab (cadar candidate))))
+                        paths))
+                      (formatted (funcall old-format tab tabs)))
+                 (if entry
+                     (concat
+                      (propertize
+                       (apply #'string (reverse (cdr entry)))
+                       'face 'tabgo-face)
+                      (if (> (length formatted) 0)
+                          (substring formatted 1)
+                        formatted))
+                   formatted)))))
+        (unwind-protect
+            (when-let
+                ((selected
+                  (avy-read
+                   (avy-tree entries avy-keys)
+                   (lambda (path entry)
+                     (push (cons entry path) paths)
+                     (refresh))
+                   (lambda ()
+                     (setq paths nil)
+                     (refresh)))))
+              (when (windowp (car-safe selected))
+                (select-window (car selected))
+                (tabgo--select-tab-line (cadr selected))))
+          (setq paths nil)
+          (refresh))))))
 
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
@@ -532,7 +594,10 @@ chosen buffer returns to the vterm."
  ace-window
  :ensure nil
  :commands ace-window
- :custom (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)) (aw-scope 'visible)
+ :custom
+ (aw-keys avy-keys)
+ (aw-leading-char-style 'path)
+ (aw-scope 'visible)
  ;; Show labels whenever there is a choice instead of silently behaving like
  ;; `other-window' when only two windows are visible.
  (aw-dispatch-when-more-than 1)
@@ -575,7 +640,7 @@ chosen buffer returns to the vterm."
   jls/split-below-map
   "O"
   jls/split-above-map
-  "v"
+  "/"
   #'jls/visual-select-window
   "x"
   #'jls/close-current-window)
@@ -589,8 +654,8 @@ chosen buffer returns to the vterm."
   #'jls/add-tab-start
   "A"
   #'jls/add-tab-end
-  "v"
-  #'tabgo-line
+  "/"
+  #'jls/tabgo-frame
   "x"
   #'jls/close-current-tab)
 
@@ -665,14 +730,14 @@ chosen buffer returns to the vterm."
   "insert at start"
   "SPC t A"
   "append at end"
-  "SPC t v"
-  "visual"
+  "SPC t /"
+  "select"
   "SPC t x"
   "close"
   "SPC w"
   "window"
-  "SPC w v"
-  "visual"
+  "SPC w /"
+  "select"
   "SPC w x"
   "close"
   "SPC w i"
