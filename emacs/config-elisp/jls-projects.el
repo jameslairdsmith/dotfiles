@@ -15,6 +15,8 @@
 (declare-function consult--buffer-query "consult")
 (declare-function consult--buffer-state "consult")
 (declare-function consult--read "consult")
+(declare-function jls/remove-buffer-from-window-history
+                  "jls-window-management" (window buffer))
 (declare-function jls/reset-current-window-buffer-history
                   "jls-window-management")
 (declare-function popper-select-popup-at-bottom
@@ -27,6 +29,10 @@
 (declare-function tabspaces--list-tabspaces "tabspaces")
 (declare-function tabspaces--local-buffer-p "tabspaces" (buffer))
 (declare-function tabspaces-open-or-create-project-and-workspace "tabspaces")
+(declare-function treemacs--setup-peek-buffer
+                  "treemacs-peek-mode" (path))
+(declare-function treemacs--tear-down-peek-mode
+                  "treemacs-peek-mode" (&optional restore-window))
 (declare-function treemacs-add-and-display-current-project-exclusively
                   "treemacs" ())
 
@@ -79,11 +85,52 @@ other popup types that may be added later."
  (popper-reference-buffers '(treemacs-mode))
  :config (popper-mode 1))
 
+(defun jls/treemacs-use-single-preview-tab (function path)
+  "Call Treemacs peek FUNCTION for PATH using one changing tab-line tab."
+  (let* ((file-buffer (get-file-buffer path))
+         (preview-window
+          (or (and file-buffer (get-buffer-window file-buffer))
+              (next-window (selected-window))))
+         (previous-previews
+          (cl-loop
+           for window in (window-list)
+           for buffer =
+           (window-parameter window 'jls/treemacs-preview-buffer)
+           when buffer collect (cons window buffer))))
+    (prog1 (funcall function path)
+      ;; Directory previews use Dired buffers, which `get-file-buffer' cannot
+      ;; find because they do not set `buffer-file-name'.  Read the buffer from
+      ;; the window Treemacs selected for the preview instead.
+      (let ((buffer (and (window-live-p preview-window)
+                         (window-buffer preview-window))))
+        (dolist (preview previous-previews)
+          (unless (eq (cdr preview) buffer)
+            (jls/remove-buffer-from-window-history
+             (car preview) (cdr preview))
+            (set-window-parameter
+             (car preview) 'jls/treemacs-preview-buffer nil)))
+        (when buffer
+          (set-window-parameter
+           preview-window 'jls/treemacs-preview-buffer buffer))))))
+
+(defun jls/treemacs-clear-preview-tab-tracking (&rest _arguments)
+  "Forget the tab-line preview buffer tracked in each live window."
+  (dolist (window (window-list))
+    (set-window-parameter window 'jls/treemacs-preview-buffer nil)))
+
 (use-package
  treemacs
  :ensure nil
  :commands treemacs-add-and-display-current-project-exclusively
- :custom (treemacs-position 'left))
+ :custom (treemacs-position 'left)
+ :config
+ (with-eval-after-load 'treemacs-peek-mode
+   (advice-add
+    #'treemacs--setup-peek-buffer
+    :around #'jls/treemacs-use-single-preview-tab)
+   (advice-add
+    #'treemacs--tear-down-peek-mode
+    :after #'jls/treemacs-clear-preview-tab-tracking)))
 
 (use-package
  treemacs-tab-bar
