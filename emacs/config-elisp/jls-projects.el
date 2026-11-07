@@ -100,6 +100,11 @@ other popup types that may be added later."
  (keymap-set evil-treemacs-state-map "z" #'treemacs-TAB-action))
 
 (use-package
+ treemacs-magit
+ :ensure nil
+ :after (magit treemacs))
+
+(use-package
  treemacs-nerd-icons
  :ensure nil
  :after treemacs

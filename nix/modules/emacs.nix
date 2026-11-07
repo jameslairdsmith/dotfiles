@@ -27,6 +27,7 @@ in
         tabspaces
         treemacs
         treemacs-evil
+        treemacs-magit
         treemacs-nerd-icons
         treemacs-tab-bar
         popper
