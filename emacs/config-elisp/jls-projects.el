@@ -51,6 +51,30 @@ than from the selected buffer."
                       tabspaces-project-tab-map)))
     (expand-file-name (car entry))))
 
+(defun jls/consult-project-root (may-prompt)
+  "Return the workspace project root for Consult.
+
+Fall back to `project-current', which may prompt when MAY-PROMPT is non-nil."
+  (or (jls/current-project-root)
+      (when-let ((project (project-current may-prompt)))
+        (project-root project))))
+
+(setq consult-project-function #'jls/consult-project-root)
+
+(defun jls/consult-project-file ()
+  "Find a file recursively in the current project with `consult-fd'."
+  (interactive)
+  (if-let ((root (jls/consult-project-root nil)))
+      (consult-fd root)
+    (user-error "There is no current project")))
+
+(defun jls/consult-project-buffer ()
+  "Switch to a buffer belonging to the current project workspace."
+  (interactive)
+  (if (jls/current-project-root)
+      (consult-buffer '(jls/consult-source-workspace))
+    (user-error "The current workspace is not a project")))
+
 ;; Temporary local checkout for evaluating Projdash before packaging it with
 ;; Nix.  Removing this form and restoring `project-dired' below removes the
 ;; experiment completely.

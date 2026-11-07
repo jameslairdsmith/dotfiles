@@ -58,8 +58,8 @@ the planned build-out, then enhancements and ideas.
 
 ## Restore / rebind (deferred from earlier steps)
 
-- [ ] `s-f` → find file (or completion-aware equivalent once the stack is
-      chosen).
+- [x] Leave `s-f` unbound; `consult-fd` uses the active workspace's project
+      root directly.
 - [ ] `s-b` → switch buffer (was `counsel-switch-buffer`).
 - [ ] `s-D` → dired in the current directory (`jls/open-dired-local`).
 - [ ] `s-t` → choose/load theme (was `counsel-load-theme`).

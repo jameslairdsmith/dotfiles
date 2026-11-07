@@ -13,6 +13,8 @@
 
 (declare-function ace-window "ace-window" (&optional arg))
 (declare-function consult-buffer "consult" (&optional sources))
+(declare-function jls/consult-project-buffer "jls-projects" ())
+(declare-function jls/consult-project-file "jls-projects" ())
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eshell "esh-mode" (&optional arg))
 (declare-function vterm "vterm" (&optional arg))
@@ -108,6 +110,11 @@
   (let ((this-command 'consult-buffer))
     (consult-buffer)))
 
+(defun jls/open-consult-project-buffer ()
+  "Choose a buffer from the current project workspace with Consult."
+  (let ((this-command 'consult-buffer))
+    (jls/consult-project-buffer)))
+
 (defun jls/open-new-vterm-then-consult-buffer ()
   "Create a vterm, then choose another buffer to display over it.
 
@@ -115,6 +122,16 @@ The vterm remains in the selected window's buffer history, so quitting the
 chosen buffer returns to the vterm."
   (jls/open-new-vterm)
   (jls/open-consult-buffer))
+
+(defun jls/open-new-vterm-then-consult-project-buffer ()
+  "Create a vterm, then choose a project buffer to display over it."
+  (jls/open-new-vterm)
+  (jls/open-consult-project-buffer))
+
+(defun jls/open-new-vterm-then-consult-project-file ()
+  "Create a vterm, then choose a project file to display over it."
+  (jls/open-new-vterm)
+  (jls/consult-project-file))
 
 (defun jls/read-multiple-choice (prompt choices)
   "Read one of CHOICES using PROMPT, with Escape as an explicit quit key."
@@ -132,13 +149,17 @@ chosen buffer returns to the vterm."
   (pcase (car
           (jls/read-multiple-choice
            "New tab contents"
-           '((?b "buffer" "Choose a buffer with Consult")
+           '((?b "project buffer" "Choose a buffer from the current project")
+             (?B "buffer" "Choose a buffer with Consult")
              (?d "dired" "Open Dired in the current directory")
              (?e "eshell" "Create a new Eshell session")
+             (?f "project file" "Choose a file from the current project")
              (?v "vterm" "Create a new vterm session"))))
-    (?b #'jls/open-consult-buffer)
+    (?b #'jls/open-consult-project-buffer)
+    (?B #'jls/open-consult-buffer)
     (?d #'jls/open-dired-here)
     (?e #'jls/open-new-eshell)
+    (?f #'jls/consult-project-file)
     (?v #'jls/open-new-vterm)))
 
 (defun jls/position-current-tab (anchor placement)
@@ -309,6 +330,54 @@ chosen buffer returns to the vterm."
   (jls/split-window-and-open
    'right #'jls/open-new-vterm-then-consult-buffer))
 
+(defun jls/split-project-file-left ()
+  "Choose a project file for a new window to the left."
+  (interactive)
+  (jls/split-window-and-open
+   'left #'jls/open-new-vterm-then-consult-project-file))
+
+(defun jls/split-project-file-below ()
+  "Choose a project file for a new window below."
+  (interactive)
+  (jls/split-window-and-open
+   'below #'jls/open-new-vterm-then-consult-project-file))
+
+(defun jls/split-project-file-above ()
+  "Choose a project file for a new window above."
+  (interactive)
+  (jls/split-window-and-open
+   'above #'jls/open-new-vterm-then-consult-project-file))
+
+(defun jls/split-project-file-right ()
+  "Choose a project file for a new window to the right."
+  (interactive)
+  (jls/split-window-and-open
+   'right #'jls/open-new-vterm-then-consult-project-file))
+
+(defun jls/split-project-buffer-left ()
+  "Choose a project buffer for a new window to the left."
+  (interactive)
+  (jls/split-window-and-open
+   'left #'jls/open-new-vterm-then-consult-project-buffer))
+
+(defun jls/split-project-buffer-below ()
+  "Choose a project buffer for a new window below."
+  (interactive)
+  (jls/split-window-and-open
+   'below #'jls/open-new-vterm-then-consult-project-buffer))
+
+(defun jls/split-project-buffer-above ()
+  "Choose a project buffer for a new window above."
+  (interactive)
+  (jls/split-window-and-open
+   'above #'jls/open-new-vterm-then-consult-project-buffer))
+
+(defun jls/split-project-buffer-right ()
+  "Choose a project buffer for a new window to the right."
+  (interactive)
+  (jls/split-window-and-open
+   'right #'jls/open-new-vterm-then-consult-project-buffer))
+
 (defun jls/side-consult-buffer-left ()
   "Choose a buffer for a new left side window."
   (interactive)
@@ -336,6 +405,30 @@ chosen buffer returns to the vterm."
   (jls/open-in-side-window
    'right #'jls/open-new-vterm-then-consult-buffer))
 
+(defun jls/side-project-file-left ()
+  "Choose a project file for a new left side window."
+  (interactive)
+  (jls/open-in-side-window
+   'left #'jls/open-new-vterm-then-consult-project-file))
+
+(defun jls/side-project-file-right ()
+  "Choose a project file for a new right side window."
+  (interactive)
+  (jls/open-in-side-window
+   'right #'jls/open-new-vterm-then-consult-project-file))
+
+(defun jls/side-project-buffer-left ()
+  "Choose a project buffer for a new left side window."
+  (interactive)
+  (jls/open-in-side-window
+   'left #'jls/open-new-vterm-then-consult-project-buffer))
+
+(defun jls/side-project-buffer-right ()
+  "Choose a project buffer for a new right side window."
+  (interactive)
+  (jls/open-in-side-window
+   'right #'jls/open-new-vterm-then-consult-project-buffer))
+
 (defun jls/side-dired-right ()
   "Open Dired in a new right side window."
   (interactive)
@@ -353,57 +446,81 @@ chosen buffer returns to the vterm."
 
 (defvar-keymap jls/split-left-map
   "b"
+  #'jls/split-project-buffer-left
+  "B"
   #'jls/split-consult-buffer-left
   "d"
   #'jls/split-dired-left
   "e"
   #'jls/split-eshell-left
+  "f"
+  #'jls/split-project-file-left
   "v"
   #'jls/split-vterm-left)
 (defvar-keymap jls/split-below-map
   "b"
+  #'jls/split-project-buffer-below
+  "B"
   #'jls/split-consult-buffer-below
   "d"
   #'jls/split-dired-below
   "e"
   #'jls/split-eshell-below
+  "f"
+  #'jls/split-project-file-below
   "v"
   #'jls/split-vterm-below)
 (defvar-keymap jls/split-above-map
   "b"
+  #'jls/split-project-buffer-above
+  "B"
   #'jls/split-consult-buffer-above
   "d"
   #'jls/split-dired-above
   "e"
   #'jls/split-eshell-above
+  "f"
+  #'jls/split-project-file-above
   "v"
   #'jls/split-vterm-above)
 (defvar-keymap jls/split-right-map
   "b"
+  #'jls/split-project-buffer-right
+  "B"
   #'jls/split-consult-buffer-right
   "d"
   #'jls/split-dired-right
   "e"
   #'jls/split-eshell-right
+  "f"
+  #'jls/split-project-file-right
   "v"
   #'jls/split-vterm-right)
 
 (defvar-keymap jls/side-left-map
   "b"
+  #'jls/side-project-buffer-left
+  "B"
   #'jls/side-consult-buffer-left
   "d"
   #'jls/side-dired-left
   "e"
   #'jls/side-eshell-left
+  "f"
+  #'jls/side-project-file-left
   "v"
   #'jls/side-vterm-left)
 (defvar-keymap jls/side-right-map
   "b"
+  #'jls/side-project-buffer-right
+  "B"
   #'jls/side-consult-buffer-right
   "d"
   #'jls/side-dired-right
   "e"
   #'jls/side-eshell-right
+  "f"
+  #'jls/side-project-file-right
   "v"
   #'jls/side-vterm-right)
 
