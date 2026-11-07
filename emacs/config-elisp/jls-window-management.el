@@ -19,6 +19,10 @@
 (declare-function eshell "esh-mode" (&optional arg))
 (declare-function vterm "vterm" (&optional arg))
 
+(defvar aw-dispatch-alist)
+(defvar aw-ignore-on)
+(defvar aw-make-frame-char)
+
 ;; `tab-line-mode' derives its tabs from each window's buffer history rather
 ;; than maintaining independent tab objects.  Remove incidental buffers from
 ;; both histories so they do not become tabs merely because Emacs displayed
@@ -543,16 +547,13 @@ chosen buffer returns to the vterm."
      :box (:line-width 2))))))
 
 (defun jls/visual-select-window ()
-  "Select a window visually, then choose what to do with it."
+  "Select and go to a window visually without offering other actions."
   (interactive)
-  (call-interactively #'ace-window)
-  (pcase (car
-          (jls/read-multiple-choice
-           "Window action"
-           '((?g "go" "Keep the chosen window selected")
-             (?x "delete" "Delete the chosen window"))))
-    (?g nil)
-    (?x (delete-window))))
+  (let ((aw-dispatch-alist nil)
+        (aw-ignore-on nil)
+        (aw-make-frame-char nil)
+        (ignore-window-parameters t))
+    (ace-window 1)))
 
 (defun jls/close-current-window ()
   "Delete the selected window when it can be safely deleted."

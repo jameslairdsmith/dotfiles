@@ -17,6 +17,7 @@
 (declare-function consult--buffer-state "consult")
 (declare-function consult--file-state "consult")
 (declare-function consult--read "consult")
+(declare-function evil-treemacs-state "treemacs-evil" ())
 (declare-function jls/remove-buffer-from-window-history
                   "jls-window-management" (window buffer))
 (declare-function jls/reset-current-window-buffer-history
@@ -38,6 +39,7 @@
 (declare-function treemacs-add-and-display-current-project-exclusively
                   "treemacs" ())
 
+(defvar evil-state)
 (defvar recentf-exclude)
 
 (recentf-mode 1)
@@ -225,13 +227,28 @@ Do not register files opened only for previewing with Recentf."
  :after treemacs
  :config (treemacs-set-scope-type 'Tabs))
 
+(defun jls/treemacs-restore-evil-state-on-selection (frame)
+  "Restore Treemacs Evil state when FRAME selects a Treemacs window."
+  (when-let* ((window (frame-selected-window frame))
+              ((window-live-p window))
+              (buffer (window-buffer window)))
+    (with-current-buffer buffer
+      (when (and (derived-mode-p 'treemacs-mode)
+                 (not (eq evil-state 'treemacs)))
+        (evil-treemacs-state)))))
+
 (use-package
  treemacs-evil
  :ensure nil
  :after (evil treemacs)
  :config
  ;; Match the section-toggle binding used in Magit and other special buffers.
- (keymap-set evil-treemacs-state-map "z" #'treemacs-TAB-action))
+ (keymap-set evil-treemacs-state-map "z" #'treemacs-TAB-action)
+ ;; Treemacs Evil restores its state after mouse clicks, but not after every
+ ;; other way of selecting its window.  Cover all window-selection methods.
+ (add-hook
+  'window-selection-change-functions
+  #'jls/treemacs-restore-evil-state-on-selection))
 
 (use-package
  treemacs-magit
