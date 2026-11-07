@@ -10,10 +10,12 @@
 (require 'cl-lib)
 (require 'consult)
 (require 'project)
+(require 'recentf)
 (require 'seq)
 
 (declare-function consult--buffer-query "consult")
 (declare-function consult--buffer-state "consult")
+(declare-function consult--file-state "consult")
 (declare-function consult--read "consult")
 (declare-function jls/remove-buffer-from-window-history
                   "jls-window-management" (window buffer))
@@ -38,6 +40,8 @@
 
 (defvar recentf-exclude)
 
+(recentf-mode 1)
+
 (defvar jls/project-history nil
   "Minibuffer history for project workspace commands.")
 
@@ -61,11 +65,62 @@ Fall back to `project-current', which may prompt when MAY-PROMPT is non-nil."
 
 (setq consult-project-function #'jls/consult-project-root)
 
+(defun jls/project-file-candidates ()
+  "Return current project files with recent files first.
+
+Use fd to include hidden files while respecting ignore files.  Exclude the
+Git metadata directory explicitly.  Files absent from `recentf-list' are sorted
+alphabetically after the recent files."
+  (when-let ((root (jls/consult-project-root nil)))
+    (let ((default-directory root)
+          (recent-ranks (make-hash-table :test #'equal))
+          candidates)
+      (cl-loop
+       for file in recentf-list
+       for rank from 0
+       do (puthash (expand-file-name file) rank recent-ranks))
+      (setq candidates
+            (mapcar
+             (lambda (file)
+               (cons file (expand-file-name file root)))
+             (process-lines
+              jls-fd-program
+              "--type"
+              "file"
+              "--hidden"
+              "--color=never"
+              "--exclude"
+              ".git"
+              ".")))
+      (cl-stable-sort
+       candidates
+       (lambda (left right)
+         (let ((left-rank (gethash (cdr left) recent-ranks))
+               (right-rank (gethash (cdr right) recent-ranks)))
+           (cond
+            ((and left-rank right-rank) (< left-rank right-rank))
+            (left-rank t)
+            (right-rank nil)
+            (t (string-lessp (car left) (car right))))))))))
+
+(defvar jls/consult-source-project-file
+  `(:name "Project File"
+    :narrow ?f
+    :category file
+    :face consult-file
+    :history file-name-history
+    :state ,#'consult--file-state
+    :new ,(lambda (_file) (user-error "Select an existing project file"))
+    :items ,#'jls/project-file-candidates)
+  "Consult source containing every file in the current project.")
+
 (defun jls/consult-project-file ()
-  "Find a file recursively in the current project with `consult-fd'."
+  "Choose a project file with recent files listed first."
   (interactive)
   (if-let ((root (jls/consult-project-root nil)))
-      (consult-fd root)
+      (let ((default-directory root)
+            (consult-project-function (lambda (_may-prompt) root)))
+        (consult-buffer '(jls/consult-source-project-file)))
     (user-error "There is no current project")))
 
 (defun jls/consult-project-buffer ()
