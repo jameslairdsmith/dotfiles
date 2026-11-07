@@ -36,6 +36,8 @@
 (declare-function treemacs-add-and-display-current-project-exclusively
                   "treemacs" ())
 
+(defvar recentf-exclude)
+
 (defvar jls/project-history nil
   "Minibuffer history for project workspace commands.")
 
@@ -86,8 +88,14 @@ other popup types that may be added later."
  :config (popper-mode 1))
 
 (defun jls/treemacs-use-single-preview-tab (function path)
-  "Call Treemacs peek FUNCTION for PATH using one changing tab-line tab."
-  (let* ((file-buffer (get-file-buffer path))
+  "Call Treemacs peek FUNCTION for PATH using one changing tab-line tab.
+
+Do not register files opened only for previewing with Recentf."
+  (let* ((recentf-exclude
+          (cons
+           (format "\\`%s\\'" (regexp-quote (expand-file-name path)))
+           (and (boundp 'recentf-exclude) recentf-exclude)))
+         (file-buffer (get-file-buffer path))
          (preview-window
           (or (and file-buffer (get-buffer-window file-buffer))
               (next-window (selected-window))))
