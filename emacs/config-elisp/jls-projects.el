@@ -86,6 +86,12 @@ other popup types that may be added later."
  :custom (treemacs-position 'left))
 
 (use-package
+ treemacs-tab-bar
+ :ensure nil
+ :after treemacs
+ :config (treemacs-set-scope-type 'Tabs))
+
+(use-package
  treemacs-evil
  :ensure nil
  :after (evil treemacs)

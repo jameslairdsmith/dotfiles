@@ -28,6 +28,7 @@ in
         treemacs
         treemacs-evil
         treemacs-nerd-icons
+        treemacs-tab-bar
         popper
         evil
         evil-collection
