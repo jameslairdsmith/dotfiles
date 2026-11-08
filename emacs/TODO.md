@@ -32,10 +32,12 @@ the planned build-out, then enhancements and ideas.
         GUI Emacs.
   - [ ] Enable `nix-format-on-save-mode` with `nixfmt`; integrate Nix buffers
         with `jls/save-buffer` as appropriate.
-  - [ ] Add project-local nixd/Eglot workspace configuration for this dotfiles
-        flake, reusing the nixpkgs, Home Manager (`homeConfigurations.jls`) and
-        nix-darwin (`darwinConfigurations.neo`) option expressions from
-        `nix/modules/neovim.nix`.
+  - [ ] Revisit explicit nixd/Eglot workspace configuration only if nixd's
+        defaults prove insufficient. Nixd cannot currently infer which flake
+        input, Home Manager configuration or nix-darwin host should provide
+        option completion. If needed, define the dotfiles expressions once in
+        Nix and generate settings for both Emacs and Neovim rather than
+        maintaining duplicate configuration.
   - [ ] Add Nix-managed `corfu` and initially enable `corfu-mode` only in Nix
         buffers for popup completion supplied by Eglot; consider enabling it
         more broadly later.

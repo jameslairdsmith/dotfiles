@@ -134,6 +134,8 @@ in
     ;;; Code:
     (setq elisp-autofmt-python-bin "${python}/bin/python3")
     (setq jls-fd-program "${pkgs.fd}/bin/fd")
+    (setq jls-nixd-program "${pkgs.nixd}/bin/nixd")
+    (setq jls-nixfmt-program "${pkgs.nixfmt}/bin/nixfmt")
     (provide 'nix-paths)
     ;;; nix-paths.el ends here
   '';
