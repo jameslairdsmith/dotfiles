@@ -5,6 +5,13 @@
 
 ;;; Code:
 
+(defun jls/enable-relative-line-numbers ()
+  "Enable relative line numbers in the current programming buffer."
+  (setq-local display-line-numbers-type 'relative)
+  (display-line-numbers-mode 1))
+
+(add-hook 'prog-mode-hook #'jls/enable-relative-line-numbers)
+
 (defun jls/macos-dark-mode-p ()
   "Return non-nil when macOS is using its dark appearance.
 Use the Mac port's application state in the GUI.  In a terminal that state is
