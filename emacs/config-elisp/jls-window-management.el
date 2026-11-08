@@ -751,6 +751,15 @@ chosen buffer returns to the vterm."
 
 (evil-define-key '(normal motion) 'global (kbd "SPC") jls/leader-map)
 
+;; Magit normally uses SPC for `magit-diff-show-or-scroll-up', and its
+;; overriding Evil map shadows the global leader.  Evil Collection preserves
+;; that command on S-SPC, so prefer a consistent SPC leader here.  Revisit this
+;; if the original unshifted Magit workflow proves important enough to need a
+;; different binding.
+(with-eval-after-load 'magit
+  (evil-collection-define-key
+   'normal 'magit-mode-map (kbd "SPC") jls/leader-map))
+
 (defun jls/dired-bind-leader (&rest _arguments)
   "Make Space open the leader map in Evil's Dired normal state."
   (evil-collection-define-key
