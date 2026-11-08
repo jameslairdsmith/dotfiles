@@ -273,7 +273,10 @@ chosen buffer returns to the vterm."
 (use-package
  tab-line
  :ensure nil
- :custom (tab-line-tabs-function #'tab-line-tabs-fixed-window-buffers)
+ :custom
+ (tab-line-tabs-function #'tab-line-tabs-fixed-window-buffers)
+ ;; This is already the default, but keep wrap-around explicit and intentional.
+ (tab-line-switch-cycling t)
  :config
  (global-tab-line-mode 1)
  (add-hook
@@ -751,6 +754,14 @@ chosen buffer returns to the vterm."
   jls/split-below-map
   "O"
   jls/split-above-map
+  "h"
+  #'windmove-left
+  "j"
+  #'windmove-down
+  "k"
+  #'windmove-up
+  "l"
+  #'windmove-right
   "/"
   #'jls/visual-select-window
   "x"
@@ -765,6 +776,10 @@ chosen buffer returns to the vterm."
   #'jls/add-tab-start
   "A"
   #'jls/add-tab-end
+  "h"
+  #'tab-line-switch-to-prev-tab
+  "l"
+  #'tab-line-switch-to-next-tab
   "/"
   #'jls/tabgo-frame
   "x"
@@ -854,6 +869,10 @@ chosen buffer returns to the vterm."
   "insert at start"
   "SPC t A"
   "append at end"
+  "SPC t h"
+  "previous"
+  "SPC t l"
+  "next"
   "SPC t /"
   "select"
   "SPC t x"
@@ -875,7 +894,15 @@ chosen buffer returns to the vterm."
   "SPC w o"
   "open below"
   "SPC w O"
-  "open above")
+  "open above"
+  "SPC w h"
+  "move left"
+  "SPC w j"
+  "move down"
+  "SPC w k"
+  "move up"
+  "SPC w l"
+  "move right")
  (dolist (prefix
           '("SPC w i"
             "SPC w a"
