@@ -21,18 +21,29 @@
 Use the Mac port's application state in the GUI.  In a terminal that state is
 unavailable, so ask macOS directly instead."
   (let* ((application-state
-          (and (fboundp 'mac-application-state) (mac-application-state)))
+          (and (fboundp 'mac-application-state)
+               (mac-application-state)))
          (appearance (plist-get application-state :appearance)))
     (if appearance
         (string-match-p "Dark" appearance)
-      (eq 0
-          (call-process
-           "/usr/bin/defaults"
-           nil nil nil
-           "read" "-g" "AppleInterfaceStyle")))))
+      (eq
+       0
+       (call-process "/usr/bin/defaults"
+                     nil
+                     nil
+                     nil
+                     "read"
+                     "-g"
+                     "AppleInterfaceStyle")))))
 
 (defvar jls/last-macos-dark-mode 'unknown
   "Last macOS appearance observed while synchronising the theme.")
+
+(defun jls/use-default-fringe-background (&optional _theme)
+  "Make the window fringes use the buffer's default background.
+
+THEME is accepted for use in `enable-theme-functions'."
+  (set-face-attribute 'fringe nil :background 'unspecified))
 
 (defun jls/sync-theme-with-macos ()
   "Update the theme when the macOS appearance changes.
@@ -41,7 +52,10 @@ Do not continually enforce the corresponding theme, so commands such as
   (let ((dark-mode (and (jls/macos-dark-mode-p) t)))
     (unless (eq dark-mode jls/last-macos-dark-mode)
       (setq jls/last-macos-dark-mode dark-mode)
-      (let ((theme (if dark-mode 'modus-vivendi 'doom-one-light)))
+      (let ((theme
+             (if dark-mode
+                 'modus-vivendi
+               'doom-one-light)))
         (mapc #'disable-theme custom-enabled-themes)
         (load-theme theme t)))))
 
@@ -54,11 +68,14 @@ Do not continually enforce the corresponding theme, so commands such as
  :ensure nil
  ;; The library ships in Emacs' etc/themes directory.  Themes can be loaded
  ;; from there, but the directory is not on `load-path' by default.
- :init (add-to-list 'load-path (expand-file-name "themes" data-directory))
+ :init
+ (add-to-list 'load-path (expand-file-name "themes" data-directory))
  (setq
   modus-themes-italic-constructs t
   modus-themes-bold-keywords t)
  :config
+ (add-hook
+  'enable-theme-functions #'jls/use-default-fringe-background)
  (jls/sync-theme-with-macos)
  (add-hook
   'mac-effective-appearance-change-hook #'jls/sync-theme-with-macos)
