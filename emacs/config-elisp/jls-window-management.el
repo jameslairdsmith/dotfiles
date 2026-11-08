@@ -21,6 +21,7 @@
 (declare-function jls/consult-project-buffer "jls-projects" ())
 (declare-function jls/consult-project-file "jls-projects" ())
 (declare-function jls/magit "jls-magit" ())
+(declare-function jls/open-grease "jls-grease" ())
 (declare-function tabgo--select-tab-line "tabgo" (tabline))
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eshell "esh-mode" (&optional arg))
@@ -177,6 +178,7 @@ chosen buffer returns to the vterm."
              (?d "dired" "Open Dired at the current project root")
              (?e "eshell" "Create a new Eshell session")
              (?f "project file" "Choose a file from the current project")
+             (?g "grease" "Edit the current project directory with Grease")
              (?m "magit" "Open Magit status for the current project")
              (?v "vterm" "Create a new vterm session"))))
     (?b #'jls/open-consult-project-buffer)
@@ -184,6 +186,7 @@ chosen buffer returns to the vterm."
     (?d #'jls/open-project-dired)
     (?e #'jls/open-new-eshell)
     (?f #'jls/consult-project-file)
+    (?g #'jls/open-grease)
     (?m #'jls/open-magit)
     (?v #'jls/open-new-vterm)))
 
@@ -396,6 +399,26 @@ chosen buffer returns to the vterm."
   (interactive)
   (jls/split-window-and-open 'right #'jls/open-dired-here))
 
+(defun jls/split-grease-left ()
+  "Open Grease in a window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'jls/open-grease))
+
+(defun jls/split-grease-below ()
+  "Open Grease in a window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'jls/open-grease))
+
+(defun jls/split-grease-above ()
+  "Open Grease in a window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'jls/open-grease))
+
+(defun jls/split-grease-right ()
+  "Open Grease in a window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'jls/open-grease))
+
 (defun jls/split-magit-left ()
   "Open Magit status in a window to the left."
   (interactive)
@@ -544,6 +567,16 @@ chosen buffer returns to the vterm."
   (interactive)
   (jls/open-in-side-window 'right #'jls/open-dired-here))
 
+(defun jls/side-grease-left ()
+  "Open Grease in a new left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-grease))
+
+(defun jls/side-grease-right ()
+  "Open Grease in a new right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-grease))
+
 (defun jls/side-eshell-right ()
   "Open a new Eshell session in a right side window."
   (interactive)
@@ -575,6 +608,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-left
   "f"
   #'jls/split-project-file-left
+  "g"
+  #'jls/split-grease-left
   "m"
   #'jls/split-magit-left
   "v"
@@ -590,6 +625,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-below
   "f"
   #'jls/split-project-file-below
+  "g"
+  #'jls/split-grease-below
   "m"
   #'jls/split-magit-below
   "v"
@@ -605,6 +642,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-above
   "f"
   #'jls/split-project-file-above
+  "g"
+  #'jls/split-grease-above
   "m"
   #'jls/split-magit-above
   "v"
@@ -620,6 +659,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-right
   "f"
   #'jls/split-project-file-right
+  "g"
+  #'jls/split-grease-right
   "m"
   #'jls/split-magit-right
   "v"
@@ -636,6 +677,8 @@ chosen buffer returns to the vterm."
   #'jls/side-eshell-left
   "f"
   #'jls/side-project-file-left
+  "g"
+  #'jls/side-grease-left
   "m"
   #'jls/side-magit-left
   "v"
@@ -651,6 +694,8 @@ chosen buffer returns to the vterm."
   #'jls/side-eshell-right
   "f"
   #'jls/side-project-file-right
+  "g"
+  #'jls/side-grease-right
   "m"
   #'jls/side-magit-right
   "v"
@@ -845,6 +890,8 @@ chosen buffer returns to the vterm."
     "dired"
     (concat prefix " e")
     "eshell"
+    (concat prefix " g")
+    "grease"
     (concat prefix " v")
     "vterm")))
 

@@ -6,6 +6,7 @@
 ;;; Code:
 
 (declare-function grease--get-line-data "grease" ())
+(declare-function grease-open "grease" (&optional directory target-file))
 (declare-function grease-quit "grease" ())
 (declare-function grease-up-directory "grease" ())
 (declare-function grease-visit "grease" ())
@@ -14,6 +15,11 @@
 (defvar grease--buffer-dirty-p)
 (defvar grease--pending-changes)
 (defvar grease-mode-map)
+
+(defun jls/open-grease ()
+  "Open Grease, using the current project root when available."
+  (interactive)
+  (call-interactively #'grease-open))
 
 (defun jls/grease-enter-or-up-directory ()
   "Enter the directory at point, or go to the parent directory.
