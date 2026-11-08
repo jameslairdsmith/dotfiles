@@ -13,6 +13,7 @@ in
     extraPackages =
       epkgs:
       let
+        treesitGrammars = epkgs.treesit-grammars.with-grammars (grammars: [ grammars.tree-sitter-nix ]);
         grease = epkgs.trivialBuild {
           pname = "grease";
           version = "0-unstable-2026-07-21";
@@ -30,6 +31,8 @@ in
       in
       with epkgs;
       [
+        treesitGrammars
+        nix-ts-mode
         elisp-autofmt
         dashboard
         doom-themes
