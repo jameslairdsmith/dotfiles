@@ -12,6 +12,11 @@
 
 (add-hook 'prog-mode-hook #'jls/enable-relative-line-numbers)
 
+;; Show the preferred line-length boundary in programming buffers.
+(setq-default fill-column 80)
+(setq-default display-fill-column-indicator-character ?│)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+
 ;; Add horizontal breathing room inside every window.
 (setq-default left-margin-width 1)
 (setq-default right-margin-width 1)
@@ -39,11 +44,37 @@ unavailable, so ask macOS directly instead."
 (defvar jls/last-macos-dark-mode 'unknown
   "Last macOS appearance observed while synchronising the theme.")
 
-(defun jls/use-default-fringe-background (&optional _theme)
-  "Make the window fringes use the buffer's default background.
+(defun jls/fill-column-indicator-stipple ()
+  "Return a one-pixel vertical stipple for the current frame's font width."
+  (let* ((width (frame-char-width))
+         (x (max 0 (- width 2)))
+         (data (make-string (ceiling width 8) 0)))
+    (aset data (/ x 8) (lsh 1 (% x 8)))
+    (list width 1 data)))
+
+(defun jls/apply-theme-face-overrides (&optional _theme)
+  "Keep peripheral faces transparent and draw a continuous column ruler.
 
 THEME is accepted for use in `enable-theme-functions'."
-  (set-face-attribute 'fringe nil :background 'unspecified))
+  (set-face-attribute 'fringe nil :background 'unspecified)
+  (if (display-graphic-p)
+      (progn
+        ;; A space painted with a one-pixel stipple is continuous across line
+        ;; boxes, unlike a repeated box-drawing glyph.
+        (setq-default display-fill-column-indicator-character ?\s)
+        (set-face-attribute
+         'fill-column-indicator nil
+         :background 'unspecified
+         :height 'unspecified
+         :inherit 'shadow
+         :stipple (jls/fill-column-indicator-stipple)))
+    ;; Stipples are unavailable in terminal frames, so retain a text fallback.
+    (setq-default display-fill-column-indicator-character ?│)
+    (set-face-attribute 'fill-column-indicator nil
+                        :background 'unspecified
+                        :height 'unspecified
+                        :inherit 'shadow
+                        :stipple nil)))
 
 (defun jls/sync-theme-with-macos ()
   "Update the theme when the macOS appearance changes.
@@ -74,8 +105,7 @@ Do not continually enforce the corresponding theme, so commands such as
   modus-themes-italic-constructs t
   modus-themes-bold-keywords t)
  :config
- (add-hook
-  'enable-theme-functions #'jls/use-default-fringe-background)
+ (add-hook 'enable-theme-functions #'jls/apply-theme-face-overrides)
  (jls/sync-theme-with-macos)
  (add-hook
   'mac-effective-appearance-change-hook #'jls/sync-theme-with-macos)
