@@ -273,6 +273,9 @@ chosen buffer returns to the vterm."
 (use-package
  tab-line
  :ensure nil
+ :bind
+ (("M-s-<left>" . tab-line-switch-to-prev-tab)
+  ("M-s-<right>" . tab-line-switch-to-next-tab))
  :custom
  (tab-line-tabs-function #'tab-line-tabs-fixed-window-buffers)
  ;; This is already the default, but keep wrap-around explicit and intentional.
