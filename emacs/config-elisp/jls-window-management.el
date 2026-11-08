@@ -19,6 +19,7 @@
 (declare-function jls/consult-grep-project "jls-projects" ())
 (declare-function jls/consult-project-buffer "jls-projects" ())
 (declare-function jls/consult-project-file "jls-projects" ())
+(declare-function jls/magit "jls-magit" ())
 (declare-function tabgo--select-tab-line "tabgo" (tabline))
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eshell "esh-mode" (&optional arg))
@@ -113,6 +114,10 @@
   "Open Dired in the current buffer's directory."
   (dired default-directory))
 
+(defun jls/open-magit ()
+  "Open Magit status for the current project."
+  (jls/magit))
+
 (defun jls/open-consult-buffer ()
   "Choose a buffer with Consult using its multiform display settings."
   ;; `vertico-multiform-mode' dispatches on `this-command'.  These openers are
@@ -165,12 +170,14 @@ chosen buffer returns to the vterm."
              (?d "dired" "Open Dired in the current directory")
              (?e "eshell" "Create a new Eshell session")
              (?f "project file" "Choose a file from the current project")
+             (?m "magit" "Open Magit status for the current project")
              (?v "vterm" "Create a new vterm session"))))
     (?b #'jls/open-consult-project-buffer)
     (?B #'jls/open-consult-buffer)
     (?d #'jls/open-dired-here)
     (?e #'jls/open-new-eshell)
     (?f #'jls/consult-project-file)
+    (?m #'jls/open-magit)
     (?v #'jls/open-new-vterm)))
 
 (defun jls/position-current-tab (anchor placement)
@@ -373,6 +380,26 @@ chosen buffer returns to the vterm."
   (interactive)
   (jls/split-window-and-open 'right #'jls/open-dired-here))
 
+(defun jls/split-magit-left ()
+  "Open Magit status in a window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'jls/open-magit))
+
+(defun jls/split-magit-below ()
+  "Open Magit status in a window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'jls/open-magit))
+
+(defun jls/split-magit-above ()
+  "Open Magit status in a window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'jls/open-magit))
+
+(defun jls/split-magit-right ()
+  "Open Magit status in a window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'jls/open-magit))
+
 (defun jls/split-consult-buffer-left ()
   "Choose a buffer for a new window to the left."
   (interactive)
@@ -511,6 +538,16 @@ chosen buffer returns to the vterm."
   (interactive)
   (jls/open-in-side-window 'right #'jls/open-new-vterm))
 
+(defun jls/side-magit-left ()
+  "Open Magit status in a new left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-magit))
+
+(defun jls/side-magit-right ()
+  "Open Magit status in a new right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-magit))
+
 (defvar-keymap jls/split-left-map
   "b"
   #'jls/split-project-buffer-left
@@ -522,6 +559,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-left
   "f"
   #'jls/split-project-file-left
+  "m"
+  #'jls/split-magit-left
   "v"
   #'jls/split-vterm-left)
 (defvar-keymap jls/split-below-map
@@ -535,6 +574,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-below
   "f"
   #'jls/split-project-file-below
+  "m"
+  #'jls/split-magit-below
   "v"
   #'jls/split-vterm-below)
 (defvar-keymap jls/split-above-map
@@ -548,6 +589,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-above
   "f"
   #'jls/split-project-file-above
+  "m"
+  #'jls/split-magit-above
   "v"
   #'jls/split-vterm-above)
 (defvar-keymap jls/split-right-map
@@ -561,6 +604,8 @@ chosen buffer returns to the vterm."
   #'jls/split-eshell-right
   "f"
   #'jls/split-project-file-right
+  "m"
+  #'jls/split-magit-right
   "v"
   #'jls/split-vterm-right)
 
@@ -575,6 +620,8 @@ chosen buffer returns to the vterm."
   #'jls/side-eshell-left
   "f"
   #'jls/side-project-file-left
+  "m"
+  #'jls/side-magit-left
   "v"
   #'jls/side-vterm-left)
 (defvar-keymap jls/side-right-map
@@ -588,6 +635,8 @@ chosen buffer returns to the vterm."
   #'jls/side-eshell-right
   "f"
   #'jls/side-project-file-right
+  "m"
+  #'jls/side-magit-right
   "v"
   #'jls/side-vterm-right)
 
