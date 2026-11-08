@@ -17,6 +17,7 @@
 (declare-function avy-tree "avy" (candidates keys))
 (declare-function consult-buffer "consult" (&optional sources))
 (declare-function jls/consult-grep-project "jls-projects" ())
+(declare-function jls/consult-project-root "jls-projects" (may-prompt))
 (declare-function jls/consult-project-buffer "jls-projects" ())
 (declare-function jls/consult-project-file "jls-projects" ())
 (declare-function jls/magit "jls-magit" ())
@@ -114,6 +115,12 @@
   "Open Dired in the current buffer's directory."
   (dired default-directory))
 
+(defun jls/open-project-dired ()
+  "Open Dired at the current project root."
+  (if-let ((root (jls/consult-project-root nil)))
+      (dired root)
+    (user-error "There is no current project")))
+
 (defun jls/open-magit ()
   "Open Magit status for the current project."
   (jls/magit))
@@ -167,14 +174,14 @@ chosen buffer returns to the vterm."
            "New tab contents"
            '((?b "project buffer" "Choose a buffer from the current project")
              (?B "buffer" "Choose a buffer with Consult")
-             (?d "dired" "Open Dired in the current directory")
+             (?d "dired" "Open Dired at the current project root")
              (?e "eshell" "Create a new Eshell session")
              (?f "project file" "Choose a file from the current project")
              (?m "magit" "Open Magit status for the current project")
              (?v "vterm" "Create a new vterm session"))))
     (?b #'jls/open-consult-project-buffer)
     (?B #'jls/open-consult-buffer)
-    (?d #'jls/open-dired-here)
+    (?d #'jls/open-project-dired)
     (?e #'jls/open-new-eshell)
     (?f #'jls/consult-project-file)
     (?m #'jls/open-magit)
