@@ -94,6 +94,11 @@ the planned build-out, then enhancements and ideas.
       `t` (both default to `nil`). Currently the dashboard runs icon-free.
 - [ ] **Treemacs extensions** — investigate further optional Treemacs
       extensions and built-in modes.
+- [ ] **Treemacs refresh** — verify that the default
+      `treemacs-filewatch-mode` keeps the tree current on macOS. Consider a
+      shorter `treemacs-file-event-delay`; add a periodic idle refresh only if
+      the `kqueue` backend proves unreliable, since full timed refreshes
+      duplicate file watching and perform unnecessary filesystem work.
 - [ ] **elisp-autofmt options** — explore its config (line length, etc.) and
       whether a `.elisp-autofmt` file is wanted; currently `on-save-p` is
       `'always`.
