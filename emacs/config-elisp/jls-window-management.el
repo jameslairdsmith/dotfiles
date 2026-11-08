@@ -242,25 +242,36 @@ chosen buffer returns to the vterm."
   (bury-buffer)
   (force-mode-line-update))
 
-(defvar jls/tab-line-show-single-tab nil
-  "Whether to show tab lines containing only one tab.")
+(defun jls/set-window-tab-line-visibility (window &optional show-single)
+  "Show WINDOW's tab line when it has multiple tabs or SHOW-SINGLE is non-nil."
+  (when (window-live-p window)
+    (with-selected-window window
+      (set-window-parameter
+       window
+       'tab-line-format
+       (if (or show-single
+               (> (length (funcall tab-line-tabs-function)) 1))
+           nil
+         'none))
+      (set-window-parameter window 'tab-line-cache nil))))
 
-(defun jls/tab-line-format-when-multiple
-    (format-function &rest arguments)
-  "Call FORMAT-FUNCTION when this window's tab line should be visible."
-  (when (or jls/tab-line-show-single-tab
-            (> (length (funcall tab-line-tabs-function)) 1))
-    (apply format-function arguments)))
+(defun jls/update-frame-tab-line-visibility (frame)
+  "Update tab-line visibility for every ordinary window on FRAME."
+  (dolist (window (window-list frame 'no-minibuffer))
+    (jls/set-window-tab-line-visibility window)))
 
 (use-package
  tab-line
  :ensure nil
  :custom (tab-line-tabs-function #'tab-line-tabs-fixed-window-buffers)
  :config
- (advice-add
-  #'tab-line-format
-  :around #'jls/tab-line-format-when-multiple)
- (global-tab-line-mode 1))
+ (global-tab-line-mode 1)
+ (add-hook
+  'window-state-change-functions
+  #'jls/update-frame-tab-line-visibility
+  90)
+ (dolist (frame (frame-list))
+   (jls/update-frame-tab-line-visibility frame)))
 
 (use-package tabgo :ensure nil :demand t)
 
@@ -277,13 +288,11 @@ chosen buffer returns to the vterm."
           (push (list window tab) entries))))
     (setq entries (nreverse entries))
     (cl-labels
-        ((refresh ()
+        ((refresh (show-single)
            (dolist (window windows)
-             (when (window-live-p window)
-               (set-window-parameter window 'tab-line-cache nil)))
+             (jls/set-window-tab-line-visibility window show-single))
            (force-mode-line-update t)))
       (let ((avy-dispatch-alist nil)
-            (jls/tab-line-show-single-tab t)
             (tab-line-tab-name-format-function
              (lambda (tab tabs)
                (let* ((window (selected-window))
@@ -310,15 +319,15 @@ chosen buffer returns to the vterm."
                    (avy-tree entries avy-keys)
                    (lambda (path entry)
                      (push (cons entry path) paths)
-                     (refresh))
+                     (refresh t))
                    (lambda ()
                      (setq paths nil)
-                     (refresh)))))
+                     (refresh t)))))
               (when (windowp (car-safe selected))
                 (select-window (car selected))
                 (tabgo--select-tab-line (cadr selected))))
           (setq paths nil)
-          (refresh))))))
+          (refresh nil))))))
 
 (defun jls/split-vterm-left ()
   "Open a new vterm in a window to the left."
