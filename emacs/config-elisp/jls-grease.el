@@ -14,6 +14,7 @@
 
 (defvar grease--buffer-dirty-p)
 (defvar grease--pending-changes)
+(defvar grease-show-hidden)
 (defvar grease-mode-map)
 
 (defun jls/open-grease ()
@@ -70,7 +71,9 @@ root without prompting.  Otherwise prompt for a directory as usual."
  :ensure nil
  :after evil
  :commands (grease-open grease-toggle grease-here)
- :init (advice-add #'grease-open :around #'jls/grease-open-in-project)
+ :init
+ (setq grease-show-hidden t)
+ (advice-add #'grease-open :around #'jls/grease-open-in-project)
  :hook (grease-mode . evil-local-mode)
  :config
  (advice-add
