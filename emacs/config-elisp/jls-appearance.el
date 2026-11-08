@@ -12,6 +12,10 @@
 
 (add-hook 'prog-mode-hook #'jls/enable-relative-line-numbers)
 
+;; Add horizontal breathing room inside every window.
+(setq-default left-margin-width 1)
+(setq-default right-margin-width 1)
+
 (defun jls/macos-dark-mode-p ()
   "Return non-nil when macOS is using its dark appearance.
 Use the Mac port's application state in the GUI.  In a terminal that state is
