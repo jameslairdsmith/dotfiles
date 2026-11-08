@@ -1,6 +1,8 @@
 ;;; jls-olivetti.el --- Centred editing layout -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; Orphaned configuration retained for reference.  This module is no longer
+;; loaded by any session profile.
 ;; Keep prose and programming text comfortably centred in wide windows.
 
 ;;; Code:
