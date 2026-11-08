@@ -5,6 +5,9 @@
 
 ;;; Code:
 
+(declare-function jls/remove-buffer-from-window-history
+                  "jls-window-management" (window buffer))
+
 (use-package
  dashboard
  :ensure nil
@@ -71,6 +74,48 @@
  :commands vertico-quick-exit)
 
 (use-package
+ vertico-buffer
+ :ensure nil
+ :after vertico
+ :commands vertico-buffer-mode)
+
+(defun jls/vertico-buffer-tab-name (buffer &optional buffers)
+  "Name Vertico's minibuffer BUFFER like its prompt in the tab line.
+
+Use the standard tab name for ordinary buffers.  BUFFERS is the complete tab
+list supplied by `tab-line-tab-name-function'."
+  (if (minibufferp buffer)
+      (replace-regexp-in-string ":? *\\'" "" (minibuffer-prompt))
+    (tab-line-tab-name-buffer buffer buffers)))
+
+(defun jls/vertico-buffer-reset-tab-line ()
+  "Remove the temporary tab line configuration from the minibuffer."
+  (remove-hook
+   'minibuffer-exit-hook #'jls/vertico-buffer-reset-tab-line t)
+  (let ((buffer (current-buffer)))
+    (dolist (window (window-list))
+      (jls/remove-buffer-from-window-history window buffer)))
+  (tab-line-mode -1)
+  (kill-local-variable 'tab-line-tab-name-function))
+
+(defun jls/vertico-buffer-setup-interface ()
+  "Make an active Vertico Buffer look like an ordinary tabbed buffer."
+  (when (bound-and-true-p vertico-buffer-mode)
+    (face-remap-remove-relative
+     '(default . mini-echo-minibuffer-window))
+    (setq-local tab-line-tab-name-function #'jls/vertico-buffer-tab-name)
+    (tab-line-mode 1)
+    (add-hook
+     'minibuffer-exit-hook #'jls/vertico-buffer-reset-tab-line 90 t)))
+
+;; Run after Mini Echo adds its minibuffer face remapping.  Vertico Buffer
+;; restores its own saved state, while the local exit hook removes the tab line.
+(add-hook
+ 'minibuffer-setup-hook
+ #'jls/vertico-buffer-setup-interface
+ 90)
+
+(use-package
  vertico-multiform
  :ensure nil
  :after (vertico vertico-posframe)
@@ -78,7 +123,8 @@
  (vertico-multiform-commands
   '((consult-buffer
      (:not posframe)
-     (:keymap "C-q" vertico-quick-exit))))
+     (:keymap "C-q" vertico-quick-exit))
+    (jls/consult-grep-project buffer (:not posframe))))
  :config (vertico-multiform-mode 1))
 
 (defvar jls-fd-program

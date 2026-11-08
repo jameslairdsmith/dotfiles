@@ -125,6 +125,15 @@ alphabetically after the recent files."
         (consult-buffer '(jls/consult-source-project-file)))
     (user-error "There is no current project")))
 
+(defun jls/consult-grep-project ()
+  "Search the current project with `consult-grep'."
+  (interactive)
+  (if-let ((root (jls/consult-project-root nil)))
+      (let ((default-directory root)
+            (consult-project-function (lambda (_may-prompt) root)))
+        (consult-grep root))
+    (user-error "There is no current project")))
+
 (defun jls/consult-project-buffer ()
   "Switch to a buffer belonging to the current project workspace."
   (interactive)
