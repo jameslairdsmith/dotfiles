@@ -32,6 +32,7 @@
 (defvar aw-make-frame-char)
 (defvar avy-dispatch-alist)
 (defvar avy-keys)
+(defvar consult-source-buffer)
 
 ;; `tab-line-mode' derives its tabs from each window's buffer history rather
 ;; than maintaining independent tab objects.  Remove incidental buffers from
@@ -127,12 +128,16 @@
   (jls/magit))
 
 (defun jls/open-consult-buffer ()
-  "Choose a buffer with Consult using its multiform display settings."
-  ;; `vertico-multiform-mode' dispatches on `this-command'.  These openers are
+  "Choose unrestrictedly from all live buffers with Consult."
+  ;; `vertico-multiform-mode' dispatches on `this-command'.  This opener is
   ;; reached through wrapper commands, so identify the nested command
-  ;; explicitly to apply the `consult-buffer' display settings.
-  (let ((this-command 'consult-buffer))
-    (consult-buffer)))
+  ;; explicitly to apply the `consult-buffer' display settings.  Make a local,
+  ;; visible copy of the all-buffer source because the global source is hidden
+  ;; in favour of the workspace-local source.
+  (let ((this-command 'consult-buffer)
+        (consult-source-buffer (copy-sequence consult-source-buffer)))
+    (plist-put consult-source-buffer :hidden nil)
+    (consult-buffer '(consult-source-buffer))))
 
 (defun jls/open-consult-project-buffer ()
   "Choose a buffer from the current project workspace with Consult."
