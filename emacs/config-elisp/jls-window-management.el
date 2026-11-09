@@ -22,6 +22,7 @@
 (declare-function jls/consult-project-file "jls-projects" ())
 (declare-function jls/magit "jls-magit" ())
 (declare-function jls/open-grease "jls-grease" ())
+(declare-function jls/treefmt-buffer "jls-formatting" ())
 (declare-function tabgo--select-tab-line "tabgo" (tabline))
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eshell "esh-mode" (&optional arg))
@@ -795,7 +796,9 @@ chosen buffer returns to the vterm."
 
 (defvar-keymap jls/buffer-map
   "/"
-  #'consult-line)
+  #'consult-line
+  "f"
+  #'jls/treefmt-buffer)
 
 (defvar-keymap jls/leader-map
   "b"
@@ -862,6 +865,8 @@ chosen buffer returns to the vterm."
   "buffer"
   "SPC b /"
   "search lines"
+  "SPC b f"
+  "format"
   "SPC p"
   "project"
   "SPC p /"

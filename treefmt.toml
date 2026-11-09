@@ -5,7 +5,7 @@
 command = "nixfmt"
 includes = ["*.nix"]
 
-[formatter.prettier]
-command = "prettier"
-options = ["--write", "--prose-wrap", "always", "--print-width", "80"]
-includes = ["*.md"]
+[formatter.panache]
+command = "panache"
+options = ["format"]
+includes = ["*.md", "*.Rmd", "*.rmd", "*.Qmd", "*.qmd"]

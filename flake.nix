@@ -29,7 +29,7 @@
           pkgs.nixfmt
           pkgs.alejandra
           pkgs.nixd
-          pkgs.prettier
+          pkgs.panache
           pkgs.treefmt
           myVscode
         ];

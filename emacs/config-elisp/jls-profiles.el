@@ -12,6 +12,7 @@
      jls-core
      jls-appearance
      jls-evil
+     jls-formatting
      jls-editing-elisp
      jls-editing-nix
      jls-editing-r

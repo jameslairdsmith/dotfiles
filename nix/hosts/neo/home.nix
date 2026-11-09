@@ -47,7 +47,6 @@ in
     page
     amp-cli
     onefetch
-    prettier
     zoom-us
     claude-code
     zotero

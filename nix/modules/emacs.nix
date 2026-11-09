@@ -136,6 +136,7 @@ in
     (setq jls-fd-program "${pkgs.fd}/bin/fd")
     (setq jls-nixd-program "${pkgs.nixd}/bin/nixd")
     (setq jls-nixfmt-program "${pkgs.nixfmt}/bin/nixfmt")
+    (setq jls-treefmt-program "${pkgs.treefmt}/bin/treefmt")
     (provide 'nix-paths)
     ;;; nix-paths.el ends here
   '';
