@@ -14,6 +14,7 @@
      jls-evil
      jls-formatting
      jls-editing-elisp
+     jls-editing-markdown
      jls-editing-nix
      jls-editing-r
      jls-interface

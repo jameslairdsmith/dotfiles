@@ -6,20 +6,47 @@
 ;;; Code:
 
 (defun jls/enable-relative-line-numbers ()
-  "Enable relative line numbers in the current programming buffer."
+  "Enable relative line numbers in the current editing buffer."
   (setq-local display-line-numbers-type 'relative)
   (display-line-numbers-mode 1))
 
-(add-hook 'prog-mode-hook #'jls/enable-relative-line-numbers)
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook #'jls/enable-relative-line-numbers))
 
 ;; Show the preferred line-length boundary in programming buffers.
 (setq-default fill-column 80)
 (setq-default display-fill-column-indicator-character ?│)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
-;; Add horizontal breathing room inside every window.
+;; Add horizontal breathing room, except where line numbers already provide
+;; separation from the left edge.
 (setq-default left-margin-width 1)
 (setq-default right-margin-width 1)
+
+(defun jls/update-left-margin-for-line-numbers ()
+  "Hide left-side spacing when the current buffer displays line numbers."
+  (let ((margin-width (if display-line-numbers 0 1))
+        (fringe-width (if display-line-numbers 0 nil)))
+    (setq-local left-margin-width margin-width)
+    (setq-local left-fringe-width fringe-width)
+    ;; The visible gap beside line numbers is the left fringe, rather than the
+    ;; text margin.  Updating either buffer-local variable only affects windows
+    ;; that display the buffer later, so also refresh existing windows.
+    (dolist (window (get-buffer-window-list (current-buffer) nil t))
+      (set-window-margins window margin-width right-margin-width)
+      (set-window-fringes
+       window fringe-width right-fringe-width fringes-outside-margins))))
+
+(add-hook
+ 'display-line-numbers-mode-hook
+ #'jls/update-left-margin-for-line-numbers)
+
+;; Also update buffers that already had line numbers when this module was
+;; re-evaluated.
+(dolist (buffer (buffer-list))
+  (with-current-buffer buffer
+    (when display-line-numbers
+      (jls/update-left-margin-for-line-numbers))))
 
 (defun jls/macos-dark-mode-p ()
   "Return non-nil when macOS is using its dark appearance.
