@@ -5,7 +5,6 @@
   ...
 }:
 let
-  dotsDir = ../..;
   r-nvim = inputs.r-nvim.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
       pkgs.nodejs
@@ -75,7 +74,6 @@ in
       vim.opt.rtp:append("${pkgs.vimPlugins.auto-dark-mode-nvim}")
       ${appearanceThemeSetup}
     '';
-    "panache/config.toml".source = "${dotsDir}/panache/panache.toml";
   };
 
   programs.nvf = {
@@ -94,10 +92,10 @@ in
         nixd.settings.nixd.formatting.command = [ "nixfmt" ];
         panache = {
           cmd = [
-            "${pkgs.panache}/bin/panache"
+            "${config.jls.panache.package}/bin/panache"
             "lsp"
           ];
-          cmd_env.PANACHE_CONFIG = "${dotsDir}/panache/panache.toml";
+          cmd_env.PANACHE_CONFIG = config.jls.panache.configPath;
           filetypes = [
             "markdown"
             "quarto"
@@ -179,7 +177,6 @@ in
       extraPackages = [
         config.jls.r.package
         pkgs.chafa
-        pkgs.panache
         pkgs.clang
         pkgs.gnumake
         pkgs.tree-sitter

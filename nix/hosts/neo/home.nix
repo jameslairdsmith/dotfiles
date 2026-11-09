@@ -22,6 +22,7 @@ in
     ../../modules/ghostty.nix
     ../../modules/nix-tools.nix
     ../../modules/neovim.nix
+    ../../modules/panache.nix
     ../../modules/plover.nix
     ../../modules/r.nix
     ../../modules/shells.nix
