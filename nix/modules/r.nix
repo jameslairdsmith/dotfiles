@@ -54,6 +54,7 @@ in
     home.packages = [
       myR
       arf
+      pkgs.air-formatter
     ];
 
     home.file.".config/arf/arf.toml".source = "${dotsDir}/arf.toml";

@@ -5,6 +5,11 @@
 command = "nixfmt"
 includes = ["*.nix"]
 
+[formatter.air]
+command = "air"
+options = ["format"]
+includes = ["*.R", "*.r"]
+
 [formatter.elisp-autofmt]
 command = "elisp-autofmt"
 includes = ["*.el"]

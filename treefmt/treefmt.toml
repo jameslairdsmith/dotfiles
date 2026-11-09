@@ -10,6 +10,12 @@
 command = "nixfmt"
 includes = ["*.nix"]
 
+# R files are formatted with Air.
+[formatter.air]
+command = "air"
+options = ["format"]
+includes = ["*.R", "*.r"]
+
 # Emacs Lisp files are formatted with elisp-autofmt via a Nix-managed wrapper.
 [formatter.elisp-autofmt]
 command = "elisp-autofmt"

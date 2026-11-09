@@ -3,3 +3,6 @@
 [format]
 line-width = 80
 wrap = "reflow"
+
+[formatters]
+r = "air"
