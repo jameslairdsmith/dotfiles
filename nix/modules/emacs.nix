@@ -5,6 +5,29 @@
 }:
 let
   python = pkgs.python3;
+  elispAutofmt = pkgs.writeShellScriptBin "elisp-autofmt" ''
+    if [ "$#" -eq 0 ]; then
+      echo "usage: elisp-autofmt FILE..." >&2
+      exit 2
+    fi
+
+    emacs_args=(
+      --batch
+      --quick
+      --eval '(setq elisp-autofmt-python-bin "${python}/bin/python3")'
+      --eval '(require (quote elisp-autofmt))'
+    )
+
+    for file in "$@"; do
+      emacs_args+=(
+        --file "$file"
+        --funcall elisp-autofmt-buffer-to-file
+      )
+    done
+
+    exec ${config.programs.emacs.finalPackage}/bin/emacs \
+      "''${emacs_args[@]}"
+  '';
 in
 {
   programs.emacs = {
@@ -70,6 +93,7 @@ in
   };
 
   home.packages = [
+    elispAutofmt
     (pkgs.writeShellScriptBin "magit" ''
       export JLS_EMACS_PROFILE=magit
 

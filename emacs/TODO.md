@@ -84,10 +84,9 @@ the planned build-out, then enhancements and ideas.
       editing stack above; add R and others), each wired the Nix way.
       Alternatively evaluate `apheleia` as a unified async format-on-save
       framework instead of the bespoke dispatch.
-- [ ] **CLI elisp formatter** — wrap a batch invocation of
-      `elisp-autofmt-buffer-to-file` in a Nix `writeShellScriptBin` (e.g.
-      `fmt-elisp`) so elisp can be formatted from the command line / CI, reusing
-      the sequestered Python via `--load ~/.config/emacs/nix-paths.el`.
+- [x] **CLI elisp formatter** — expose
+      `elisp-autofmt-buffer-to-file` through the Nix-managed `elisp-autofmt`
+      command and use it as treefmt's formatter for Emacs Lisp files.
 - [ ] **Dashboard icons** — enable icons on the startup dashboard by adding
       `nerd-icons` (Nix `extraPackages`), running `nerd-icons-install-fonts`,
       and setting `dashboard-set-heading-icons`/`dashboard-set-file-icons` to

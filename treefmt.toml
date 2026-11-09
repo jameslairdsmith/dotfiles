@@ -5,6 +5,10 @@
 command = "nixfmt"
 includes = ["*.nix"]
 
+[formatter.elisp-autofmt]
+command = "elisp-autofmt"
+includes = ["*.el"]
+
 [formatter.panache]
 command = "panache"
 options = ["format"]

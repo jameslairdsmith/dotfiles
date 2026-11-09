@@ -10,6 +10,11 @@
 command = "nixfmt"
 includes = ["*.nix"]
 
+# Emacs Lisp files are formatted with elisp-autofmt via a Nix-managed wrapper.
+[formatter.elisp-autofmt]
+command = "elisp-autofmt"
+includes = ["*.el"]
+
 # Markdown, R Markdown, and Quarto files are formatted with Panache.
 [formatter.panache]
 command = "panache"
