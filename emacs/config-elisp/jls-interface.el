@@ -124,6 +124,7 @@ list supplied by `tab-line-tab-name-function'."
   '((consult-buffer
      (:not posframe)
      (:keymap "C-q" vertico-quick-exit))
+    (consult-line buffer (:not posframe))
     (jls/consult-grep-project buffer (:not posframe))))
  :config (vertico-multiform-mode 1))
 
@@ -136,7 +137,7 @@ list supplied by `tab-line-tab-name-function'."
 (use-package
  consult
  :ensure nil
- :commands (consult-buffer consult-fd)
+ :commands (consult-buffer consult-fd consult-line)
  :custom
  (consult-async-min-input 1)
  (consult-fd-args

@@ -16,6 +16,7 @@
 (declare-function avy-read "avy" (tree display-function cleanup-function))
 (declare-function avy-tree "avy" (candidates keys))
 (declare-function consult-buffer "consult" (&optional sources))
+(declare-function consult-line "consult" (&optional initial start))
 (declare-function jls/consult-grep-project "jls-projects" ())
 (declare-function jls/consult-project-root "jls-projects" (may-prompt))
 (declare-function jls/consult-project-buffer "jls-projects" ())
@@ -788,9 +789,13 @@ chosen buffer returns to the vterm."
   "x"
   #'jls/close-current-tab)
 
+(defvar-keymap jls/buffer-map
+  "/"
+  #'consult-line)
+
 (defvar-keymap jls/leader-map
   "b"
-  #'consult-buffer
+  jls/buffer-map
   "p"
   jls/project-map
   "s"
@@ -807,6 +812,7 @@ chosen buffer returns to the vterm."
 (dolist (map
          (list
           jls/leader-map
+          jls/buffer-map
           jls/project-map
           jls/window-map
           jls/tab-map
@@ -852,6 +858,8 @@ chosen buffer returns to the vterm."
  (which-key-add-key-based-replacements
   "SPC b"
   "buffer"
+  "SPC b /"
+  "search lines"
   "SPC p"
   "project"
   "SPC p o"
