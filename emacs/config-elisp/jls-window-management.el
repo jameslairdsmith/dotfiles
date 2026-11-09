@@ -17,7 +17,6 @@
 (declare-function avy-tree "avy" (candidates keys))
 (declare-function consult-buffer "consult" (&optional sources))
 (declare-function consult-line "consult" (&optional initial start))
-(declare-function jls/consult-grep-project "jls-projects" ())
 (declare-function jls/consult-project-root "jls-projects" (may-prompt))
 (declare-function jls/consult-project-buffer "jls-projects" ())
 (declare-function jls/consult-project-file "jls-projects" ())
@@ -798,8 +797,6 @@ chosen buffer returns to the vterm."
   jls/buffer-map
   "p"
   jls/project-map
-  "s"
-  #'jls/consult-grep-project
   "t"
   jls/tab-map
   "w"
@@ -862,14 +859,14 @@ chosen buffer returns to the vterm."
   "search lines"
   "SPC p"
   "project"
+  "SPC p /"
+  "search"
   "SPC p o"
   "open"
   "SPC p s"
   "switch"
   "SPC p x"
   "close"
-  "SPC s"
-  "search project"
   "SPC t"
   "tab"
   "SPC t i"

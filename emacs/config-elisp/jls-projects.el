@@ -422,6 +422,8 @@ kill-and-close command."
   (add-to-list 'consult-buffer-sources 'jls/consult-source-workspace))
 
 (defvar-keymap jls/project-map
+  "/"
+  #'jls/consult-grep-project
   "o"
   #'jls/open-project
   "s"
