@@ -13,10 +13,15 @@
 (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
   (add-hook hook #'jls/enable-relative-line-numbers))
 
-;; Show the preferred line-length boundary in programming buffers.
+;; Show the preferred line-length boundary in editing buffers.
 (setq-default fill-column 80)
 (setq-default display-fill-column-indicator-character ?│)
-(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook #'display-fill-column-indicator-mode))
+(dolist (buffer (buffer-list))
+  (with-current-buffer buffer
+    (when (derived-mode-p 'prog-mode 'text-mode 'conf-mode)
+      (display-fill-column-indicator-mode 1))))
 
 ;; Add horizontal breathing room, except where line numbers already provide
 ;; separation from the left edge.
