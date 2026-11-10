@@ -5,6 +5,17 @@
 
 ;;; Code:
 
+(defconst jls/default-font-height 140
+  "Default font height in tenths of a point.")
+
+;; Set the initial size; theme application reapplies it below.
+(set-face-attribute 'default nil :height jls/default-font-height)
+
+;; Match VS Code's macOS shortcuts for session-wide scaling.
+(global-set-key (kbd "s-=") #'global-text-scale-adjust)
+(global-set-key (kbd "s--") #'global-text-scale-adjust)
+(global-set-key (kbd "s-0") #'global-text-scale-adjust)
+
 (defun jls/enable-relative-line-numbers ()
   "Enable relative line numbers in the current editing buffer."
   (setq-local display-line-numbers-type 'relative)
@@ -88,6 +99,7 @@ unavailable, so ask macOS directly instead."
   "Keep peripheral faces transparent and draw a continuous column ruler.
 
 THEME is accepted for use in `enable-theme-functions'."
+  (set-face-attribute 'default nil :height jls/default-font-height)
   (set-face-attribute 'fringe nil :background 'unspecified)
   (if (display-graphic-p)
       (progn
