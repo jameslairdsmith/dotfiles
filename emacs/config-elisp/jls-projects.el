@@ -220,7 +220,9 @@ Do not register files opened only for previewing with Recentf."
  treemacs
  :ensure nil
  :commands treemacs-add-and-display-current-project-exclusively
- :custom (treemacs-position 'left)
+ :custom
+ (treemacs-position 'left)
+ (treemacs-width-is-initially-locked nil)
  :config
  (with-eval-after-load 'treemacs-peek-mode
    (advice-add
