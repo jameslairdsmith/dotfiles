@@ -145,24 +145,6 @@
   (let ((this-command 'consult-buffer))
     (jls/consult-project-buffer)))
 
-(defun jls/open-new-vterm-then-consult-buffer ()
-  "Create a vterm, then choose another buffer to display over it.
-
-The vterm remains in the selected window's buffer history, so quitting the
-chosen buffer returns to the vterm."
-  (jls/open-new-vterm)
-  (jls/open-consult-buffer))
-
-(defun jls/open-new-vterm-then-consult-project-buffer ()
-  "Create a vterm, then choose a project buffer to display over it."
-  (jls/open-new-vterm)
-  (jls/open-consult-project-buffer))
-
-(defun jls/open-new-vterm-then-consult-project-file ()
-  "Create a vterm, then choose a project file to display over it."
-  (jls/open-new-vterm)
-  (jls/consult-project-file))
-
 (defun jls/read-multiple-choice (prompt choices)
   "Read one of CHOICES using PROMPT, with Escape as an explicit quit key."
   (let ((read-event-function (symbol-function #'read-event)))
@@ -454,80 +436,67 @@ chosen buffer returns to the vterm."
 (defun jls/split-consult-buffer-left ()
   "Choose a buffer for a new window to the left."
   (interactive)
-  (jls/split-window-and-open
-   'left #'jls/open-new-vterm-then-consult-buffer))
+  (jls/split-window-and-open 'left #'jls/open-consult-buffer))
 
 (defun jls/split-consult-buffer-below ()
   "Choose a buffer for a new window below."
   (interactive)
-  (jls/split-window-and-open
-   'below #'jls/open-new-vterm-then-consult-buffer))
+  (jls/split-window-and-open 'below #'jls/open-consult-buffer))
 
 (defun jls/split-consult-buffer-above ()
   "Choose a buffer for a new window above."
   (interactive)
-  (jls/split-window-and-open
-   'above #'jls/open-new-vterm-then-consult-buffer))
+  (jls/split-window-and-open 'above #'jls/open-consult-buffer))
 
 (defun jls/split-consult-buffer-right ()
   "Choose a buffer for a new window to the right."
   (interactive)
-  (jls/split-window-and-open
-   'right #'jls/open-new-vterm-then-consult-buffer))
+  (jls/split-window-and-open 'right #'jls/open-consult-buffer))
 
 (defun jls/split-project-file-left ()
   "Choose a project file for a new window to the left."
   (interactive)
-  (jls/split-window-and-open
-   'left #'jls/open-new-vterm-then-consult-project-file))
+  (jls/split-window-and-open 'left #'jls/consult-project-file))
 
 (defun jls/split-project-file-below ()
   "Choose a project file for a new window below."
   (interactive)
-  (jls/split-window-and-open
-   'below #'jls/open-new-vterm-then-consult-project-file))
+  (jls/split-window-and-open 'below #'jls/consult-project-file))
 
 (defun jls/split-project-file-above ()
   "Choose a project file for a new window above."
   (interactive)
-  (jls/split-window-and-open
-   'above #'jls/open-new-vterm-then-consult-project-file))
+  (jls/split-window-and-open 'above #'jls/consult-project-file))
 
 (defun jls/split-project-file-right ()
   "Choose a project file for a new window to the right."
   (interactive)
-  (jls/split-window-and-open
-   'right #'jls/open-new-vterm-then-consult-project-file))
+  (jls/split-window-and-open 'right #'jls/consult-project-file))
 
 (defun jls/split-project-buffer-left ()
   "Choose a project buffer for a new window to the left."
   (interactive)
-  (jls/split-window-and-open
-   'left #'jls/open-new-vterm-then-consult-project-buffer))
+  (jls/split-window-and-open 'left #'jls/open-consult-project-buffer))
 
 (defun jls/split-project-buffer-below ()
   "Choose a project buffer for a new window below."
   (interactive)
-  (jls/split-window-and-open
-   'below #'jls/open-new-vterm-then-consult-project-buffer))
+  (jls/split-window-and-open 'below #'jls/open-consult-project-buffer))
 
 (defun jls/split-project-buffer-above ()
   "Choose a project buffer for a new window above."
   (interactive)
-  (jls/split-window-and-open
-   'above #'jls/open-new-vterm-then-consult-project-buffer))
+  (jls/split-window-and-open 'above #'jls/open-consult-project-buffer))
 
 (defun jls/split-project-buffer-right ()
   "Choose a project buffer for a new window to the right."
   (interactive)
-  (jls/split-window-and-open
-   'right #'jls/open-new-vterm-then-consult-project-buffer))
+  (jls/split-window-and-open 'right #'jls/open-consult-project-buffer))
 
 (defun jls/side-consult-buffer-left ()
   "Choose a buffer for a new left side window."
   (interactive)
-  (jls/open-in-side-window
-   'left #'jls/open-new-vterm-then-consult-buffer))
+  (jls/open-in-side-window 'left #'jls/open-consult-buffer))
 
 (defun jls/side-dired-left ()
   "Open Dired in a new left side window."
@@ -547,32 +516,27 @@ chosen buffer returns to the vterm."
 (defun jls/side-consult-buffer-right ()
   "Choose a buffer for a new right side window."
   (interactive)
-  (jls/open-in-side-window
-   'right #'jls/open-new-vterm-then-consult-buffer))
+  (jls/open-in-side-window 'right #'jls/open-consult-buffer))
 
 (defun jls/side-project-file-left ()
   "Choose a project file for a new left side window."
   (interactive)
-  (jls/open-in-side-window
-   'left #'jls/open-new-vterm-then-consult-project-file))
+  (jls/open-in-side-window 'left #'jls/consult-project-file))
 
 (defun jls/side-project-file-right ()
   "Choose a project file for a new right side window."
   (interactive)
-  (jls/open-in-side-window
-   'right #'jls/open-new-vterm-then-consult-project-file))
+  (jls/open-in-side-window 'right #'jls/consult-project-file))
 
 (defun jls/side-project-buffer-left ()
   "Choose a project buffer for a new left side window."
   (interactive)
-  (jls/open-in-side-window
-   'left #'jls/open-new-vterm-then-consult-project-buffer))
+  (jls/open-in-side-window 'left #'jls/open-consult-project-buffer))
 
 (defun jls/side-project-buffer-right ()
   "Choose a project buffer for a new right side window."
   (interactive)
-  (jls/open-in-side-window
-   'right #'jls/open-new-vterm-then-consult-project-buffer))
+  (jls/open-in-side-window 'right #'jls/open-consult-project-buffer))
 
 (defun jls/side-dired-right ()
   "Open Dired in a new right side window."
