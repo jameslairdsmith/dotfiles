@@ -25,6 +25,7 @@
 (declare-function jls/treefmt-buffer "jls-formatting" ())
 (declare-function tabgo--select-tab-line "tabgo" (tabline))
 (declare-function dired "dired" (dirname &optional switches))
+(declare-function eat "eat" (&optional program arg))
 (declare-function eshell "esh-mode" (&optional arg))
 (declare-function vterm "vterm" (&optional arg))
 
@@ -110,6 +111,12 @@
   ;; process and the windows to repeatedly resize each other and hang Emacs.
   (vterm t))
 
+(defun jls/open-new-eat ()
+  "Create and select a new Eat session."
+  ;; A non-numeric argument makes Eat generate a fresh buffer rather than
+  ;; reusing the default `*eat*' buffer.
+  (eat nil t))
+
 (defun jls/open-new-eshell ()
   "Create and select a new Eshell session."
   (eshell t))
@@ -168,6 +175,7 @@
              (?f "project file" "Choose a file from the current project")
              (?g "grease" "Edit the current project directory with Grease")
              (?m "magit" "Open Magit status for the current project")
+             (?t "eat" "Create a new Eat session")
              (?v "vterm" "Create a new vterm session"))))
     (?b #'jls/open-consult-project-buffer)
     (?B #'jls/open-consult-buffer)
@@ -176,6 +184,7 @@
     (?f #'jls/consult-project-file)
     (?g #'jls/open-grease)
     (?m #'jls/open-magit)
+    (?t #'jls/open-new-eat)
     (?v #'jls/open-new-vterm)))
 
 (defun jls/position-current-tab (anchor placement)
@@ -353,6 +362,26 @@
   (interactive)
   (jls/split-window-and-open 'right #'jls/open-new-vterm))
 
+(defun jls/split-eat-left ()
+  "Open a new Eat session in a window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'jls/open-new-eat))
+
+(defun jls/split-eat-below ()
+  "Open a new Eat session in a window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'jls/open-new-eat))
+
+(defun jls/split-eat-above ()
+  "Open a new Eat session in a window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'jls/open-new-eat))
+
+(defun jls/split-eat-right ()
+  "Open a new Eat session in a window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'jls/open-new-eat))
+
 (defun jls/split-eshell-left ()
   "Open a new Eshell session in a window to the left."
   (interactive)
@@ -503,6 +532,11 @@
   (interactive)
   (jls/open-in-side-window 'left #'jls/open-dired-here))
 
+(defun jls/side-eat-left ()
+  "Open a new Eat session in a left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-new-eat))
+
 (defun jls/side-eshell-left ()
   "Open a new Eshell session in a left side window."
   (interactive)
@@ -553,6 +587,11 @@
   (interactive)
   (jls/open-in-side-window 'right #'jls/open-grease))
 
+(defun jls/side-eat-right ()
+  "Open a new Eat session in a right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-new-eat))
+
 (defun jls/side-eshell-right ()
   "Open a new Eshell session in a right side window."
   (interactive)
@@ -588,6 +627,8 @@
   #'jls/split-grease-left
   "m"
   #'jls/split-magit-left
+  "t"
+  #'jls/split-eat-left
   "v"
   #'jls/split-vterm-left)
 (defvar-keymap jls/split-below-map
@@ -605,6 +646,8 @@
   #'jls/split-grease-below
   "m"
   #'jls/split-magit-below
+  "t"
+  #'jls/split-eat-below
   "v"
   #'jls/split-vterm-below)
 (defvar-keymap jls/split-above-map
@@ -622,6 +665,8 @@
   #'jls/split-grease-above
   "m"
   #'jls/split-magit-above
+  "t"
+  #'jls/split-eat-above
   "v"
   #'jls/split-vterm-above)
 (defvar-keymap jls/split-right-map
@@ -639,6 +684,8 @@
   #'jls/split-grease-right
   "m"
   #'jls/split-magit-right
+  "t"
+  #'jls/split-eat-right
   "v"
   #'jls/split-vterm-right)
 
@@ -657,6 +704,8 @@
   #'jls/side-grease-left
   "m"
   #'jls/side-magit-left
+  "t"
+  #'jls/side-eat-left
   "v"
   #'jls/side-vterm-left)
 (defvar-keymap jls/side-right-map
@@ -674,6 +723,8 @@
   #'jls/side-grease-right
   "m"
   #'jls/side-magit-right
+  "t"
+  #'jls/side-eat-right
   "v"
   #'jls/side-vterm-right)
 
@@ -901,6 +952,8 @@
     "eshell"
     (concat prefix " g")
     "grease"
+    (concat prefix " t")
+    "eat"
     (concat prefix " v")
     "vterm")))
 

@@ -42,6 +42,34 @@
   "Delete deletable windows displaying the exited vterm BUFFER."
   (jls/delete-deletable-buffer-windows buffer))
 
+(defun jls/eat-finish-exit-cleanup (buffer windows)
+  "Kill exited Eat BUFFER, then delete its terminal-only WINDOWS."
+  (when (buffer-live-p buffer)
+    (kill-buffer buffer))
+  (dolist (window windows)
+    ;; Recheck deletability in case the frame layout changed while the timer was
+    ;; pending.  In particular, never delete a frame's sole window.
+    (when (and (window-live-p window)
+               (eq (window-deletable-p window) t))
+      (delete-window window))))
+
+(defun jls/eat-clean-up-on-exit (_process)
+  "Arrange to clean up the current Eat buffer after its exit hooks finish."
+  (let ((buffer (current-buffer))
+        (windows
+         (seq-filter
+          (lambda (window)
+            (and (eq (window-deletable-p window) t)
+                 (not
+                  (jls/window-has-other-buffer-tabs-p window
+                                                      (current-buffer)))))
+          (get-buffer-window-list (current-buffer) nil t))))
+    ;; Eat runs its exit hooks from the process sentinel.  Defer killing the
+    ;; buffer and deleting windows until the complete hook sequence returns;
+    ;; changing the selected window during Eat's own hook processing can make
+    ;; a later hook act on the wrong buffer.
+    (run-at-time 0 nil #'jls/eat-finish-exit-cleanup buffer windows)))
+
 (defun jls/eshell-delete-windows-on-exit ()
   "Delete deletable windows displaying the exiting Eshell buffer."
   (jls/delete-deletable-buffer-windows (current-buffer)))
@@ -53,11 +81,16 @@
              (< (point) eshell-last-output-end))
     (goto-char (point-max))))
 
+(defun jls/eat-send-escape-to-tui ()
+  "Send Escape to the terminal application running in Eat."
+  (interactive)
+  (eat-self-input 1 'escape))
+
 (defun jls/eshell-send-escape-to-tui ()
   "Send Escape to an Eat-managed TUI from Evil normal state."
   (interactive)
   (if (bound-and-true-p eat-terminal)
-      (eat-self-input 1 'escape)
+      (jls/eat-send-escape-to-tui)
     (keyboard-escape-quit)))
 
 (defun jls/evil-collection-eshell-setup ()
@@ -149,8 +182,14 @@ not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
  eat
  :ensure nil
  :commands (eat eat-project eat-eshell-mode)
- :init (add-hook 'eshell-load-hook #'eat-eshell-mode)
+ :init
+ (add-hook 'eshell-load-hook #'eat-eshell-mode)
+ (add-hook 'eat-exit-hook #'jls/eat-clean-up-on-exit)
  :custom
+ ;; Cleanup is deferred until Eat has finished running all its exit hooks so
+ ;; that deleting the selected window cannot redirect a later hook to another
+ ;; buffer.
+ (eat-kill-buffer-on-exit nil)
  ;; Prevent commands such as `top' from bypassing Eat via Eshell's old `term'
  ;; path; Eat provides terminal emulation directly in the Eshell buffer.
  (eshell-visual-commands nil)
@@ -160,7 +199,25 @@ not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
  ;; true-colour support; see the corresponding entry in emacs/TODO.md.
  (eat-term-name "xterm-256color")
  (eat-minimum-latency 0.008)
- (eat-maximum-latency 0.033))
+ (eat-maximum-latency 0.033)
+ :config
+ (advice-add #'eat :around #'jls/terminal-use-project-directory))
+
+(use-package
+ evil-collection
+ :ensure nil
+ :after (evil eat)
+ :demand t
+ :hook (eat-mode . evil-local-mode)
+ :config
+ (evil-collection-init 'eat)
+ ;; The first Escape leaves insert state.  Once in normal state, pass later
+ ;; Escapes through to the terminal application, matching vterm and Eshell.
+ (evil-define-key
+  'normal
+  eat-mode-map
+  (kbd "<escape>")
+  #'jls/eat-send-escape-to-tui))
 
 (provide 'jls-terminal-emulators)
 ;;; jls-terminal-emulators.el ends here
