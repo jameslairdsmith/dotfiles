@@ -8,6 +8,7 @@
 (require 'seq)
 
 (declare-function eat-self-input "eat" (n &optional event))
+(declare-function eat-term-send-string "eat" (terminal string))
 (declare-function evil-collection-init "evil-collection"
                   (&optional modes))
 (declare-function jls/current-project-root "jls-projects" ())
@@ -85,6 +86,14 @@
   "Send Escape to the terminal application running in Eat."
   (interactive)
   (eat-self-input 1 'escape))
+
+(defun jls/eat-send-backspace-to-tui ()
+  "Send the backspace advertised by Eat's terminal type to its application."
+  (interactive)
+  ;; Eat encodes its `backspace' event as DEL (Control-?), but the
+  ;; xterm-256color terminfo selected below advertises Control-H.  Fish follows
+  ;; terminfo strictly, unlike Bash's Readline, so send the advertised byte.
+  (eat-term-send-string eat-terminal "\C-h"))
 
 (defun jls/eshell-send-escape-to-tui ()
   "Send Escape to an Eat-managed TUI from Evil normal state."
@@ -211,6 +220,16 @@ not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
  :hook (eat-mode . evil-local-mode)
  :config
  (evil-collection-init 'eat)
+ ;; Evil's insert-state backspace binding otherwise shadows Eat.  Also send
+ ;; the byte advertised by our terminal type rather than Eat's hard-coded DEL.
+ ;; Cover both forms in which Emacs may report the physical key.
+ (evil-define-key
+  'insert
+  eat-mode-map
+  (kbd "DEL")
+  #'jls/eat-send-backspace-to-tui
+  (kbd "<backspace>")
+  #'jls/eat-send-backspace-to-tui)
  ;; The first Escape leaves insert state.  Once in normal state, pass later
  ;; Escapes through to the terminal application, matching vterm and Eshell.
  (evil-define-key
