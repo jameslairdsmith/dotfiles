@@ -37,9 +37,11 @@
  (mini-echo-buffer-status-style 'both)
  (mini-echo-separator "  ")
  :custom-face
- (mini-echo-minibuffer-window ((t (:inherit mode-line :box nil))))
+ (mini-echo-minibuffer-window ((t (:inherit default))))
  (mini-echo-major-mode ((t (:inherit mode-line-emphasis :weight bold))))
- :config (mini-echo-mode 1))
+ :config
+ (define-key minibuffer-inactive-mode-map [mouse-1] #'ignore)
+ (mini-echo-mode 1))
 
 (use-package
  evil-collection
