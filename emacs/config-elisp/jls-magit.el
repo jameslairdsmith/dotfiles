@@ -103,6 +103,7 @@ With a prefix argument, retain `magit-status' standard prompting behaviour."
  :bind ("s-m" . magit-status)
  :custom
  (git-commit-cd-to-toplevel t)
+ (magit-bury-buffer-function #'magit-restore-window-configuration)
  (magit-display-buffer-function
   #'magit-display-buffer-same-window-except-diff-v1))
 
