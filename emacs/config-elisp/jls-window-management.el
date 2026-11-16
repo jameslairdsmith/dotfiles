@@ -765,6 +765,87 @@
       (delete-window)
     (message "The current window cannot be deleted")))
 
+(defun jls/move-buffer-in-direction (direction)
+  "Move the current buffer to the adjacent window in DIRECTION.
+Keep the destination's buffers as tabs and show another tab in the source
+window.  When the source has no other tab, show `other-buffer' there instead."
+  (let* ((source (selected-window))
+         (buffer (current-buffer))
+         (destination (window-in-direction direction source))
+         (source-tabs (tab-line-tabs-fixed-window-buffers)))
+    (cond
+     ((not (window-live-p destination))
+      (message "There is no window %s of this one" direction))
+     ((window-dedicated-p destination)
+      (message "The window %s of this one is dedicated" direction))
+     (t
+      (let* ((source-position (seq-position source-tabs buffer))
+             (source-tabs (delq buffer (copy-sequence source-tabs)))
+             (replacement
+              (or (nth
+                   (min (or source-position 0)
+                        (1- (length source-tabs)))
+                   source-tabs)
+                  (other-buffer buffer t)))
+             (destination-tabs
+              (with-selected-window destination
+                (tab-line-tabs-fixed-window-buffers))))
+        (set-window-parameter source 'tab-line-buffers source-tabs)
+        (set-window-buffer source replacement)
+        (jls/remove-buffer-from-window-history source buffer)
+        (set-window-buffer destination buffer)
+        (set-window-parameter
+         destination 'tab-line-buffers
+         (append
+          (delq
+           buffer (copy-sequence destination-tabs))
+          (list buffer)))
+        (set-window-parameter destination 'tab-line-cache nil)
+        (select-window destination)
+        (force-mode-line-update))))))
+
+(defun jls/move-buffer-left ()
+  "Move the current buffer to the window on the left."
+  (interactive)
+  (jls/move-buffer-in-direction 'left))
+
+(defun jls/move-buffer-down ()
+  "Move the current buffer to the window below."
+  (interactive)
+  (jls/move-buffer-in-direction 'below))
+
+(defun jls/move-buffer-up ()
+  "Move the current buffer to the window above."
+  (interactive)
+  (jls/move-buffer-in-direction 'above))
+
+(defun jls/move-buffer-right ()
+  "Move the current buffer to the window on the right."
+  (interactive)
+  (jls/move-buffer-in-direction 'right))
+
+(defvar-keymap jls/move-buffer-map
+  :doc
+  "Transient keymap for moving the current buffer between windows."
+  "h"
+  #'jls/move-buffer-left
+  "j"
+  #'jls/move-buffer-down
+  "k"
+  #'jls/move-buffer-up
+  "l"
+  #'jls/move-buffer-right
+  "<escape>"
+  #'keyboard-quit
+  "ESC"
+  #'keyboard-quit)
+
+(defun jls/activate-move-buffer-map ()
+  "Activate the persistent directional buffer-moving keymap."
+  (interactive)
+  (set-transient-map jls/move-buffer-map t)
+  (message "Move buffer: h left, j down, k up, l right; ESC quits"))
+
 (defvar-keymap jls/window-map
   "i"
   jls/split-left-map
@@ -813,7 +894,9 @@
   "/"
   #'consult-line
   "f"
-  #'jls/treefmt-buffer)
+  #'jls/treefmt-buffer
+  "m"
+  #'jls/activate-move-buffer-map)
 
 (defvar-keymap jls/leader-map
   "b"
@@ -882,6 +965,8 @@
   "search lines"
   "SPC b f"
   "format"
+  "SPC b m"
+  "move"
   "SPC p"
   "project"
   "SPC p /"
