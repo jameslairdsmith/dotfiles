@@ -56,6 +56,37 @@ the planned build-out, then enhancements and ideas.
 - [ ] **helpful** — nicer `*Help*` buffers; was in the old config.
 - [x] **Project management** — built-in `project.el` with Tabspaces project
       workspaces, isolated buffer lists and Consult/Vertico project commands.
+- [ ] **Transparent Worktrunk project roots** — keep each Worktrunk repository
+      container (for example, `~/projects/jls/`) as the sole `project.el` and
+      Tabspaces project, while opening its files from one selected child
+      worktree. Implement this entirely in Elisp, without invoking Git or
+      Worktrunk executables:
+  - [ ] Persist an alist from logical project roots to selected worktree roots
+        with `savehist-additional-variables`. Save it in the existing
+        `~/.config/emacs/history` file and call `savehist-save` immediately
+        after changing a selection.
+  - [ ] Recognise the existing Worktrunk layout by reading the container's
+        `.git` indirection file and checking that it resolves to `.bare`.
+  - [ ] Discover candidate worktrees among immediate child directories by
+        reading their `.git` files and verifying that each Git directory lies
+        under the container's `.bare/worktrees/` directory.
+  - [ ] When opening a Worktrunk-managed project, reuse its saved worktree when
+        it remains valid. Select and remember the only candidate
+        automatically, prompt when several candidates exist, and prompt again
+        when a saved selection is stale. Report an actionable error when no
+        worktree exists.
+  - [ ] Keep the logical project root as the project picker and Tabspaces
+        identity, but store both the logical root and selected working root as
+        workspace parameters. Make file-oriented project commands use the
+        working root so the project looks like an ordinary non-Worktrunk
+        checkout.
+  - [ ] Keep an open workspace attached to the worktree with which it was
+        opened. Add an explicit command for changing the saved selection; do
+        not silently retarget live buffers when the selection changes.
+  - [ ] Ensure the mapping variable is registered before `savehist-mode` loads
+        `~/.config/emacs/history`, despite `jls-interface` currently loading
+        before `jls-projects`.
+  - [ ] Leave Magit and `cdmacs` integration out of the initial implementation.
 - [ ] **rainbow-delimiters** — from the old config, for prog modes.
 
 ## Restore / rebind (deferred from earlier steps)
