@@ -10,6 +10,8 @@
 (require 'subr-x)
 
 (declare-function jls/current-project-root "jls-projects")
+(declare-function
+ magit-get-mode-buffer "magit-mode" (mode &optional value frame))
 
 (use-package
  transient
@@ -19,11 +21,24 @@
  (dolist (key '("<escape>" "ESC"))
    (keymap-set transient-base-map key #'transient-quit-one)))
 
+(defun jls/magit-kill-commit-diff ()
+  "Kill the temporary Magit diff shown while writing a commit message."
+  (when-let ((buffer
+              (ignore-error magit-outside-git-repo
+                (magit-get-mode-buffer 'magit-diff-mode))))
+    ;; Killing the buffer also removes it from every window's buffer history,
+    ;; so `tab-line-tabs-fixed-window-buffers' cannot add it back as a tab.
+    (kill-buffer buffer)))
+
 (defun jls/git-commit-setup-evil ()
-  "Enable Evil with `with-editor' commands in a Git commit buffer."
+  "Enable Evil and configure cleanup in a Git commit buffer."
   (evil-local-mode 1)
   (evil-local-set-key 'normal (kbd "Z Z") #'with-editor-finish)
-  (evil-local-set-key 'normal (kbd "Z Q") #'with-editor-cancel))
+  (evil-local-set-key 'normal (kbd "Z Q") #'with-editor-cancel)
+  (add-hook
+   'with-editor-post-finish-hook #'jls/magit-kill-commit-diff nil t)
+  (add-hook
+   'with-editor-post-cancel-hook #'jls/magit-kill-commit-diff nil t))
 
 (use-package
  evil-collection
@@ -103,7 +118,6 @@ With a prefix argument, retain `magit-status' standard prompting behaviour."
  :bind ("s-m" . magit-status)
  :custom
  (git-commit-cd-to-toplevel t)
- (magit-bury-buffer-function #'magit-restore-window-configuration)
  (magit-display-buffer-function
   #'magit-display-buffer-same-window-except-diff-v1))
 
