@@ -765,6 +765,28 @@
       (delete-window)
     (message "The current window cannot be deleted")))
 
+(defvar jls/move-buffer-map)
+
+(defvar jls/move-buffer-window-change-handler nil
+  "Function notified when the buffer-moving map selects a new window.")
+
+(defvar jls/move-buffer-exit-function nil
+  "Function which deactivates the buffer-moving transient map.")
+
+(defun jls/deactivate-move-buffer-map ()
+  "Deactivate the buffer-moving transient map and its window tracking."
+  (when-let ((exit-function jls/move-buffer-exit-function))
+    (setq jls/move-buffer-exit-function nil)
+    (funcall exit-function))
+  (when (eq overriding-terminal-local-map jls/move-buffer-map)
+    (setq overriding-terminal-local-map nil)))
+
+(defun jls/quit-move-buffer-map ()
+  "Quit the buffer-moving transient map."
+  (interactive)
+  (jls/deactivate-move-buffer-map)
+  (keyboard-quit))
+
 (defun jls/move-buffer-in-direction (direction)
   "Move the current buffer to the adjacent window in DIRECTION.
 Keep the destination's buffers as tabs and show another tab in the source
@@ -802,6 +824,8 @@ window.  When the source has no other tab, show `other-buffer' there instead."
           (list buffer)))
         (set-window-parameter destination 'tab-line-cache nil)
         (select-window destination)
+        (when jls/move-buffer-window-change-handler
+          (funcall jls/move-buffer-window-change-handler destination))
         (force-mode-line-update))))))
 
 (defun jls/move-buffer-left ()
@@ -824,27 +848,121 @@ window.  When the source has no other tab, show `other-buffer' there instead."
   (interactive)
   (jls/move-buffer-in-direction 'right))
 
-(defvar-keymap jls/move-buffer-map
-  :doc
-  "Transient keymap for moving the current buffer between windows."
-  "h"
-  #'jls/move-buffer-left
-  "j"
-  #'jls/move-buffer-down
-  "k"
-  #'jls/move-buffer-up
-  "l"
-  #'jls/move-buffer-right
-  "<escape>"
-  #'keyboard-quit
-  "ESC"
-  #'keyboard-quit)
+(defvar jls/move-buffer-map
+  (let ((map (make-keymap)))
+    ;; Keep unrecognised character events from reaching an underlying map.
+    (set-char-table-range (cadr map) t #'ignore)
+    (keymap-set map "h" #'jls/move-buffer-left)
+    (keymap-set map "j" #'jls/move-buffer-down)
+    (keymap-set map "k" #'jls/move-buffer-up)
+    (keymap-set map "l" #'jls/move-buffer-right)
+    (keymap-set map "<escape>" #'jls/quit-move-buffer-map)
+    (keymap-set map "ESC" #'jls/quit-move-buffer-map)
+    map)
+  "Exclusive transient keymap for moving buffers between windows.")
 
 (defun jls/activate-move-buffer-map ()
-  "Activate the persistent directional buffer-moving keymap."
+  "Activate the exclusive directional buffer-moving keymap.
+Follow windows selected by its movement commands, but deactivate when another
+window is selected by some other command, including a mouse command."
   (interactive)
-  (set-transient-map jls/move-buffer-map t)
+  (jls/deactivate-move-buffer-map)
+  (let ((active-window (selected-window))
+        deactivate
+        update-active-window
+        window-change-monitor)
+    (setq update-active-window
+          (lambda (window)
+            (setq active-window window)
+            ;; Selecting the destination changes the current buffer and clears
+            ;; the terminal-local override.  Restore this map so the next
+            ;; directional key can continue moving the same buffer.
+            (setq overriding-terminal-local-map jls/move-buffer-map)))
+    (setq window-change-monitor
+          (lambda ()
+            (unless (eq (selected-window) active-window)
+              (jls/deactivate-move-buffer-map))))
+    (setq deactivate
+          (lambda ()
+            (remove-hook 'post-command-hook window-change-monitor)
+            (when (eq jls/move-buffer-window-change-handler
+                      update-active-window)
+              (setq jls/move-buffer-window-change-handler nil))
+            (when (eq jls/move-buffer-exit-function deactivate)
+              (setq jls/move-buffer-exit-function nil))
+            (when (eq overriding-terminal-local-map jls/move-buffer-map)
+              (setq overriding-terminal-local-map nil))))
+    (setq jls/move-buffer-window-change-handler update-active-window
+          jls/move-buffer-exit-function deactivate
+          overriding-terminal-local-map jls/move-buffer-map)
+    (add-hook 'post-command-hook window-change-monitor))
   (message "Move buffer: h left, j down, k up, l right; ESC quits"))
+
+(defun jls/move-tab-in-direction (direction)
+  "Move the current tab one place in DIRECTION within its window."
+  (let* ((buffer (current-buffer))
+         (tabs (copy-sequence (tab-line-tabs-fixed-window-buffers)))
+         (position (seq-position tabs buffer))
+         (destination
+          (pcase direction
+            ('left (and position (1- position)))
+            ('right (and position (1+ position)))
+            (_ (error "Unknown tab direction: %S" direction)))))
+    (if (or (not destination)
+            (< destination 0)
+            (>= destination (length tabs)))
+        (message "The current tab is already at the %s" direction)
+      (let ((other-buffer (nth destination tabs)))
+        (setcar (nthcdr destination tabs) buffer)
+        (setcar (nthcdr position tabs) other-buffer)
+        (set-window-parameter nil 'tab-line-buffers tabs)
+        (set-window-parameter nil 'tab-line-cache nil)
+        (force-mode-line-update)))))
+
+(defun jls/move-tab-left ()
+  "Move the current tab one place to the left."
+  (interactive)
+  (jls/move-tab-in-direction 'left))
+
+(defun jls/move-tab-right ()
+  "Move the current tab one place to the right."
+  (interactive)
+  (jls/move-tab-in-direction 'right))
+
+(defvar jls/move-tab-map
+  (let ((map (make-keymap)))
+    ;; A full keymap lets unrecognised character events resolve to `ignore'
+    ;; here rather than falling through to Evil or another underlying map.
+    (set-char-table-range (cadr map) t #'ignore)
+    (keymap-set map "h" #'jls/move-tab-left)
+    (keymap-set map "l" #'jls/move-tab-right)
+    (keymap-set map "<escape>" #'keyboard-quit)
+    (keymap-set map "ESC" #'keyboard-quit)
+    map)
+  "Exclusive transient keymap for moving the current tab within its window.")
+
+(defun jls/activate-move-tab-map ()
+  "Activate the exclusive horizontal tab-moving keymap.
+Deactivate it when another window is selected, including with the mouse."
+  (interactive)
+  (let ((origin (selected-window))
+        exit-function
+        window-change-monitor)
+    (setq window-change-monitor
+          (lambda ()
+            (unless (eq (selected-window) origin)
+              (funcall exit-function))))
+    ;; Keep the map after otherwise unrecognised events, but use a temporary
+    ;; post-command hook to release it immediately after a mouse command selects
+    ;; another window.
+    (setq exit-function
+          (set-transient-map
+           jls/move-tab-map
+           (lambda () t)
+           (lambda ()
+             (remove-hook 'post-command-hook window-change-monitor))))
+    (add-hook 'post-command-hook window-change-monitor))
+  (message "Move tab: h left, l right; ESC quits"))
 
 (defvar-keymap jls/window-map
   "i"
@@ -885,6 +1003,8 @@ window.  When the source has no other tab, show `other-buffer' there instead."
   #'tab-line-switch-to-prev-tab
   "l"
   #'tab-line-switch-to-next-tab
+  "m"
+  #'jls/activate-move-tab-map
   "/"
   #'jls/tabgo-frame
   "x"
@@ -991,6 +1111,8 @@ window.  When the source has no other tab, show `other-buffer' there instead."
   "previous"
   "SPC t l"
   "next"
+  "SPC t m"
+  "move"
   "SPC t /"
   "select"
   "SPC t x"
