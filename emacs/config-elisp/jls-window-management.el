@@ -20,10 +20,16 @@
 (declare-function jls/consult-project-root "jls-projects" (may-prompt))
 (declare-function jls/consult-project-buffer "jls-projects" ())
 (declare-function jls/consult-project-file "jls-projects" ())
+(declare-function jls/consult-popup "jls-projects" ())
+(declare-function jls/popper-toggle-type-in-place
+                  "jls-projects" (&optional buffer))
 (declare-function jls/magit "jls-magit" ())
 (declare-function jls/open-grease "jls-grease" ())
 (declare-function jls/treefmt-buffer "jls-formatting" ())
 (declare-function tabgo--select-tab-line "tabgo" (tabline))
+(declare-function popper-cycle "popper" (&optional num))
+(declare-function popper-kill-latest-popup "popper" ())
+(declare-function popper-toggle "popper" (&optional arg))
 (declare-function dired "dired" (dirname &optional switches))
 (declare-function eat "eat" (&optional program arg))
 (declare-function eshell "esh-mode" (&optional arg))
@@ -975,6 +981,18 @@ Deactivate it when another window is selected, including with the mouse."
     (add-hook 'post-command-hook window-change-monitor))
   (message "Move tab: h left, l right; ESC quits"))
 
+(defvar-keymap jls/popup-map
+  "/"
+  #'jls/consult-popup
+  "n"
+  #'popper-cycle
+  "p"
+  #'popper-toggle
+  "t"
+  #'jls/popper-toggle-type-in-place
+  "x"
+  #'popper-kill-latest-popup)
+
 (defvar-keymap jls/window-map
   "i"
   jls/split-left-map
@@ -1037,7 +1055,9 @@ Deactivate it when another window is selected, including with the mouse."
   "t"
   jls/tab-map
   "w"
-  jls/window-map)
+  jls/window-map
+  "z"
+  jls/popup-map)
 
 ;; Escape should abandon a partially entered leader sequence at any depth rather
 ;; than begin Emacs' Meta prefix.  GUI Emacs reports the Escape function key as
@@ -1049,6 +1069,7 @@ Deactivate it when another window is selected, including with the mouse."
           jls/buffer-map
           jls/project-map
           jls/window-map
+          jls/popup-map
           jls/tab-map
           jls/split-left-map
           jls/split-right-map

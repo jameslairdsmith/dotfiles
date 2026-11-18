@@ -126,6 +126,7 @@ list supplied by `tab-line-tab-name-function'."
   '((consult-buffer
      (:not posframe)
      (:keymap "C-q" vertico-quick-exit))
+    (jls/consult-popup posframe)
     (consult-flymake
      buffer
      (:not posframe)

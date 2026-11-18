@@ -15,13 +15,16 @@
 
 (declare-function consult--buffer-query "consult")
 (declare-function consult--buffer-state "consult")
+(declare-function consult--buffer-pair "consult" (buffer))
 (declare-function consult--file-state "consult")
-(declare-function consult--read "consult")
+(declare-function consult--read "consult" (table &rest options))
 (declare-function evil-treemacs-state "treemacs-evil" ())
 (declare-function jls/remove-buffer-from-window-history
                   "jls-window-management" (window buffer))
 (declare-function jls/reset-current-window-buffer-history
                   "jls-window-management")
+(declare-function popper--update-popups "popper" ())
+(declare-function popper-popup-p "popper" (buffer))
 (declare-function popper-select-popup-at-bottom
                   "popper" (buffer &optional alist))
 (declare-function projdash-open "projdash" (&optional prompt))
@@ -40,7 +43,14 @@
                   "treemacs" ())
 
 (defvar evil-state)
+(defvar popper-popup-status)
 (defvar recentf-exclude)
+
+(defvar-local jls/popper-origin-window nil
+  "Window in which this buffer was manually made into a popup.")
+
+(defvar-local jls/popper-origin-side-action nil
+  "Display action which recreates this popup's original side window.")
 
 (recentf-mode 1)
 
@@ -153,16 +163,78 @@ alphabetically after the recent files."
 (defun jls/display-popup (buffer &optional alist)
   "Display popup BUFFER according to its type and action ALIST.
 
-Keep Treemacs in a left side window; use Popper's normal bottom placement for
-other popup types that may be added later."
-  (if (eq (buffer-local-value 'major-mode buffer) 'treemacs-mode)
+Restore manually lowered buffers to their original live window, or recreate
+their original side window.  Otherwise, keep Treemacs in a left side window and
+use Popper's normal bottom placement for other popup types added later."
+  (let ((origin
+         (buffer-local-value 'jls/popper-origin-window buffer)))
+    (cond
+     ((and (window-live-p origin)
+           (eq (window-frame origin) (selected-frame)))
+      ;; Side windows in this setup remain dedicated while their popup is
+      ;; hidden.  Temporarily relax that dedication to restore the popup, then
+      ;; put it back so ordinary display actions cannot reuse the window.
+      (let ((dedicated (window-dedicated-p origin)))
+        (set-window-dedicated-p origin nil)
+        (set-window-buffer origin buffer)
+        (set-window-dedicated-p origin dedicated))
+      (select-window origin)
+      origin)
+     ((buffer-local-value 'jls/popper-origin-side-action buffer)
+      (let ((window
+             (display-buffer-in-side-window
+              buffer
+              (buffer-local-value
+               'jls/popper-origin-side-action buffer))))
+        (select-window window)
+        window))
+     ((eq (buffer-local-value 'major-mode buffer) 'treemacs-mode)
       (display-buffer-in-side-window
        buffer
        '((side . left)
          (slot . -1)
          (window-width . 35)
-         (dedicated . t)))
-    (popper-select-popup-at-bottom buffer alist)))
+         (dedicated . t))))
+     (t (popper-select-popup-at-bottom buffer alist)))))
+
+(defun jls/popper-toggle-type-in-place (&optional buffer)
+  "Toggle BUFFER's Popper status without moving its window.
+
+Use the current buffer when BUFFER is nil.  Its existing position is retained
+while its status changes.  Remember its window and, for side windows, the
+placement needed to recreate it after Popper deletes it."
+  (interactive)
+  (let* ((buffer (get-buffer (or buffer (current-buffer))))
+         (status (buffer-local-value 'popper-popup-status buffer))
+         (origin
+          (if (eq (window-buffer (selected-window)) buffer)
+              (selected-window)
+            (get-buffer-window buffer)))
+         (side (and origin (window-parameter origin 'window-side)))
+         (side-action
+          (when side
+            (append
+             `((side . ,side)
+               (slot . ,(window-parameter origin 'window-slot)))
+             (if (memq side '(left right))
+                 `((window-width . ,(window-total-width origin)))
+               `((window-height . ,(window-total-height origin))))
+             (when-let ((dedicated (window-dedicated-p origin)))
+               `((dedicated . ,dedicated)))))))
+    (with-current-buffer buffer
+      (if (memq status '(popup user-popup))
+          (progn
+            (setq popper-popup-status
+                  (and (popper-popup-p buffer) 'raised)
+                  jls/popper-origin-window nil
+                  jls/popper-origin-side-action nil)
+            (setq mode-line-format (default-value 'mode-line-format)))
+        (setq popper-popup-status
+              (if (popper-popup-p buffer) 'popup 'user-popup)
+              jls/popper-origin-window origin
+              jls/popper-origin-side-action side-action)))
+    (popper--update-popups)
+    (force-mode-line-update t)))
 
 (use-package
  popper
@@ -171,11 +243,73 @@ other popup types that may be added later."
  :bind
  (("C-`" . popper-toggle)
   ("M-`" . popper-cycle)
-  ("C-M-`" . popper-toggle-type))
+  ("C-M-`" . jls/popper-toggle-type-in-place))
  :custom
  (popper-display-function #'jls/display-popup)
  (popper-reference-buffers '(treemacs-mode))
- :config (popper-mode 1))
+ :config
+ ;; Remove the earlier origin-preserving advice when reloading this module in
+ ;; an existing Emacs session.  Popper should now delete every popup window.
+ (advice-remove
+  'popper--delete-popup 'jls/popper-preserve-origin-window)
+ (popper-mode 1))
+
+(defun jls/hidden-popper-buffer-p (buffer)
+  "Return non-nil when BUFFER is a hidden Popper popup."
+  (let ((status (buffer-local-value 'popper-popup-status buffer)))
+    (and (not (get-buffer-window buffer t))
+         (not (eq status 'raised))
+         (or (memq status '(popup user-popup suppressed))
+             (popper-popup-p buffer)))))
+
+(defun jls/consult-popup-state ()
+  "Return a Consult state function which previews via Popper.
+
+Each preview starts from the window configuration which preceded the Consult
+session.  Cancelling therefore restores the original layout; accepting a
+candidate restores it first and then displays the chosen buffer using Popper's
+normal display machinery."
+  (let (original-configuration original-window)
+    (lambda (action candidate)
+      (pcase action
+        ('setup
+         (setq original-configuration (current-window-configuration)
+               original-window (selected-window)))
+        ((or 'preview 'exit)
+         (when original-configuration
+           (set-window-configuration original-configuration))
+         (when-let* (((eq action 'preview))
+                     (buffer (and candidate (get-buffer candidate)))
+                     (window (display-buffer buffer)))
+           ;; `jls/display-popup' selects its window.  Keep keyboard focus in
+           ;; the originating window while the Posframe prompt remains active.
+           (when (window-live-p original-window)
+             (select-window original-window 'norecord))))
+        ('return
+         (when original-configuration
+           (set-window-configuration original-configuration))
+         (when-let* ((buffer (and candidate (get-buffer candidate)))
+                     (window (display-buffer buffer)))
+           (select-window window)))))))
+
+(defun jls/consult-popup ()
+  "Choose a hidden Popper buffer and display it as a popup."
+  (interactive)
+  (let ((candidates
+         (mapcar
+          #'consult--buffer-pair
+          (seq-filter #'jls/hidden-popper-buffer-p (buffer-list)))))
+    (unless candidates
+      (user-error "There are no hidden Popper buffers"))
+    (consult--read
+     candidates
+     :prompt "Popup: "
+     :category 'buffer
+     :require-match t
+     :history 'buffer-name-history
+     :sort nil
+     :state (jls/consult-popup-state)
+     :preview-key '(:debounce 0.1 any))))
 
 (defun jls/treemacs-use-single-preview-tab (function path)
   "Call Treemacs peek FUNCTION for PATH using one changing tab-line tab.
