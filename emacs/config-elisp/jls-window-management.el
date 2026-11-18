@@ -91,7 +91,9 @@
   (let* ((placeholder (generate-new-buffer " *jls-side-window*"))
          (window
           (display-buffer-in-side-window
-           placeholder `((side . ,side)))))
+           placeholder
+           `((side . ,side)
+             ,@(when (eq side 'right) '((window-width . 54)))))))
     ;; Side windows are dedicated by default.  Temporarily allow OPENER to
     ;; replace the placeholder in this window rather than another one.
     (set-window-dedicated-p window nil)
@@ -216,12 +218,21 @@
 (defun jls/add-tab (placement)
   "Add a tab at PLACEMENT and prompt for its contents."
   (let ((anchor (current-buffer))
-        (opener (jls/read-new-tab-opener)))
+        (opener (jls/read-new-tab-opener))
+        (window (selected-window))
+        (dedicated (window-dedicated-p)))
     ;; Initialise the stable tab order before OPENER changes the buffer.
     (tab-line-tabs-fixed-window-buffers)
+    ;; Side windows are dedicated, which prevents display actions such as
+    ;; Magit's same-window action from using them.  Temporarily permit the
+    ;; opener to replace the buffer, then preserve the side-window dedication.
+    (set-window-dedicated-p window nil)
     (unwind-protect
         (funcall opener)
-      (jls/position-current-tab anchor placement))))
+      (when (window-live-p window)
+        (with-selected-window window
+          (jls/position-current-tab anchor placement))
+        (set-window-dedicated-p window dedicated)))))
 
 (defun jls/add-tab-left ()
   "Add and select a tab to the left of the current tab."

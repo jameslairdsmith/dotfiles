@@ -126,6 +126,13 @@ list supplied by `tab-line-tab-name-function'."
   '((consult-buffer
      (:not posframe)
      (:keymap "C-q" vertico-quick-exit))
+    (consult-flymake
+     buffer
+     (:not posframe)
+     (vertico-buffer-display-action
+      . (display-buffer-in-side-window
+         (side . right)
+         (window-width . 54))))
     (consult-line buffer (:not posframe))
     (jls/consult-grep-project buffer (:not posframe))))
  :config (vertico-multiform-mode 1))
