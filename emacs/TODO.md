@@ -52,7 +52,7 @@ the planned build-out, then enhancements and ideas.
 - [x] **Magit** — added via Nix `extraPackages` and configured.
 - [ ] **Org mode** — minimal config for notes/capture. (Decided against the old
       literate/`org-transclusion` tangling workflow.)
-- [ ] **which-key** — discoverability for prefixes; was in the old config.
+- [x] **which-key** — discoverability for prefixes; was in the old config.
 - [ ] **helpful** — nicer `*Help*` buffers; was in the old config.
 - [x] **Project management** — built-in `project.el` with Tabspaces project
       workspaces, isolated buffer lists and Consult/Vertico project commands.
