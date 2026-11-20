@@ -143,6 +143,10 @@
   "Open Magit status for the current project."
   (jls/magit))
 
+(defun jls/open-extended-command ()
+  "Choose and invoke an interactive command, as with `M-x'."
+  (call-interactively #'execute-extended-command))
+
 (defun jls/open-consult-buffer ()
   "Choose unrestrictedly from all live buffers with Consult."
   ;; `vertico-multiform-mode' dispatches on `this-command'.  This opener is
@@ -184,7 +188,8 @@
              (?g "grease" "Edit the current project directory with Grease")
              (?m "magit" "Open Magit status for the current project")
              (?t "eat" "Create a new Eat session")
-             (?v "vterm" "Create a new vterm session"))))
+             (?v "vterm" "Create a new vterm session")
+             (?x "command" "Choose any interactive command, as with M-x"))))
     (?b #'jls/open-consult-project-buffer)
     (?B #'jls/open-consult-buffer)
     (?d #'jls/open-project-dired)
@@ -193,7 +198,8 @@
     (?g #'jls/open-grease)
     (?m #'jls/open-magit)
     (?t #'jls/open-new-eat)
-    (?v #'jls/open-new-vterm)))
+    (?v #'jls/open-new-vterm)
+    (?x #'jls/open-extended-command)))
 
 (defun jls/position-current-tab (anchor placement)
   "Position the current tab relative to ANCHOR according to PLACEMENT."
@@ -539,6 +545,26 @@
   (interactive)
   (jls/split-window-and-open 'right #'jls/open-consult-project-buffer))
 
+(defun jls/split-command-left ()
+  "Choose a command to run in a new window to the left."
+  (interactive)
+  (jls/split-window-and-open 'left #'jls/open-extended-command))
+
+(defun jls/split-command-below ()
+  "Choose a command to run in a new window below."
+  (interactive)
+  (jls/split-window-and-open 'below #'jls/open-extended-command))
+
+(defun jls/split-command-above ()
+  "Choose a command to run in a new window above."
+  (interactive)
+  (jls/split-window-and-open 'above #'jls/open-extended-command))
+
+(defun jls/split-command-right ()
+  "Choose a command to run in a new window to the right."
+  (interactive)
+  (jls/split-window-and-open 'right #'jls/open-extended-command))
+
 (defun jls/side-consult-buffer-left ()
   "Choose a buffer for a new left side window."
   (interactive)
@@ -629,6 +655,16 @@
   (interactive)
   (jls/open-in-side-window 'right #'jls/open-magit))
 
+(defun jls/side-command-left ()
+  "Choose a command to run in a new left side window."
+  (interactive)
+  (jls/open-in-side-window 'left #'jls/open-extended-command))
+
+(defun jls/side-command-right ()
+  "Choose a command to run in a new right side window."
+  (interactive)
+  (jls/open-in-side-window 'right #'jls/open-extended-command))
+
 (defvar-keymap jls/split-left-map
   "b"
   #'jls/split-project-buffer-left
@@ -647,7 +683,9 @@
   "t"
   #'jls/split-eat-left
   "v"
-  #'jls/split-vterm-left)
+  #'jls/split-vterm-left
+  "x"
+  #'jls/split-command-left)
 (defvar-keymap jls/split-below-map
   "b"
   #'jls/split-project-buffer-below
@@ -666,7 +704,9 @@
   "t"
   #'jls/split-eat-below
   "v"
-  #'jls/split-vterm-below)
+  #'jls/split-vterm-below
+  "x"
+  #'jls/split-command-below)
 (defvar-keymap jls/split-above-map
   "b"
   #'jls/split-project-buffer-above
@@ -685,7 +725,9 @@
   "t"
   #'jls/split-eat-above
   "v"
-  #'jls/split-vterm-above)
+  #'jls/split-vterm-above
+  "x"
+  #'jls/split-command-above)
 (defvar-keymap jls/split-right-map
   "b"
   #'jls/split-project-buffer-right
@@ -704,7 +746,9 @@
   "t"
   #'jls/split-eat-right
   "v"
-  #'jls/split-vterm-right)
+  #'jls/split-vterm-right
+  "x"
+  #'jls/split-command-right)
 
 (defvar-keymap jls/side-left-map
   "b"
@@ -724,7 +768,9 @@
   "t"
   #'jls/side-eat-left
   "v"
-  #'jls/side-vterm-left)
+  #'jls/side-vterm-left
+  "x"
+  #'jls/side-command-left)
 (defvar-keymap jls/side-right-map
   "b"
   #'jls/side-project-buffer-right
@@ -743,7 +789,9 @@
   "t"
   #'jls/side-eat-right
   "v"
-  #'jls/side-vterm-right)
+  #'jls/side-vterm-right
+  "x"
+  #'jls/side-command-right)
 
 (use-package
  ace-window
