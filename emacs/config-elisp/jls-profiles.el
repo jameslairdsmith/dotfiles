@@ -23,6 +23,7 @@
      jls-magit
      jls-terminal-input
      jls-terminal-emulators
+     jls-agent-shell
      jls-projects
      jls-window-management)
     (magit
@@ -45,6 +46,7 @@
     (agent-shell
      jls-core
      jls-appearance
+     jls-evil
      jls-terminal-input
      jls-agent-shell))
   "Configuration modules loaded by each Emacs session profile.")
