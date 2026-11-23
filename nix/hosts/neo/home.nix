@@ -13,6 +13,13 @@ let
       system = pkgs.system;
       config.allowUnfree = true;
     }).claude-code;
+  # Tracks nixpkgs-unstable independently because Ladybird's package was
+  # broken on Darwin in the main nixpkgs revision.
+  # Update with: nix flake update nixpkgs-ladybird
+  ladybird =
+    (import inputs.nixpkgs-ladybird {
+      system = pkgs.system;
+    }).ladybird;
 in
 {
   imports = [
@@ -50,6 +57,7 @@ in
     zoom-us
     claude-code
     zotero
+    ladybird
   ];
 
   home.file = {

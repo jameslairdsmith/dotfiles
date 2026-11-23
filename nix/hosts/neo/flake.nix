@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-ladybird.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-claude-code.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-pi-coding-agent.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     bun2nix.url = "github:baileyluTCD/bun2nix";
@@ -36,6 +37,7 @@
       plover-flake,
       worktrunk,
       arf,
+      nixpkgs-ladybird,
       nixpkgs-claude-code,
       nixpkgs-pi-coding-agent,
       bun2nix,
