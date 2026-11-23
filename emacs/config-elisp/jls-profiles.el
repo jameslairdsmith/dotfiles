@@ -13,6 +13,7 @@
      jls-appearance
      jls-evil
      jls-formatting
+     jls-pdf
      jls-editing-elisp
      jls-editing-markdown
      jls-editing-nix

@@ -37,6 +37,21 @@ in
       epkgs:
       let
         treesitGrammars = epkgs.treesit-grammars.with-grammars (grammars: [ grammars.tree-sitter-nix ]);
+        # Poppler 26.06.0 crashes while rendering on macOS because its GLib
+        # page mutex is not initialised.  Remove this override once nixpkgs
+        # provides Poppler 26.07.0 or newer.
+        popplerFixed = pkgs.poppler.overrideAttrs (_: {
+          version = "26.07.0";
+          src = pkgs.fetchurl {
+            url = "https://poppler.freedesktop.org/poppler-26.07.0.tar.xz";
+            hash = "sha256-MEgy9I+KR/3KkMa20faE5o83wQyaBybzRfTKnfTKAeI=";
+          };
+        });
+        pdfTools = epkgs.pdf-tools.overrideAttrs (old: {
+          buildInputs = map (
+            input: if input.pname or "" == "poppler-glib" then popplerFixed else input
+          ) old.buildInputs;
+        });
         grease = epkgs.trivialBuild {
           pname = "grease";
           version = "0-unstable-2026-07-21";
@@ -84,6 +99,7 @@ in
         gptel-magit
         markdown-mode
         olivetti
+        pdfTools
         vterm
         kkp
         eat

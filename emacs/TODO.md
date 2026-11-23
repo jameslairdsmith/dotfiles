@@ -173,7 +173,7 @@ the planned build-out, then enhancements and ideas.
 
 ## Possible ports from the old config (lower priority)
 
-- [ ] `pdf-tools` for PDF viewing.
+- [x] `pdf-tools` for PDF viewing.
 - [ ] `elm-mode` (Elm is used elsewhere in the dotfiles).
 - [ ] `term` with `s-v` → `term-paste`.
 - [ ] Snippets (e.g. `yasnippet`).
