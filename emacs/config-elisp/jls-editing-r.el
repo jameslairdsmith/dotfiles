@@ -6,10 +6,17 @@
 
 ;;; Code:
 
+(use-package ess-r-mode :ensure nil :mode ("\\.R\\'" . R-mode))
+
 (use-package
- ess-r-mode
+ evil-collection
  :ensure nil
- :mode ("\\.R\\'" . R-mode))
+ :after evil
+ :demand t
+ :hook (inferior-ess-r-mode . evil-local-mode)
+ :config
+ (evil-collection-init 'comint)
+ (evil-set-initial-state 'inferior-ess-r-mode 'insert))
 
 (provide 'jls-editing-r)
 ;;; jls-editing-r.el ends here
