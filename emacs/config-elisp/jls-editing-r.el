@@ -14,7 +14,14 @@
  (:map
   ess-r-mode-map
   ("s-<return>" . ess-eval-region-or-function-or-paragraph)
-  ("s-<enter>" . ess-eval-region-or-function-or-paragraph)))
+  ("s-<enter>" . ess-eval-region-or-function-or-paragraph))
+ :config
+ (add-to-list
+  'display-buffer-alist
+  '((major-mode . inferior-ess-r-mode)
+    (display-buffer-in-side-window)
+    (side . right)
+    (window-width . 54))))
 
 (use-package
  evil-collection
