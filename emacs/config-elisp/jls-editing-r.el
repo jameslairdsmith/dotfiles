@@ -6,7 +6,15 @@
 
 ;;; Code:
 
-(use-package ess-r-mode :ensure nil :mode ("\\.R\\'" . R-mode))
+(use-package
+ ess-r-mode
+ :ensure nil
+ :mode ("\\.R\\'" . R-mode)
+ :bind
+ (:map
+  ess-r-mode-map
+  ("s-<return>" . ess-eval-region-or-function-or-paragraph)
+  ("s-<enter>" . ess-eval-region-or-function-or-paragraph)))
 
 (use-package
  evil-collection
