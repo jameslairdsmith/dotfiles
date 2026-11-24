@@ -10,6 +10,7 @@
  ess-r-mode
  :ensure nil
  :mode ("\\.R\\'" . R-mode)
+ :custom (ess-auto-width 'window)
  :bind
  (:map
   ess-r-mode-map
