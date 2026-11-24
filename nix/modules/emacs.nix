@@ -79,6 +79,7 @@ in
         vertico-posframe
         marginalia
         orderless
+        corfu
         consult
         consult-dir
         ace-window
