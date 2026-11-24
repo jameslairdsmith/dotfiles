@@ -428,8 +428,13 @@ Do not register files opened only for previewing with Recentf."
   "Open a known project in a new Tabspaces workspace.
 
 Projects which already have an open workspace are omitted from the prompt.
-The candidates come from project.el and are selected with Consult and Vertico."
+The candidates come from project.el and are selected with Consult and Vertico.
+Refresh projects immediately below ~/projects before displaying the prompt."
   (interactive)
+  (let ((projects-directory (expand-file-name "~/projects")))
+    (when (file-directory-p projects-directory)
+      (let ((inhibit-message t))
+        (project-remember-projects-under projects-directory))))
   (let* ((tabs (tabspaces--list-tabspaces))
          (open-projects
           (mapcar
