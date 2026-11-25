@@ -18,6 +18,7 @@
      jls-editing-markdown
      jls-editing-nix
      jls-editing-r
+     jls-editing-r-inline-results
      jls-interface
      jls-dired
      jls-grease

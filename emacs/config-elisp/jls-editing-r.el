@@ -8,6 +8,10 @@
 
 (require 'project)
 
+(declare-function jls/delete-deletable-buffer-windows
+                  "jls-terminal-emulators"
+                  (buffer))
+
 (defun jls/ess-project-root ()
   "Return the current workspace or Project project root, if any."
   (or (and (fboundp #'jls/current-project-root)
@@ -84,6 +88,30 @@ insertion point."
     (insert
      (concat (and left-text-p " ") "|>" (and right-text-p " ")))))
 
+(defun jls/inferior-ess-finish-exit-cleanup (buffer)
+  "Kill exited iESS BUFFER and delete its terminal-only windows."
+  (when (buffer-live-p buffer)
+    (when (fboundp #'jls/delete-deletable-buffer-windows)
+      (jls/delete-deletable-buffer-windows buffer))
+    (kill-buffer buffer)))
+
+(defun jls/inferior-ess-kill-buffer-after-exit (process _message)
+  "Arrange to kill the iESS buffer after PROCESS exits."
+  (when (memq (process-status process) '(exit signal))
+    (let ((buffer (process-buffer process)))
+      (when (and (buffer-live-p buffer)
+                 (with-current-buffer buffer
+                   (derived-mode-p 'inferior-ess-r-mode)))
+        (run-at-time 0 nil #'jls/inferior-ess-finish-exit-cleanup
+                     buffer)))))
+
+(defun jls/inferior-ess-mouse-focus-input (event)
+  "Select the iESS window from EVENT and focus its active input."
+  (interactive "e")
+  (mouse-set-point event)
+  (goto-char (point-max))
+  (evil-insert-state))
+
 (defun jls/inferior-ess-return-to-input-on-insert ()
   "Move from iESS scrollback to the active input when entering insert state."
   (when (derived-mode-p 'inferior-ess-r-mode)
@@ -93,6 +121,14 @@ insertion point."
 
 (defun jls/inferior-ess-setup-evil ()
   "Configure Evil state transitions in the current iESS buffer."
+  (setq-local comint-prompt-read-only t)
+  (evil-define-key
+   '(normal insert visual replace operator motion emacs)
+   inferior-ess-r-mode-map
+   [down-mouse-1]
+   #'mouse-drag-region
+   [mouse-1]
+   #'jls/inferior-ess-mouse-focus-input)
   (evil-define-key
    'insert
    inferior-ess-r-mode-map
@@ -152,6 +188,20 @@ insertion point."
               (derived-mode-p 'inferior-ess-r-mode))
         (jls/inferior-ess-schedule-width-update buffer)))))
 
+(defun jls/ess-expression-bounds ()
+  "Return the bounds of the complete R expression at point."
+  (save-excursion
+    ;; ESS treats point on or immediately after a closing delimiter as an
+    ;; empty expression boundary.  Move inside the expression first.
+    (when (and (not (bobp)) (memq (char-before) '(?\) ?\] ?\})))
+      (backward-char))
+    (while (and (not (bobp)) (memq (char-after) '(?\) ?\] ?\})))
+      (backward-char))
+    ;; Expand a token inside a call or assignment to its enclosing top-level R
+    ;; expression before collecting continuation lines.
+    (ess-climb-to-top-level)
+    (ess-continuations-bounds)))
+
 (defun jls/ess-eval-expression (&optional visibly)
   "Evaluate the R expression at point after synchronising the console width.
 
@@ -160,19 +210,7 @@ Include continuation lines belonging to the expression, such as a pipeline or
   (interactive "P")
   (let ((process-buffer (ess-force-buffer-current)))
     (jls/inferior-ess-set-width-from-window process-buffer))
-  (if-let
-      ((bounds
-        (save-excursion
-          ;; ESS treats point on or immediately after a closing delimiter as
-          ;; an empty expression boundary.  Move inside the expression first.
-          (when (and (not (bobp)) (memq (char-before) '(?\) ?\] ?\})))
-            (backward-char))
-          (while (and (not (bobp)) (memq (char-after) '(?\) ?\] ?\})))
-            (backward-char))
-          ;; Expand a token inside a call or assignment to its enclosing
-          ;; top-level R expression before collecting continuation lines.
-          (ess-climb-to-top-level)
-          (ess-continuations-bounds))))
+  (if-let ((bounds (jls/ess-expression-bounds)))
       (progn
         (ess-eval-region
          (car bounds) (cadr bounds) visibly "Eval expression")
@@ -184,6 +222,7 @@ Include continuation lines belonging to the expression, such as a pipeline or
  ess-r-mode
  :ensure nil
  :mode ("\\.R\\'" . R-mode)
+ :hook ((ess-r-mode inferior-ess-r-mode) . electric-pair-local-mode)
  :custom
  ;; Reserve the final text column for Emacs' continuation glyph.
  (ess-auto-width -1)
@@ -196,6 +235,9 @@ Include continuation lines belonging to the expression, such as a pipeline or
   ("s-<enter>" . jls/ess-eval-expression))
  :config
  (advice-add #'R :around #'jls/ess-r-use-project-directory)
+ (advice-add
+  #'ess-process-sentinel
+  :after #'jls/inferior-ess-kill-buffer-after-exit)
  (add-hook 'ess-r-mode-hook #'jls/ess-setup-completion)
  (add-hook 'inferior-ess-r-mode-hook #'jls/ess-setup-completion)
  (dolist (map (list ess-r-mode-map inferior-ess-r-mode-map))
