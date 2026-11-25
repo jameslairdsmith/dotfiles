@@ -59,6 +59,7 @@ Look up `major-mode' in `jls/save-buffer-dispatch'; fall back to plain
 (global-set-key (kbd "s-c") #'jls/copy-region)
 (global-set-key (kbd "s-v") #'yank)
 (global-set-key (kbd "s-x") #'kill-region)
+(global-set-key (kbd "s-z") #'undo)
 (global-set-key (kbd "s-p") #'execute-extended-command)
 (global-set-key (kbd "s-<return>") #'eval-defun)
 
