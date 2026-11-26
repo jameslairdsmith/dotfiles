@@ -8,8 +8,28 @@
 (defconst jls/default-font-height 140
   "Default font height in tenths of a point.")
 
-;; Set the initial size; theme application reapplies it below.
+(defconst jls/preferred-font-families
+  '("JetBrainsMono Nerd Font Mono")
+  "Preferred font families, in order.
+This family is provided by the Nerd Font package installed through Nix.")
+
+(defun jls/apply-preferred-font (&optional frame)
+  "Use the first available preferred font in FRAME.
+Leave the default face's family unchanged when none is available."
+  (let ((frame (or frame (selected-frame))))
+    (when (display-graphic-p frame)
+      (let ((family
+             (seq-find
+              (lambda (candidate)
+                (find-font (font-spec :family candidate) frame))
+              jls/preferred-font-families)))
+        (when family
+          (set-face-attribute 'default frame :family family))))))
+
+;; Set the initial font and size; theme application reapplies them below.
 (set-face-attribute 'default nil :height jls/default-font-height)
+(jls/apply-preferred-font)
+(add-hook 'after-make-frame-functions #'jls/apply-preferred-font)
 
 ;; Match VS Code's macOS shortcuts for session-wide scaling.
 (global-set-key (kbd "s-=") #'global-text-scale-adjust)
@@ -100,6 +120,7 @@ unavailable, so ask macOS directly instead."
 
 THEME is accepted for use in `enable-theme-functions'."
   (set-face-attribute 'default nil :height jls/default-font-height)
+  (jls/apply-preferred-font)
   (set-face-attribute 'fringe nil :background 'unspecified)
   (if (display-graphic-p)
       (progn
