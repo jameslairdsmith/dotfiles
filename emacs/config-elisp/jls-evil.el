@@ -17,11 +17,17 @@
  evil
  :ensure nil
  :init
- (setq evil-want-integration t
-       evil-want-keybinding nil)
+ (setq
+  evil-want-integration t
+  evil-want-keybinding nil)
  :hook
  ((prog-mode text-mode) . evil-local-mode)
- (find-file . jls/evil-enable-in-file-buffer))
+ (find-file . jls/evil-enable-in-file-buffer)
+ :config
+ ;; Evil can mistake the frame-selection event from a focus click for the
+ ;; beginning of a drag and leave the buffer in Visual state.
+ (define-key
+  evil-motion-state-map [down-mouse-1] #'mouse-drag-region))
 
 (use-package
  evil-collection
@@ -29,8 +35,7 @@
  :after evil
  :demand t
  :hook (messages-buffer-mode . evil-local-mode)
- :config
- (evil-collection-init 'simple)
+ :config (evil-collection-init 'simple)
  ;; `*Messages*' normally exists before its mode hook is configured.
  (when-let ((buffer (get-buffer "*Messages*")))
    (with-current-buffer buffer
