@@ -124,13 +124,20 @@ list supplied by `tab-line-tab-name-function'."
       (replace-regexp-in-string ":? *\\'" "" (minibuffer-prompt))
     (tab-line-tab-name-buffer buffer buffers)))
 
+(defvar-local jls/vertico-buffer-window-dedication nil
+  "Window and dedication temporarily replaced by Vertico Buffer.")
+
 (defun jls/vertico-buffer-reset-tab-line ()
-  "Remove the temporary tab line configuration from the minibuffer."
+  "Remove Vertico Buffer's temporary tab line and restore its window."
   (remove-hook
    'minibuffer-exit-hook #'jls/vertico-buffer-reset-tab-line t)
   (let ((buffer (current-buffer)))
     (dolist (window (window-list))
       (jls/remove-buffer-from-window-history window buffer)))
+  (when-let ((state jls/vertico-buffer-window-dedication))
+    (when (window-live-p (car state))
+      (set-window-dedicated-p (car state) (cdr state))))
+  (kill-local-variable 'jls/vertico-buffer-window-dedication)
   (tab-line-mode -1)
   (kill-local-variable 'tab-line-tab-name-function))
 
@@ -150,6 +157,28 @@ list supplied by `tab-line-tab-name-function'."
  'minibuffer-setup-hook
  #'jls/vertico-buffer-setup-interface
  90)
+
+(defun jls/display-buffer-prefer-right (buffer alist)
+  "Display BUFFER in an existing right window or a new right side window.
+
+Prefer the window immediately right of the selected window, including a side
+window.  If there is no such window, ask Emacs to create a right side window.
+Return nil when neither placement is possible so another display action can
+run.  ALIST is the action alist supplied by `display-buffer'."
+  (if-let ((window (window-in-direction 'right)))
+      (let ((dedicated (window-dedicated-p window)))
+        ;; `vertico-buffer-mode' restores the original buffer but clears the
+        ;; window's dedication.  Remember it in the minibuffer so the later
+        ;; interface cleanup can restore it after Vertico's own exit hook.
+        (when dedicated
+          (setq-local jls/vertico-buffer-window-dedication
+                      (cons window dedicated)))
+        (window--display-buffer buffer window 'reuse alist))
+    (display-buffer-in-side-window
+     buffer
+     `((side . right)
+       (window-width . 54)
+       ,@alist))))
 
 (use-package
  vertico-multiform
@@ -174,7 +203,11 @@ list supplied by `tab-line-tab-name-function'."
       . (display-buffer-in-side-window
          (side . right)
          (window-width . 54))))
-    (consult-line buffer (:not posframe))
+    (consult-line
+     buffer
+     (:not posframe)
+     (vertico-buffer-display-action
+      . (jls/display-buffer-prefer-right)))
     (jls/consult-grep-project buffer (:not posframe))))
  :config (vertico-multiform-mode 1))
 
