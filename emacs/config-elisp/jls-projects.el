@@ -35,6 +35,7 @@
 (declare-function tabspaces--list-tabspaces "tabspaces")
 (declare-function tabspaces--local-buffer-p "tabspaces" (buffer))
 (declare-function tabspaces-open-or-create-project-and-workspace "tabspaces")
+(declare-function tab-line-tabs-fixed-window-buffers "tab-line" ())
 (declare-function treemacs--setup-peek-buffer
                   "treemacs-peek-mode" (path))
 (declare-function treemacs--tear-down-peek-mode
@@ -150,6 +151,78 @@ alphabetically after the recent files."
   (if (jls/current-project-root)
       (consult-buffer '(jls/consult-source-workspace))
     (user-error "The current workspace is not a project")))
+
+(defun jls/project-tabs ()
+  "Return distinct project tab buffers paired with their owning windows."
+  (let (buffers tabs)
+    (dolist (window (window-list nil 'no-minibuffer))
+      (dolist (buffer
+               (with-selected-window window
+                 (tab-line-tabs-fixed-window-buffers)))
+        (unless (memq buffer buffers)
+          (push buffer buffers)
+          (push (cons buffer window) tabs))))
+    (nreverse tabs)))
+
+(defun jls/restore-project-tab-windows (snapshots)
+  "Restore project tab windows from SNAPSHOTS made before Consult previewing."
+  (dolist (snapshot snapshots)
+    (pcase-let ((`(,window ,buffer ,previous ,next ,tabs) snapshot))
+      (when (and (window-live-p window) (buffer-live-p buffer))
+        (set-window-buffer window buffer)
+        (set-window-prev-buffers window previous)
+        (set-window-next-buffers window next)
+        (set-window-parameter window 'tab-line-buffers tabs)
+        (set-window-parameter window 'tab-line-cache nil))))
+  (force-mode-line-update t))
+
+(defun jls/consult-project-tab-state (tabs)
+  "Return Consult state which previews TABS in their owning windows."
+  (let (snapshots)
+    (lambda (action candidate)
+      (pcase action
+        ('setup
+         (setq snapshots
+               (mapcar
+                (lambda (window)
+                  (list
+                   window
+                   (window-buffer window)
+                   (copy-tree (window-prev-buffers window))
+                   (copy-sequence (window-next-buffers window))
+                   (copy-sequence
+                    (window-parameter window 'tab-line-buffers))))
+                (delete-dups (mapcar #'cdr tabs)))))
+        ((or 'preview 'exit)
+         (jls/restore-project-tab-windows snapshots)
+         (when-let* (((eq action 'preview))
+                     (buffer (and candidate (get-buffer candidate)))
+                     (window (cdr (assq buffer tabs)))
+                     ((window-live-p window)))
+           (set-window-buffer window buffer)))
+        ('return
+         (jls/restore-project-tab-windows snapshots)
+         (when-let* ((buffer (and candidate (get-buffer candidate)))
+                     (window (cdr (assq buffer tabs)))
+                     ((window-live-p window)))
+           (select-window window)
+           (switch-to-buffer buffer)))))))
+
+(defun jls/consult-project-tab ()
+  "Choose and preview a tab from the current project workspace."
+  (interactive)
+  (unless (jls/current-project-root)
+    (user-error "The current workspace is not a project"))
+  (let ((tabs (jls/project-tabs)))
+    (consult--read
+     (mapcar (lambda (tab) (consult--buffer-pair (car tab))) tabs)
+     :prompt "Project tab: "
+     :category 'buffer
+     :require-match t
+     :history 'buffer-name-history
+     :sort nil
+     :state (jls/consult-project-tab-state tabs)
+     :preview-key 'any)))
 
 ;; Temporary local checkout for evaluating Projdash before packaging it with
 ;; Nix.  Removing this form and restoring `project-dired' below removes the
@@ -562,6 +635,10 @@ kill-and-close command."
     "Consult source containing buffers in the current workspace.")
   (add-to-list 'consult-buffer-sources 'jls/consult-source-workspace))
 
+(defvar-keymap jls/project-tab-map
+  "/"
+  #'jls/consult-project-tab)
+
 (defvar-keymap jls/project-map
   "/"
   #'jls/consult-grep-project
@@ -569,6 +646,8 @@ kill-and-close command."
   #'jls/open-project
   "s"
   #'jls/switch-project
+  "t"
+  jls/project-tab-map
   "x"
   #'jls/close-project)
 

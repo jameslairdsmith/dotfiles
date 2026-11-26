@@ -161,6 +161,7 @@ list supplied by `tab-line-tab-name-function'."
      (:not posframe)
      (:keymap "C-q" vertico-quick-exit))
     (jls/consult-popup posframe)
+    (jls/consult-project-tab (:not posframe))
     (jls/consult-window-tab
      buffer
      (:not posframe)

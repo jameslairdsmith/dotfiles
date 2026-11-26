@@ -1061,6 +1061,10 @@ Deactivate it when another window is selected, including with the mouse."
   "x"
   #'popper-kill-latest-popup)
 
+(defvar-keymap jls/window-tab-map
+  "/"
+  #'jls/consult-window-tab)
+
 (defvar-keymap jls/window-map
   "i"
   jls/split-left-map
@@ -1082,6 +1086,8 @@ Deactivate it when another window is selected, including with the mouse."
   #'windmove-up
   "l"
   #'windmove-right
+  "t"
+  jls/window-tab-map
   "/"
   #'jls/visual-select-window
   "x"
@@ -1102,8 +1108,6 @@ Deactivate it when another window is selected, including with the mouse."
   #'tab-line-switch-to-next-tab
   "m"
   #'jls/activate-move-tab-map
-  "s"
-  #'jls/consult-window-tab
   "/"
   #'jls/tabgo-frame
   "x"
@@ -1138,7 +1142,9 @@ Deactivate it when another window is selected, including with the mouse."
           jls/leader-map
           jls/buffer-map
           jls/project-map
+          jls/project-tab-map
           jls/window-map
+          jls/window-tab-map
           jls/popup-map
           jls/tab-map
           jls/split-left-map
@@ -1219,6 +1225,10 @@ Deactivate it when another window is selected, including with the mouse."
   "open"
   "SPC p s"
   "switch"
+  "SPC p t"
+  "tab"
+  "SPC p t /"
+  "search"
   "SPC p x"
   "close"
   "SPC t"
@@ -1245,6 +1255,10 @@ Deactivate it when another window is selected, including with the mouse."
   "window"
   "SPC w /"
   "select"
+  "SPC w t"
+  "tab"
+  "SPC w t /"
+  "search"
   "SPC w x"
   "close"
   "SPC w i"
