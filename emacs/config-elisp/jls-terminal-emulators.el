@@ -82,6 +82,10 @@
              (< (point) eshell-last-output-end))
     (goto-char (point-max))))
 
+(defun jls/eat-setup-display ()
+  "Prevent Emacs from visually wrapping Eat terminal rows."
+  (setq-local truncate-lines t))
+
 (defun jls/eat-send-escape-to-tui ()
   "Send Escape to the terminal application running in Eat."
   (interactive)
@@ -193,6 +197,7 @@ not associated with a project.  Pass ARGUMENTS unchanged to FUNCTION."
  :commands (eat eat-project eat-eshell-mode)
  :init
  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+ (add-hook 'eat-mode-hook #'jls/eat-setup-display)
  (add-hook 'eat-exit-hook #'jls/eat-clean-up-on-exit)
  :custom
  ;; Cleanup is deferred until Eat has finished running all its exit hooks so
