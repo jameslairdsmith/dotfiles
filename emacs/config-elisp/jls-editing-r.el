@@ -268,7 +268,7 @@ Include continuation lines belonging to the expression, such as a pipeline or
  (corfu-auto-delay 0.2)
  (corfu-auto-prefix 2)
  (corfu-cycle t)
- (corfu-preselect 'prompt)
+ (corfu-preselect 'first)
  :bind
  (:map
   corfu-map
@@ -278,6 +278,8 @@ Include continuation lines belonging to the expression, such as a pipeline or
   ("TAB" . corfu-complete)
   ([tab] . corfu-complete))
  :config
+ (require 'corfu-history)
+ (corfu-history-mode 1)
  (require 'corfu-popupinfo)
  (corfu-popupinfo-mode 1))
 
