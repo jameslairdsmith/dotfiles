@@ -1156,8 +1156,30 @@ Deactivate it when another window is selected, including with the mouse."
 (use-package
  which-key
  :ensure nil
- :init (which-key-mode 1)
+ :init
+ ;; Use a compact, theme-aware bottom panel rather than Which Key's rather
+ ;; sparse defaults.  Prefixes come first within each column, so the available
+ ;; submenus remain easy to scan alongside commands.
+ (setq which-key-idle-delay 0.35
+       which-key-idle-secondary-delay 0.05
+       which-key-sort-order #'which-key-prefix-then-key-order
+       which-key-sort-uppercase-first nil
+       which-key-add-column-padding 1
+       which-key-max-display-columns 4
+       which-key-max-description-length 32
+       which-key-side-window-max-height 0.33
+       which-key-preserve-window-configuration t
+       which-key-show-prefix 'left
+       which-key-show-remaining-keys t
+       which-key-dont-use-unicode nil
+       which-key-separator "  →  "
+       which-key-prefix-prefix "◦ ")
+ (which-key-mode 1)
  :config
+ ;; Emphasise the parts a user scans without hard-coding theme colours.
+ (set-face-attribute 'which-key-key-face nil :weight 'bold)
+ (set-face-attribute
+  'which-key-group-description-face nil :weight 'bold)
  (which-key-add-key-based-replacements
   "SPC b"
   "buffer"
