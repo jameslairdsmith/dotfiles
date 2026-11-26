@@ -83,8 +83,12 @@
     (goto-char (point-max))))
 
 (defun jls/eat-setup-display ()
-  "Prevent Emacs from visually wrapping Eat terminal rows."
-  (setq-local truncate-lines t))
+  "Prevent wrapping and hide right truncation arrows in Eat buffers."
+  (setq-local truncate-lines t)
+  (setq-local fringe-indicator-alist
+              (cons '(truncation left-arrow nil)
+                    (assq-delete-all
+                     'truncation (copy-tree fringe-indicator-alist)))))
 
 (defun jls/eat-send-escape-to-tui ()
   "Send Escape to the terminal application running in Eat."
