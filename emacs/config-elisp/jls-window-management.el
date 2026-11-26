@@ -15,6 +15,9 @@
 (declare-function ace-window "ace-window" (&optional arg))
 (declare-function avy-read "avy" (tree display-function cleanup-function))
 (declare-function avy-tree "avy" (candidates keys))
+(declare-function consult--buffer-pair "consult" (buffer))
+(declare-function consult--buffer-state "consult" ())
+(declare-function consult--read "consult" (table &rest options))
 (declare-function consult-buffer "consult" (&optional sources))
 (declare-function consult-line "consult" (&optional initial start))
 (declare-function jls/consult-project-root "jls-projects" (may-prompt))
@@ -271,6 +274,23 @@
   (interactive)
   (bury-buffer)
   (force-mode-line-update))
+
+(defun jls/consult-window-tab ()
+  "Choose and preview a tab from the selected window with Consult."
+  (interactive)
+  (let ((candidates
+         (mapcar
+          #'consult--buffer-pair
+          (tab-line-tabs-fixed-window-buffers))))
+    (consult--read
+     candidates
+     :prompt "Tab: "
+     :category 'buffer
+     :require-match t
+     :history 'buffer-name-history
+     :sort nil
+     :state (consult--buffer-state)
+     :preview-key 'any)))
 
 (defun jls/set-window-tab-line-visibility (window &optional show-single)
   "Show WINDOW's tab line when it has multiple tabs or SHOW-SINGLE is non-nil."
@@ -1082,6 +1102,8 @@ Deactivate it when another window is selected, including with the mouse."
   #'tab-line-switch-to-next-tab
   "m"
   #'jls/activate-move-tab-map
+  "s"
+  #'jls/consult-window-tab
   "/"
   #'jls/tabgo-frame
   "x"
