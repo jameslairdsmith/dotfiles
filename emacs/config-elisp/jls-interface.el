@@ -8,6 +8,24 @@
 (declare-function jls/remove-buffer-from-window-history
                   "jls-window-management" (window buffer))
 
+(defvar jls/default-font-height)
+
+(defun jls/record-font-scale-baseline (&optional frame)
+  "Record FRAME's resolved normal font height for the scale indicator."
+  (let* ((frame (or frame (selected-frame)))
+         (height (face-attribute 'default :height frame 'default)))
+    (set-frame-parameter
+     frame
+     'jls-font-scale-baseline-height
+     (if (numberp height) height jls/default-font-height))))
+
+;; Record each frame after `jls/apply-preferred-font' has selected its font.
+;; Re-record the initial frame after startup, once its font has been realised by
+;; the graphical display backend.
+(jls/record-font-scale-baseline)
+(add-hook 'after-make-frame-functions #'jls/record-font-scale-baseline 90)
+(add-hook 'emacs-startup-hook #'jls/record-font-scale-baseline 90)
+
 (use-package
  dashboard
  :ensure nil
@@ -30,16 +48,32 @@
      "project"
      "vcs"
      "flymake"
+     "font-scale"
      "buffer-position"
      "buffer-size")
     :short
-    ("evil" "buffer-name" "flymake" "buffer-position")))
+    ("evil" "buffer-name" "flymake" "font-scale" "buffer-position")))
  (mini-echo-buffer-status-style 'both)
  (mini-echo-separator "  ")
  :custom-face
  (mini-echo-minibuffer-window ((t (:inherit default))))
  (mini-echo-major-mode ((t (:inherit mode-line-emphasis :weight bold))))
  :config
+ (mini-echo-define-segment "font-scale"
+   "Display the default font height relative to its configured size."
+   :fetch
+   (let* ((frame (selected-frame))
+          (height (face-attribute 'default :height frame 'default))
+          (height
+           (if (numberp height) height jls/default-font-height))
+          (baseline
+           (or (frame-parameter frame 'jls-font-scale-baseline-height)
+               jls/default-font-height))
+          (scale (/ (float height) baseline))
+          (configured-height (round (* jls/default-font-height scale))))
+     (format "%gpt (%d%%)"
+             (/ configured-height 10.0)
+             (round (* 100 scale)))))
  (define-key minibuffer-inactive-mode-map [mouse-1] #'ignore)
  (mini-echo-mode 1))
 
